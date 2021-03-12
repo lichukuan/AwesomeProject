@@ -1,0 +1,11 @@
+{
+    "nativeEvent": {
+        "canGoBack": false,
+        "canGoForward": false,
+        "data": "{\"path\":\"check.html\"}",
+        "loading": false,
+        "target": 1747,
+        "title": "实时更新|新冠肺炎疫情动态地图",
+        "url": "file:///android_asset/index.html"
+    }
+}

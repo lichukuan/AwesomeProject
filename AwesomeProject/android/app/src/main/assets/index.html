@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" data-percent="100" data-width="750" data-height="736" style="font-size: 100px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=750,user-scalable=no, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <link rel="shortcut icon" href="https://static.ws.126.net/163/f2e/news/virus_report/static/favicon.ico">
+  <title>实时更新|新冠肺炎疫情动态地图</title>
+  <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+<script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+   <script>   
+    (function (doc, win) {
+      var docEl = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        isIOS = navigator.userAgent.match(/iphone|ipad|ipod/i),
+        recalc = function () {
+          var clientWidth = docEl.clientWidth;
+          var clientHeight = docEl.clientHeight;
+          if (!clientWidth) return;
+          if (clientWidth >= 750) {
+            clientWidth = 750;
+          }
+          docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+          docEl.dataset.percent = 100 * (clientWidth / 750);
+          docEl.dataset.width = clientWidth;
+          docEl.dataset.height = clientHeight;
+        };
+      recalc();
+      isIOS && doc.documentElement.classList.add('iosx' + win.devicePixelRatio);
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, recalc, false);
+    })(document, window);
+  </script>
+<link href="./file/163_f2e_news_virus_report_static_css_vendors.4b1b24ad.css" rel="stylesheet">
+<link href="./file/163_f2e_news_virus_report_static_css_main.c8e52d7b.css" rel="stylesheet">
+</head>
+<body>
+  <img src="./file/163_f2e_common_share-icon.png" alt="logo" style="display: none;">
+  <div id="common-share">
+    <div style="display: none !important">
+      <div id="__newsapp_sharetext"></div>
+      <div id="__newsapp_sharephotourl"></div>
+      <div id="__newsapp_sharewxtitle"></div>
+      <div id="__newsapp_sharewxtext"></div>
+      <div id="__newsapp_sharewxthumburl"></div>
+      <div id="__newsapp_sharewxurl"></div>
+    </div>
+  </div>
+<div class="common-container">
+  <!-- 封面 -->
+  <div class="cover" id="map_block">
+    <!-- 封面图片 -->
+    <div class="cover_img section_content">
+      <div class="cover_logo"></div>
+      <div class="subscribe">
+        <div class="subscribe-unfollow">
+          <span>追踪</span>
+        </div>
+        <div class="subscribe-follow">已追踪</div>
+      </div>
+      <!-- <div class="cover_more_info" style="transform-origin: 0px 0px; opacity: 1; transform: scale(1, 1);">更多疫情信息</div> -->
+      <img src="./file/163_f2e_news_virus_report_static_images_banner.53e59fc.png" width="100%">
+      <!-- <h1>抗击疫情 共渡难关</h1>
+      <h2>缅怀所有逝世同胞</h2> -->
+      <h1>科学防护 共渡难关</h1>
+      <h2>肺炎疫情实时动态播报</h2>
+      <div class="cover_cards">
+        <div class="cover_tabs">
+          
+          <div class="cover_tab active"><i></i>重庆疫情数据</div>
+        </div>
+        <div class="cover_data_province active">
+          <div class="cover_province_confirm">
+            <h4>累计确诊</h4>
+            <div class="number" id="data_total_confirm">591</div><!-- 今日确诊 -->
+          <p class="added" style="display: block;">较昨日<span id="data_today_confirm">+0</span></p></div>
+          <div class="cover_province_dead">
+            <h4>累计死亡</h4>
+            <div class="number" id="data_total_dead">6</div><!-- 今日死亡 -->
+          <p class="added" style="display: block;">较昨日<span id="data_today_dead">+0</span></p></div>
+          <div class="cover_province_heal">
+            <h4>累计治愈</h4>
+            <div class="number" id="data_total_heal">585</div><!-- 今日治愈 -->
+          <p class="added" style="display: block;">较昨日<span id="data_today_heal">+0</span></p></div>
+          <div class="cover_time">截至2021-03-05 08:47</div>
+          <div class="cover_location">
+            <div class="cover_location_name">正在加载位置...</div>
+          </div>
+          <div class="cover_province_go" style="transform-origin: 0px 0px; opacity: 1; transform: scale(1, 1);">了解更多</div>
+        </div>
+      </div>
+      <div class="toolbox mb">
+        <div class="toolbox_item" id="search_isolate">
+          <div class="toolbox_icon toolbox_isolate"></div>
+          <div class="toolbox_name">隔离政策</div>
+        </div>
+        <!-- <div class="toolbox_item" id="search_action">
+          <div class="toolbox_icon toolbox_action"></div>
+          <div class="toolbox_name">最新消息</div>
+        </div> -->
+        <div class="toolbox_item" id="search_hebei">
+          <div class="toolbox_icon toolbox_hebei"></div>
+          <div class="toolbox_name">中国疫情</div>
+        </div>
+        <div class="toolbox_item" id="search_input">
+          <div class="toolbox_icon toolbox_input"></div>
+          <div class="toolbox_name">国外疫情</div>
+        </div>
+        <div class="toolbox_item" id="search_truth">
+          <div class="toolbox_icon toolbox_truth"></div>
+          <div class="toolbox_name">辟谣一线</div>
+        </div>
+        <!-- https://c.m.163.com/news/s/S1585457167564.html -->
+        <!-- https://wp.m.163.com/163/page/news/virus_input/index.html -->
+      </div>
+      <div class="nav_box" id="navHeight">
+        <div class="nav_wrap" id="nav-wrap">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 实时播报 -->
+
+  <!-- 底部 -->
+
+</div>
+
+<script type="text/javascript"  src="./file/load.js"></script>
+    <style>
+    .toast-wrap-d7fef5 { display: none; position: fixed;z-index:99999998;left: 0;top: 0; width: 100%; height: 100%; }
+    .mask-d7fef5 { height: 100%; opacity: 0; -webkit-transition: opacity 0.2s ease-in-out; transition: opacity 0.2s ease-in-out; background: rgba(0,0,0,0.6)}
+    .toast-wrap-d7fef5.active .mask-d7fef5 { opacity: 1;}
+    .toast-d7fef5 {
+      position:absolute;z-index:99999999;left:0;bottom: 0;width:100%;
+      -webkit-transform: translateY(100%); -webkit-transition:-webkit-transform 0.2s ease-in-out;
+      transform: translateY(100%); transition: transform 0.2s ease-in-out;
+    }
+    .toast-wrap-d7fef5.active .toast-d7fef5 { -webkit-transform: translateY(0); transform: translateY(0); }
+    
+    .btn-d7fef5 { position: absolute; right:0;left:0;bottom:14.52%; height: 23.93%; }
+    </style>
+
+  </body></html>
