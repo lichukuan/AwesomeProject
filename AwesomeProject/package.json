@@ -19,6 +19,7 @@
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-camera": "^3.43.0",
+    "react-native-exception-handler": "^2.10.9",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-nfc-manager": "^3.0.2",
     "react-native-qrcode-svg": "^6.1.1",

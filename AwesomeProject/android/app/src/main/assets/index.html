@@ -30,8 +30,21 @@
       win.addEventListener(resizeEvt, recalc, false);
     })(document, window);
   </script>
-<link href="./file/163_f2e_news_virus_report_static_css_vendors.4b1b24ad.css" rel="stylesheet">
-<link href="./file/163_f2e_news_virus_report_static_css_main.c8e52d7b.css" rel="stylesheet">
+  <link href="./file/163_f2e_news_virus_report_static_css_vendors.4b1b24ad.css" rel="stylesheet">
+  <link href="./file/163_f2e_news_virus_report_static_css_main.c8e52d7b.css" rel="stylesheet">
+  <link href="./file/163_newsapp_isolate-rule_static_css_app.bbb3c436.css" rel="preload" as="style">
+  <link href="./file/163_newsapp_isolate-rule_static_css_vendors.a096adbb.css" rel="preload" as="style">
+  <link href="./file/163_newsapp_isolate-rule_static_css_vendors.a096adbb.css" rel="stylesheet">
+  <link href="./file/163_newsapp_isolate-rule_static_css_app.bbb3c436.css" rel="stylesheet">
+  <link href="./file/163_activity_20200311_static_css_home.35f8edf4.css" rel="prefetch">
+  <link href="./file/163_activity_20200311_static_css_app.449f5a0f.css" rel="preload" as="style">
+  <link href="./file/163_activity_20200311_static_css_vendors.decf2ded.css" rel="preload" as="style">
+  <link href="./file/163_activity_20200311_static_css_vendors.decf2ded.css" rel="stylesheet">
+  <link href="./file/163_activity_20200311_static_css_app.449f5a0f.css" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://static.ws.126.net/163/activity/20200311/static/icons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://static.ws.126.net/163/activity/20200311/static/icons/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="./file/163_activity_20200311_static_css_home.35f8edf4.css">
+  <link href="./select.css" rel="stylesheet"/>
 </head>
 <body>
   <img src="./file/163_f2e_common_share-icon.png" alt="logo" style="display: none;">
@@ -62,7 +75,6 @@
       <!-- <h1>抗击疫情 共渡难关</h1>
       <h2>缅怀所有逝世同胞</h2> -->
       <h1>科学防护 共渡难关</h1>
-      <h2>肺炎疫情实时动态播报</h2>
       <div class="cover_cards">
         <div class="cover_tabs">
           
@@ -113,15 +125,137 @@
         <!-- https://wp.m.163.com/163/page/news/virus_input/index.html -->
       </div>
       <div class="nav_box" id="navHeight">
-        <div class="nav_wrap" id="nav-wrap">
+        <div class="nav_wrap" id="nav-wrap" style="height:auto">
+          <!-- 疫情隔离策略部分 -->
+          <div class="select" >
+            <div class="rule-panel" data-v-b4f6b35c="" data-v-57bc5122="">
+              <div class="rule-list" data-v-4b40086d="" data-v-b4f6b35c="">
+                  <div class="rule-item from" data-v-50b5cb1a="" data-v-4b40086d="">
+                      <div class="s-header" data-v-50b5cb1a="">
+                          <div class="s-city" data-v-50b5cb1a="">重庆</div>
+                          <div class="s-tags" data-v-50b5cb1a="">
+                              <div class="s-tag tag-0" data-v-50b5cb1a="">  </div>
+                          </div>
+                      </div>
+                      <div class="s-policy from" data-v-50b5cb1a=""></div>
+                      <div class="s-policy-list" data-v-50b5cb1a="">
+                  </div>
+              </div>
+          </div>
+          <div class="rule-panel" data-v-b4f6b35c="" data-v-57bc5122="">
+              <div class="rule-list" data-v-4b40086d="" data-v-b4f6b35c="">
+                  <div class="rule-item to" data-v-50b5cb1a="" data-v-4b40086d="">
+                      <div class="s-header" data-v-50b5cb1a="">
+                          <div class="s-city" data-v-50b5cb1a="">重庆</div>
+                          <div class="s-tags" data-v-50b5cb1a="">
+                              <div class="s-tag tag-0" data-v-50b5cb1a=""> </div>
+                          </div>
+                      </div>
+                      <div class="s-policy to" data-v-50b5cb1a=""></div>
+                      <div class="s-policy-list" data-v-50b5cb1a="">
+                          </div>
+                  </div>
+              </div>
+
+              <div class="s-tips" data-v-4b40086d=""></div>
+          </div>
+          <div class="share-widget" data-v-51adfb22="" data-v-b4f6b35c="" style="transform: translate(-50%, -60px);"></div>
+     
+          </div>
+         
+        </div>
+
+
+         <!-- 辟谣一线 -->
+         <div class='check' >
+          <div id="item_list">
+            <!-- <div data-v-54065788="" data-v-2a40a406="" class="home-item">
+                <div data-v-54065788="" class="image"><img data-v-54065788="" src="./file/2021_0225_e9565f6ep00qp235t006rc0009c0070c.png" alt=""></div>
+                <div data-v-54065788="" class="desc">
+                    <div data-v-54065788="" class="title"> 编造发现新冠肺炎病例谣言，湖北麻城两男子被行拘 </div>
+                    <div data-v-54065788="" class="time">2021/02/24</div>
+                </div>
+                <div data-v-54065788="" class="devide"></div>
+            </div>   -->
+          </div>
+        </div>
+        
+        <!-- 中国疫情 -->
+        <div class="china" >
+          <div class="line_chart_tit" style="margin-top: 0;">中国病例</div>
+          <div class="province_th_wrap">
+            <div class="province_th">
+              <span class="item_name">地区</span>
+              <span class="item_newconfirm">现有确诊</span>
+              <span class="item_confirm">确诊</span>
+              <span class="item_dead">死亡</span>
+              <span class="item_heal">治愈</span>
+            </div>
+          </div>
+          <ul>
+            <li class="hasCities">
+              <div class="province_th">
+                <span class="item_name">香港</span>
+                <span class="item_newconfirm">297</span>
+                <span class="item_confirm  ">11210<span>较昨日+22</span></span>
+                <span class="item_dead  ">203</span>
+                <span class="item_heal  ">10710</span>
+              </div>
+            </li>
+
+            <li class="hasCities">
+              <div class="province_th" style="background-color: aliceblue;">
+                <span class="item_name">广东</span>
+                <span class="item_newconfirm">43</span>
+                <span class="item_confirm  ">2240<span>较昨日+2</span></span>
+                <span class="item_dead  ">8</span>
+                <span class="item_heal  ">2189</span>
+              </div>
+            </li>
+          </ul>
+         
+        </div>
+
+
+        <!-- 国外疫情 -->
+        <div class='foreign' >
+          <div class="line_chart_tit" id="overseas_tit">世界病例</div>
+          <div class="overseas_list">
+            <div class="overseas_list_head">
+              <div class="overseas_list_row">
+                <div class="overseas_list_name">地区</div>
+                <div class="overseas_list_today_confirm">新增确诊</div>
+                <div class="overseas_list_confirm">累计确诊</div>
+                <div class="overseas_list_dead">死亡</div>
+                <div class="overseas_list_heal">治愈</div>
+              </div>
+            </div>
+            <div class="overseas_list_body" id="overseas_list">
+            <div class="overseas_list_row ">
+              <div class="overseas_list_nation">
+                <div class="overseas_list_name">美国</div>
+                <div class="overseas_list_today_confirm ">62773</div>
+                <div class="overseas_list_confirm">29925902</div>
+                <div class="overseas_list_dead">543721</div>
+                <div class="overseas_list_heal">20797298</div>
+              </div>
+            </div>
           
+            <div class="overseas_list_row ">
+              <div class="overseas_list_nation">
+                <div class="overseas_list_name">印度</div>
+                <div class="overseas_list_today_confirm ">23285</div>
+                <div class="overseas_list_confirm">11308846</div>
+                <div class="overseas_list_dead">158306</div>
+                <div class="overseas_list_heal">10953303</div>
+              </div>
+            </div>
+          </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- 实时播报 -->
-
-  <!-- 底部 -->
 
 </div>
 

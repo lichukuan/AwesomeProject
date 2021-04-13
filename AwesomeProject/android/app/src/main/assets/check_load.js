@@ -15,9 +15,9 @@ window.onload = function() {
          const p = JSON.parse(message);//获取json数据
          const g = JSON.parse(p);//将json转化为对象
         // item_list.innerHTML = message;
-        // for(var i = 0;i < g.items.length;i++){
-        //     createItem(item_list,g.items[i]);
-        // }
+        for(var i = 0;i < g.items.length;i++){
+            createItem(item_list,g.items[i]);
+        }
         sendData(g.city);
         
     })

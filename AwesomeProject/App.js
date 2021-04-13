@@ -69,15 +69,14 @@ export default class App extends React.Component {
 
     render() {
         return (
-            // <NavigationContainer>
-            //   <MainStack.Navigator>
-            //       <MainStack.Screen name="首页" component={MainFragment}/>
-            //       <MainStack.Screen name="user" component={UserFragment} /> 
-            //       <MainStack.Screen name="home" component={HomeFragment} />
-            //       <MainStack.Screen name='epide' component = {EpidemicFragment}/>         
-            //   </MainStack.Navigator>      
-            // </NavigationContainer>
-            <EpidemicCheck />
+            <NavigationContainer>
+              <MainStack.Navigator>
+                  <MainStack.Screen name="首页" component={MainFragment}/>
+                  <MainStack.Screen name="user" component={UserFragment} /> 
+                  <MainStack.Screen name="home" component={HomeFragment} />
+                  <MainStack.Screen name='epide' component = {EpidemicFragment}/>         
+              </MainStack.Navigator>      
+            </NavigationContainer>
         );
     }
 }
