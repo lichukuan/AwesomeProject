@@ -35,12 +35,7 @@ function MainFragment() {
             { title: "首页" }
         }
         /> 
-        <Tab.Screen name = "疫情"
-        component = { EpidemicSituation }
-        options = {
-            { title: "疫情" }
-        }
-        /> 
+        
         <Tab.Screen name = "用户"
         component = { User }
         options = {
@@ -74,7 +69,7 @@ export default class App extends React.Component {
                   <MainStack.Screen name="首页" component={MainFragment}/>
                   <MainStack.Screen name="user" component={UserFragment} /> 
                   <MainStack.Screen name="home" component={HomeFragment} />
-                  <MainStack.Screen name='epide' component = {EpidemicFragment}/>         
+                  <MainStack.Screen name='epide' component = {EpidemicSituation}/>         
               </MainStack.Navigator>      
             </NavigationContainer>
         );

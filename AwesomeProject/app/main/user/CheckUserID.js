@@ -7,10 +7,25 @@ import {
   TextInput,
   Button,
   StatusBar,
+  Image,
   Text
 } from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Config from '../Config';
 var that = null;
+ 
+//图片选择器参数设置
+var  options = {
+   title:  '请选择图片来源' ,
+   cancelButtonTitle: '取消' ,
+   takePhotoButtonTitle: '拍照' ,
+   chooseFromLibraryButtonTitle: '相册图片',
+   storageOptions: {
+     skipBackup:  true ,
+     path:  'images'
+   }
+};
+
 class CheckUserID extends React.Component{
 
   constructor(props){
@@ -18,34 +33,48 @@ class CheckUserID extends React.Component{
      this.state = {
         name:null,
         phone:0,
-        code:0
+        code:0,
+        real_image_height:0,
+        id_image_height:0,
+        real_picture_url:null,
+        id_card_picture_url:null
      }
      that = this;
   }
 
    render(){
+      const real_picture_url = this.state.real_picture_url;
+      const id_card_picture_url = this.state.id_card_picture_url;
        return (
-           <View style={style.parent}>
+           <ScrollView style={style.parent}>
+             <TextInput onChangeText={(text) => {this.setName(text)}} style={style.name} placeholder="请输入真实姓名"></TextInput>
+             <TextInput onChangeText={(text) => {this.setAddress(text)}} style={style.name} placeholder="请输入社区地址"></TextInput>
              <TextInput onChangeText={(text) => {this.setPhone(text)}} style={style.name} placeholder="请输入电话号码"></TextInput>
-             <View height={50}>
-             <View style={style.code}>
-                 <TextInput  onChangeText={(text) => {this.setCode(text)}} style={style.password} placeholder="验证码" ></TextInput>
-                 <Button title='发送' style={style.button} onPress={()=>{this.sendMessage()}}></Button>
+             <View height={60}>
+                <View style={style.sms}>
+                    <TextInput  onChangeText={(text) => {this.setCode(text)}} style={style.sms_code} placeholder="验证码" ></TextInput>
+                    <Button title='发送' style={style.send} onPress={()=>{this.sendMessage()}}></Button>
+                </View>
              </View>
-             </View>
-            <Button title='上传真人相片' onPress={()=>{this.takeRealPicture()}}></Button>
-            <Button title='上传身份证正面照' onPress={()=>{this.takeIDCardPicture()}}></Button>
-            <TextInput onChangeText={(text) => {this.setName(text)}} style={style.name} placeholder="请输入真实姓名"></TextInput>
-            <Button  onPress={()=>{this.check()}} style={style.button}  title="认证"></Button>
-            <View style={style.other}></View>
-           </View>
+            <Image  source={real_picture_url} style={{marginTop:10,height:this.state.real_image_height}}></Image> 
+            <Button title='上传真人相片' onPress={()=>{this.takeRealPicture()}} style={style.button}></Button>
+            <Image source={{uri:id_card_picture_url}} style={{marginTop:10,height:this.state.id_card_picture_url}}></Image>
+            <Button title='上传身份证正面照' onPress={()=>{this.takeIDCardPicture()}} style={style.button}></Button>
+            <View style={{height:10}}></View>
+            <Button onPress={()=>{this.check()}} style={style.button}  title="认证"></Button>
+           </ScrollView>
         )
    }
+
+
 
    setPhone(data){
       this.setState({phone:data})
    }
 
+   setAddress(data){
+
+   }
    setCode(data){
       this.setState({code:data})
    } 
@@ -78,11 +107,53 @@ class CheckUserID extends React.Component{
    }
 
    takeRealPicture(){
-      
+    launchImageLibrary(options, (response) => {
+      console.log( 'Response = ' , response);
+  
+      if  (response.didCancel) {
+        console.log( '用户取消了选择！' );
+      }
+      else  if  (response.error) {
+        alert( "ImagePicker发生错误："  + response.error);
+      }
+      else  if  (response.customButton) {
+        alert( "自定义按钮点击："  + response.customButton);
+      }
+      else  {
+        let source = { uri: response.uri };
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({
+          real_picture_url: source,
+          real_image_height:200
+        });
+      }
+    });
    }
 
    takeIDCardPicture(){
-
+    launchImageLibrary(options, (response) => {
+      console.log( 'Response = ' , response);
+  
+      if  (response.didCancel) {
+        console.log( '用户取消了选择！' );
+      }
+      else  if  (response.error) {
+        alert( "ImagePicker发生错误："  + response.error);
+      }
+      else  if  (response.customButton) {
+        alert( "自定义按钮点击："  + response.customButton);
+      }
+      else  {
+        let source = { uri: response.uri };
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({
+          id_card_picture_url: source,
+          id_image_height:200
+        });
+      }
+    });
    }
 
    check(){
@@ -146,28 +217,33 @@ class CheckUserID extends React.Component{
 
 const style = StyleSheet.create({
   parent:{
-    
+    margin:10
+  },
+  button:{
+   height:50
   },
   name:{
       height:50,
+      borderColor:'skyblue',
+      borderWidth:1,
+      marginTop:10
   },
-  password:{
+  sms:{
+      flex:1,
+      flexDirection:'row',
       height:50,
-      flex:8
-    },
-  button:{
-      backgroundColor:'skyblue',
-      height:50,
-      fontSize:20,
-      
+      marginTop:10
   },
-  code:{
-    flex:1,
-    flexDirection:'row',
-    height:50
+  sms_code:{
+    flex:5,
+    borderColor:'skyblue',
+    borderWidth:1,
+    marginRight:10
   },
-  other:{
-    flex:10
+  send:{
+    flex:2,
+    height:30,
+    fontSize:20,
   }
 });
 

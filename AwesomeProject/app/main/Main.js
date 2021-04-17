@@ -64,12 +64,17 @@ class Main extends React.Component {
         </View>
           <Card press = {()=>this.card()}/>
           <Text style={style.community_info} onPress={()=>{this.qrcode()}}>扫描二维码</Text>
+          <Text style={style.community_info} onPress={()=>{this.showInfo()}}>疫情</Text>
       </View>
     }
 
     //打卡
     card(){
          this.navigation.navigate('home',{itemId:10,key:'CardHealth'});
+    }
+
+    showInfo(){
+        this.navigation.navigate('epide',{itemId:10,key:'epide'});
     }
 
     qrcode(){
