@@ -14,6 +14,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DeviceStorage from '../storage/DeviceStorage';
 import Key from '../storage/Keys'
+import AsyncStorage from '@react-native-community/async-storage';
+
 import Config from '../Config'
 var that = null;
 class Login extends React.Component{
@@ -49,7 +51,7 @@ class Login extends React.Component{
     register(){
         const  url = 'https://api2.bmob.cn/1/users';
         const name = this.state.name;
-        const pas = this.state.pas;
+        const pas = this.state.pas+"";
         var fetchOptions = {
             method: 'POST',
             headers: {
@@ -66,23 +68,27 @@ class Login extends React.Component{
         .then((response) => response.text())
         .then((responseText) => {
              console.log(responseText);
-            // const data = JSON.parse(responseText);
-            // if(data.code == 202){//登录
-            //     that.login();
-            // }else{//注册
-            //     DeviceStorage.save(Key.user_class,JSON.stringify({
-            //         user_name:name,
-            //         user_id:user_id
-            //     }));
-            //     Config.IS_LOGIN = true;
-            //     Config.LOGIN_USER_NAME = name;
-            //     Config.LOGIN_USER_ID = data.objectId;
-            //     console.log("用户id = "+data.objectId);
-            //     DeviceEventEmitter.emit(Config.UPDATE_USER_LOGIN_INFO,true);
-            //     console.log("name = "+name +"  pas = "+pas);
-            //     this.navigation.goBack();   
-            // }    
-            that.login();
+            const data = JSON.parse(responseText);
+            if(data.code == 202){//登录
+                that.login();
+            }else{//注册
+                var user = {
+                    user_name:name,
+                    user_id:data.objectId,
+                    session_token:data.sessionToken,
+                    phone:data.mobilephone
+                }
+                AsyncStorage.setItem(Key.USER_INFO, JSON.stringify(user), err => {
+                    err && console.log(err.toString());
+                });  
+                Config.IS_LOGIN = true;
+                Config.LOGIN_USER_NAME = name;
+                Config.LOGIN_USER_ID = data.objectId;
+                console.log("用户id = "+data.objectId);
+                DeviceEventEmitter.emit(Config.UPDATE_USER_LOGIN_INFO,true);
+                console.log("name = "+name +"  pas = "+pas);
+                this.navigation.goBack();   
+            }    
         }).done();        
         
     }
@@ -104,16 +110,28 @@ class Login extends React.Component{
         .then((responseText) => {
             console.log(responseText);
             const data = JSON.parse(responseText);
-            DeviceStorage.save(Key.user_class,{
-                user_name:name,
-                user_id:data.objectId
-            });
-                
             Config.IS_LOGIN = true;
             Config.LOGIN_USER_NAME = name;
             Config.LOGIN_USER_ID = data.objectId;
             Config.SESSION_TOKEN = data.sessionToken;
-            console.log("用户id = "+data.objectId);  
+            Config.authentication = data.authentication;
+            console.log("用户id = "+data.objectId);
+            var user = {
+                user_name:name,
+                user_id:data.objectId,
+                session_token:data.sessionToken,
+                phone:data.mobilePhoneNumber,
+                address:data.address,
+                authentication:data.authentication,
+                realName:data.real_name,
+                mobilePhoneNumberVerified:data.mobilePhoneNumberVerified,
+                id_card_picture_url:data.id_card_picture_url,
+                real_picture_url:data.real_picture_url,
+                create_community_id:data.create_community_id,
+            }
+            AsyncStorage.setItem(Key.USER_INFO, JSON.stringify(user), err => {
+                err && console.log(err.toString());
+            });  
             DeviceEventEmitter.emit(Config.UPDATE_USER_LOGIN_INFO,true);
             console.log("name = "+name +"  pas = "+pas);
             console.log("session_id = "+data.sessionToken);

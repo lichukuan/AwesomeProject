@@ -66,10 +66,11 @@ export default class App extends React.Component {
         return (
             <NavigationContainer>
               <MainStack.Navigator>
-                  <MainStack.Screen name="首页" component={MainFragment}/>
+                  <MainStack.Screen name="首页"  component={MainFragment}/>
                   <MainStack.Screen name="user" component={UserFragment} /> 
                   <MainStack.Screen name="home" component={HomeFragment} />
-                  <MainStack.Screen name='epide' component = {EpidemicSituation}/>         
+                  <MainStack.Screen name='疫情' component = {EpidemicSituation}/>
+                  <MainStack.Screen name="info" component = {ApplyForJoinCommunityNumberinfor}/>         
               </MainStack.Navigator>      
             </NavigationContainer>
         );

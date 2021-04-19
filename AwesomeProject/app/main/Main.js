@@ -11,7 +11,11 @@ import DeviceStorage from './storage/DeviceStorage';
 import Key from "./storage/Keys";
 var REQUEST_URL = 'https://ipservice.3g.163.com/ip';
 import AsyncStorage from '@react-native-community/async-storage';
+import Config from './Config';
+//获取位置数据
+//获取登录信息
 
+var that = null;
 class Main extends React.Component {
     constructor(props){
         super(props);
@@ -19,32 +23,151 @@ class Main extends React.Component {
             message:"请稍后",
             city:"正在查询...",
             communityInfo:"你未加入社区，点击加入社区",
-            communityId:null
+            communityId:null,
+            communityMember:'无'
         }
         this.navigation = props.navigation;
+        that = this;
     }
 
     fetchData()
     {
-        fetch(REQUEST_URL, {
-            method: 'GET'
+        AsyncStorage.getItem(Key.LOCATION_KEY).then(value => {
+            console.log(value +" time = "+that.getmyDate());
+            const data = JSON.parse(value);
+            if(data == null||data.time != that.getmyDate()){
+                //获取位置信息
+                fetch(REQUEST_URL, {
+                    method: 'GET'
+                })
+                .then((response) => response.text())
+                .then((responseData) => {
+                    const data = JSON.parse(responseData);
+                    console.log(data);
+                    that.setState({
+                        message:data.message,
+                        cityCode:data.result.administrativeCode,
+                        city:data.result.city
+                    });
+                    var location = {
+                        city:data.result.city,
+                        code:data.result.administrativeCode,
+                        time:that.getmyDate()
+                    }
+                    AsyncStorage.setItem(Key.LOCATION_KEY, JSON.stringify(location), err => {
+                        err && console.log(err.toString());
+                    })
+                })
+                .catch((error) => {
+                    console.log('error = '+error);
+                });
+            }else{
+                that.setState({
+                    cityCode:data.code,
+                    city:data.city
+                });
+            }
+        }).catch(err => {
+            console.log(err.toString());
         })
-        .then((response) => response.json())
-        .then((responseData) => {
-            Config.json_ip_data =  responseData;
-            this.setState({
-                message:responseData.message,
-                cityCode:responseData.result.administrativeCode,
-                city:responseData.result.city
-            });
-            DeviceStorage.save(Key.location_city,responseData.result.city);
-            DeviceStorage.save(Key.location_city_code,responseData.result.administrativeCode);
-            console.log(responseData);
-        })
-        .catch((error) => {
+       
+        //登录信息
+        AsyncStorage.getItem(Key.USER_INFO)
+        .then(value => {
+            console.log(value);
+            const userData = JSON.parse(value);
+            var url = 'https://api2.bmob.cn/1/checkSession/'+userData.user_id;
+            fetch(url,{
+                method:'GET',
+                headers: {
+                    'X-Bmob-Application-Id': Config.BMOB_APP_ID,
+                    'X-Bmob-REST-API-Key': Config.REST_API_ID,
+                    'X-Bmob-Session-Token':userData.session_token
+                    }
+            }).then((response) => response.text())
+            .then((responseText) =>{
+                const data = JSON.parse(responseText);
+                console.log(data);
+                if(data.msg == 'ok'){
+                    console.log('Main登录成功');
+                    Config.user = userData;
+                    Config.IS_LOGIN = true;
+                    Config.LOGIN_USER_NAME = userData.user_name;
+                    Config.LOGIN_USER_ID = userData.user_id;
+                    Config.authentication = userData.authentication;
+                    Config.SESSION_TOKEN = userData.session_token;
+                    that.findCommunity(userData.user_id,userData.session_token,userData.create_community_id);
+                }
+            }).catch((error) => {
                 console.log(error);
-        });
+            });
+        })
+        .catch(err => {
+            err && console.log(err.toString());
+        })
+
     }
+
+    findCommunity(id,session,create_community_id){
+           
+            var url = 'https://api2.bmob.cn/1/classes/CmmunityMember?where='+JSON.stringify({
+                user_id:id
+            });
+            fetch(url,{
+                method:'GET',
+                headers: {
+                    'X-Bmob-Application-Id': Config.BMOB_APP_ID,
+                    'X-Bmob-REST-API-Key': Config.REST_API_ID,
+                    'X-Bmob-Session-Token':session
+                    }
+            }).then((response) => response.text())
+            .then((responseText) =>{
+                 //request 已申请
+                 //agree 同意
+                 //refuse 拒绝
+                 const data = JSON.parse(responseText);
+                 console.log(data.results);
+                 if(data.results.length != 0){
+                    const userData = data.results[0]; 
+                    if(userData.state == 'request'){
+                        that.setState({
+                            communityInfo:'你已申请加入'+userData.apply_for_name+',请等候结果'
+                        })
+                    }else if(userData.state == 'refuse'){
+                        that.setState({
+                            communityInfo:'你加入'+userData.apply_for_name+'的申请已经被拒绝'
+                        })
+                    }else if(userData.state == 'agree'){
+                        Config.apply_for_id = userData.commuinty_id;
+                        Config.apply_for_name = userData.community_name;
+                        Config.apply_state = userData.state;
+                        that.setState({
+                            communityInfo:userData.community_name
+                        })
+                        if(create_community_id != null && create_community_id == userData.commuinty_id){
+                            this.setState({
+                                communityMember:'管理员'
+                            })
+                        }else{
+                            this.setState({
+                                communityMember:'租户'
+                            })
+                        }
+                    }
+                    
+                 }
+            });   
+    }
+
+
+getmyDate() {
+    var date = new Date();
+    var year = date.getFullYear().toString();
+    var month = (date.getMonth()+1).toString();
+    var day = date.getDate().toString();
+    return year+'/'+month+'/'+day;
+}
+
 
     componentDidMount()
     {
@@ -56,16 +179,27 @@ class Main extends React.Component {
       const city = this.state.city;
       const communityInfo = this.state.communityInfo; 
       const communityId = this.state.communityId;
-      return <View>
-          <CommunityInfo info = {communityInfo} id = {communityId} press={()=>this.goCreateCommunityOrShowCommunityInformation()}/>
-        <View>
+      const communityMember = this.state.communityMember;
+      return <ScrollView>
+        <View style={{backgroundColor:'skyblue',height:100}}>
+            <View style={{flexDirection:'row'}}>
+                <Text>社区: </Text>
+                <Text onPress={()=>this.goCreateCommunityOrShowCommunityInformation()}>{communityInfo}</Text>
+            </View>  
+            <View style={{flexDirection:'row'}}>
+                <Text>职责: </Text>
+                <Text>{communityMember}</Text>
+            </View>
+        </View>  
+        <View style={{flexDirection:'row',flexWrap:'wrap-reverse',alignContent:'space-around'}}>
           <Location message = {message} city = {city}/>
           <HealthCode press={()=>this.showHealthCode()}/>
-        </View>
           <Card press = {()=>this.card()}/>
           <Text style={style.community_info} onPress={()=>{this.qrcode()}}>扫描二维码</Text>
           <Text style={style.community_info} onPress={()=>{this.showInfo()}}>疫情</Text>
-      </View>
+        </View>
+          
+      </ScrollView>
     }
 
     //打卡
@@ -89,7 +223,9 @@ class Main extends React.Component {
 
     goCreateCommunityOrShowCommunityInformation(){
         console.log("设置社区");
-        this.navigation.navigate('user',{itemId:11,key:'JoinCommunity'});
+        if(Config.apply_for_name == null){
+            this.navigation.navigate('user',{itemId:11,key:'JoinCommunity'});
+        }
     }
 }
 
@@ -104,7 +240,7 @@ function CommunityInfo(props){
 }
 
 function Location(props){
-    return <Text onPress={props.press} style = {style.location}>{"当前位置为："+props.city}</Text>;
+    return <Text onPress={props.press} style = {style.location}>{""+props.city}</Text>;
 }
 
 function HealthCode(props){
@@ -118,34 +254,31 @@ function Card(props){
 const style = StyleSheet.create({
     community_info:{
       height:100,
-      marginLeft:20,
-      marginRight:20,
-      marginTop:20,
-      fontSize:20,
+      width:100,
       textAlignVertical: 'center',
-      backgroundColor:'yellow'
+      backgroundColor:'skyblue',
+      color:'white',
     },
     location:{
        height:100,
-       fontSize:20,
+       width:100,
+       backgroundColor:'skyblue',
+       color:'white',
        textAlignVertical: 'center',
-       backgroundColor:'green',
-       margin:20
     },
     health_code:{
         height:100,
-        fontSize:20,
-        marginLeft:20,
+        width:100,
+        backgroundColor:'skyblue',
+       color:'white',
         textAlignVertical: 'center',
-        marginRight:20,
-        backgroundColor:'red',
     },
     card:{
         height:100,
-        fontSize:20,
+        width:100,
+        backgroundColor:'skyblue',
+       color:'white',
         textAlignVertical: 'center',
-        backgroundColor:'blue',
-        margin:20
     }
   });
 

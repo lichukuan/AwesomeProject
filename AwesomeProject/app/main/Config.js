@@ -11,11 +11,17 @@ export default class Config{
    static LOGIN_USER_ID = null;
    static SESSION_TOKEN = null;
    static JOINED_USER_COMMUNITY_ID = null;
+   static authentication = false;
+   static apply_for_id = null;
+   static apply_for_name = null;
+   static joined_id = null;
+   static joined_name = null;
    
    static BMOB_APP_ID = '6ff9c68a13e661734e423db5c32da5e8';
    static REST_API_ID = 'b1af538d4e7e039a876546bdc8cd121b';
 
    static json_ip_data = null;
    static json_epidemic_data = null;
-   
+   static user = null;
+   static apply_state = null;//申请状态
 }

@@ -13,15 +13,11 @@ import {
 class QrCodeShow extends React.Component{
 
 
-  downloadQrcode(){
-     console.log('下载二维码');
-  }
-
    render(){
        return (
         <View style={style.parent}>
          <QRCode value={"This is a QR code string, string cannot be null"} size={300} />
-         <Button title = '下载二维码' onPress={()=>{this.downloadQrcode()}}></Button>
+         <View style={{height:20}}></View>
         </View>   
        )
    }

@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 
-import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View} from "react-native";
-import Config from "../../Config";
-export default class ApplyForJoinCommunityList extends React.Component {
+import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View,TouchableHighlight, Button} from "react-native";
+import Config from "../Config";
+var that;
+export default class CommunityMember extends React.Component {
 
     static navigationOptions = {
         title: '申请列表项',
@@ -17,11 +18,13 @@ export default class ApplyForJoinCommunityList extends React.Component {
             data: [],
             loaded: false
         };
+        console.log(props);
         // 在ES6中，如果在自定义的函数里使用了this关键字，则需要对其进行“绑定”操作，否则this的指向会变为空
         // 像下面这行代码一样，在constructor中使用bind是其中一种做法（还有一些其他做法，如使用箭头函数等）
-        this.fetchData = this.fetchData.bind(this);
-        Config.JOINED_USER_COMMUNITY_ID = '7f2a5c2d-c970-4ff4-a9a1-d80bd4dda15a';
-    }
+        //this.fetchData = this.fetchData.bind(this);
+        that = this;
+        this.navigation=props.navigation;   
+     }
 
     componentDidMount() {
         this.fetchData();
@@ -29,8 +32,10 @@ export default class ApplyForJoinCommunityList extends React.Component {
     }
 
     fetchData() {
-            const url = 'https://api2.bmob.cn/1/classes/_User?where='+JSON.stringify({
-                  apply_for_id:Config.JOINED_USER_COMMUNITY_ID
+            const commitId = Config.user.create_community_id;
+            const url = 'https://api2.bmob.cn/1/classes/CmmunityMember?where='+JSON.stringify({
+                  state:'agree',
+                  community_id:commitId
             });
             var fetchOptions = {
                 method: 'GET',
@@ -49,7 +54,6 @@ export default class ApplyForJoinCommunityList extends React.Component {
                     data: data.results,
                     loaded: true
                 });
-                //this.navigation.goBack();    
             }).done();        
     }
 
@@ -64,34 +68,39 @@ export default class ApplyForJoinCommunityList extends React.Component {
     static renderMovie({item}) {
         // { item }是一种“解构”写法，请阅读ES2015语法的相关文档
         // item也是FlatList中固定的参数名，请阅读FlatList的相关文档
-
         return (
-            <View style={styles.container} onPress = {()=>{this.click(item)}}>
+            <TouchableHighlight  onPress={()=>{that.click(item)}}>
+                <View style={styles.container}>
                 <Image
                     source={require('../../images/icon.jpg')}
                     style={styles.thumbnail}/>
                 <View style={styles.rightContainer}>
-                    <Text style={styles.title}>{item.username}</Text>
+                    <Text style={styles.title}>{item.user_name}</Text>
                     <Text style={styles.title}>{item.updatedAt}</Text>
                 </View>
-            </View>
+                <Button title='删除'></Button>
+                </View>
+            </TouchableHighlight>
         );
     }
 
     click(item){
-       
+       console.log("item==============");
+       console.log(item);
+    //    DeviceEventEmitter.emit(Config.USER_FRAGMENT_COMMUNITY_CHANGE,'ApplyForJoinCommunityNumberinfor');
+     //  this.navigation.navigate('info',{value:item});
     }
 
     render() {
         if (!this.state.loaded) {
-            return ApplyForJoinCommunityList.renderLoadingView();
+            return CommunityMember.renderLoadingView();
         }
 
         return (
             <FlatList
                 data={this.state.data}
                 ItemSeparatorComponent={ItemDivideComponent}
-                renderItem={ApplyForJoinCommunityList.renderMovie}
+                renderItem={CommunityMember.renderMovie}
                 style={styles.list}
                 keyExtractor={(item, index) => item.objectId}
             />

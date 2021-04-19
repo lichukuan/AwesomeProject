@@ -18,11 +18,11 @@ class CommunityManager extends React.Component{
 
     render(){
         return (
-            <View style={style.parent}>
+            <View style={{margin:10}}>
                 <Button onPress={()=>{this.createCommunity()}} style={style.item} title="创建社区"></Button>
-                <Button onPress={()=>{this.toUserCommunity()}} style={style.item} title="我的社区"></Button>
-                <Button onPress={()=>{this.joinCommunity()}} style={style.item} title="加入社区"></Button>
-            </View>
+                <Button onPress={()=>{this.toUserCommunity()}} style={style.item1} title="我的社区"></Button>
+                <Button onPress={()=>{this.joinCommunity()}} style={style.item2}  title="加入社区"></Button>
+              </View>           
         );
     }
 
@@ -44,10 +44,16 @@ class CommunityManager extends React.Component{
 }
 //Button的样式无效
 const style = StyleSheet.create({
-    parent:{
-    },
     item:{
-        height:50,
+        height:100,
+        backgroundColor:'skyblue'
+    },
+    item1:{
+        flex:2,
+        backgroundColor:'skyblue'
+    },
+    item2:{
+        flex:3,
         backgroundColor:'skyblue'
     }
 });

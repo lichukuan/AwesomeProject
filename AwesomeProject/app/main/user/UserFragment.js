@@ -17,6 +17,7 @@ import ApplyForJoinCommunityNumberinfor from './ApplyForJoinCommunityNumberinfor
 import ApplyForJoinCommunityList from "./ApplyForJoinCommunityList";
 import EpidemicCheck from "../Epidemic/EpidemicCheck";
 import EpidemicSelect from "../Epidemic/EpidemicSelect";
+import CommunityMember from './CommunityMember'
   // const UserStack = createStackNavigator();
   export default function UserFragment({navigation,route}) {
     const {itemId,key} = route.params;
@@ -38,12 +39,16 @@ import EpidemicSelect from "../Epidemic/EpidemicSelect";
     }else if(key == 'JoinCommunity'){
       page =  <JoinCommunity />;
     }else if(key == 'UserCommunity'){
-      page = <UserCommunity />;
+      page = <UserCommunity navigation={navigation}/>;
     }else if(key == 'ApplyForJoinCommunityList'){
-      page = <ApplyForJoinCommunityList />
+      page = <ApplyForJoinCommunityList navigation={navigation}/>
     }else if(key == 'ApplyForJoinCommunityNumberinfor'){
       page = <ApplyForJoinCommunityNumberinfor />
-    }else{
+    }else if(key == 'QrCodeShow'){
+      page = <QrCodeShow/>
+    }else if(key == 'CommunityMember'){
+      page = <CommunityMember navigation={navigation}/>
+    }else{ 
       console.log('key = '+key);
     }
     if(key == 'select'){

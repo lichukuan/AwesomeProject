@@ -10,6 +10,7 @@ import {
   StatusBar,
 } from 'react-native';
 import Config from '../Config';
+var that;
 class JoinCommunity extends React.Component{
     constructor(props){
         super(props);
@@ -17,9 +18,7 @@ class JoinCommunity extends React.Component{
             name:null,
             id:null
         }
-        Config.LOGIN_USER_NAME = '123'
-        Config.LOGIN_USER_ID = '8e9c025932'
-        Config.SESSION_TOKEN = '8c39a6eb40c0ec0480047a714acc8bfd'
+        that = this;
     }
 
     render(){
@@ -42,13 +41,60 @@ class JoinCommunity extends React.Component{
     }
 
     requestJoin(){
+
+        const commitId = Config.user.create_community_id;
+        const url = 'https://api2.bmob.cn/1/classes/CmmunityMember?where='+JSON.stringify({
+              community_id:commitId
+        });
+        var fetchOptions = {
+            method: 'GET',
+            headers: {
+            'X-Bmob-Application-Id': Config.BMOB_APP_ID,
+            'X-Bmob-REST-API-Key': Config.REST_API_ID,
+            'Content-Type': 'application/json'
+            }
+        };
+        fetch(url, fetchOptions)
+        .then((response) => response.text())
+        .then((responseData) => {
+            console.log("获取的申请为："+responseData);
+            const data = JSON.parse(responseData);
+            if(data.results.length > 0)
+                that.saveData(data.results[0].objectId);
+            else
+                that.saveData(null); 
+        }).done();     
+    }
+
+    deleteOld(objectId){
+     if(objectId != null){
+
+        const url = 'https://api2.bmob.cn/1/classes/CmmunityMember/'+objectId
+        var fetchOptions = {
+            method: 'DELETE',
+            headers: {
+            'X-Bmob-Application-Id': Config.BMOB_APP_ID,
+            'X-Bmob-REST-API-Key': Config.REST_API_ID,
+            'Content-Type': 'application/json'
+            }
+        };
+        fetch(url, fetchOptions)
+        .then((response) => response.text())
+        .then((responseData) => {
+            console.log("获取的申请为："+responseData);
+        }).done();    
+     }
+    }
+
+    saveData(objectId){
+        that.deleteOld(objectId);
+        const user_name = Config.user.user_name;
+        const user_id = Config.user.user_id; 
         var name = this.state.name;
         var id = this.state.id;
-        name = '重庆邮电';
-        id = '7f2a5c2d-c970-4ff4-a9a1-d80bd4dda15a'
-        const url = 'https://api2.bmob.cn/1/classes/_User/'+Config.LOGIN_USER_ID;
+        const url = 'https://api2.bmob.cn/1/classes/CmmunityMember';
         var fetchOptions = {
-            method: 'PUT',
+            method: 'POST',
             headers: {
             'X-Bmob-Application-Id': Config.BMOB_APP_ID,
             'X-Bmob-REST-API-Key': Config.REST_API_ID,
@@ -56,8 +102,12 @@ class JoinCommunity extends React.Component{
             'X-Bmob-Session-Token':Config.SESSION_TOKEN
             },
             body: JSON.stringify({
-               apply_for_id:id,
-               apply_for_name:name
+               user_name:user_name,
+               user_id:user_id,
+               community_user_id:user_id,
+               community_id:id,
+               community_name:name,
+               state:'request'
             })
         };
         fetch(url, fetchOptions)

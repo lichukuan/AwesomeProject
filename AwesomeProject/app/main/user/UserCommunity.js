@@ -7,6 +7,7 @@ import {
   TextInput,
   Button,
   Text,
+  DeviceEventEmitter,
   StatusBar,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -23,10 +24,11 @@ class UserCommunity extends React.Component{
             number:0,
             create_name:null,
             create_id:null,
-            objectId:null
+            objectId:null,
+            create_phone:null
         }
+        this.navigation = props.navigation;
         that = this;
-        Config.JOINED_USER_COMMUNITY_ID = '628d0dcf-6f21-47e5-b005-1d24b4cee247';
     }
 
     render(){
@@ -34,12 +36,30 @@ class UserCommunity extends React.Component{
         const id = this.state.id;
         const number = this.state.number;
         return (
-            <View style={style.parent}>
-                <Text style={style.item}>{name}</Text>
-                <Text  style={style.item}>{id}</Text>
-                <Text  style={style.item} onPress={()=>{this.showCommunityMember()}}>社区人数：{number}</Text>
-                <Text  style={style.item} onPress={()=>{this.showQRCode()}}>出入二维码</Text>
-                <Button style={style.item} onPress={()=>{this.deleteCommunity()}} title="删除社区"></Button>
+            <View>
+                <View style={{flexDirection:'row',height:40,margin:10}}>
+                     <Text>社区名: </Text>
+                     <Text >{name}</Text>
+                </View>
+                <View style={{flexDirection:'row',height:40,margin:10}}>
+                     <Text>社区ID: </Text>
+                     <Text >{id}</Text>
+                </View>
+                <View style={{flexDirection:'row',height:40,margin:10}}>
+                     <Text>管理员姓名: </Text>
+                     <Text>{this.state.create_name}</Text>
+                </View>
+                <View style={{flexDirection:'row',height:40,margin:10}}>
+                     <Text>管理员电话: </Text>
+                     <Text>{this.state.create_phone}</Text>
+                </View>
+                <View style={{flexDirection:'row',height:40,margin:10}}>
+                     <Button title="出入二维码"  onPress={()=>{this.showQRCode()}}></Button>
+                     <Text style={{width:20}}></Text>
+                     <Button title=" 社区人员 " onPress={()=>{this.showCommunityMember()}}></Button>
+                     <Text style={{width:20}}></Text>
+                     <Button title=' 申请列表 ' onPress={()=>{this.applyCommunityList()}}></Button>
+                </View>
             </View>
         );
     }
@@ -48,10 +68,17 @@ class UserCommunity extends React.Component{
         this.feedCommunityInfo();
     }
 
+
+    applyCommunityList(){
+        DeviceEventEmitter.emit(Config.USER_FRAGMENT_COMMUNITY_CHANGE,'ApplyForJoinCommunityList');
+    }
+
     feedCommunityInfo(){
-       const url = 'https://api2.bmob.cn/1/classes/Community?where='+JSON.stringify({
-           community_id:Config.JOINED_USER_COMMUNITY_ID
-       });
+       const communityId = Config.user.join_community_id; 
+       const param = JSON.stringify({
+        community_id:communityId
+       }); 
+       const url = 'https://api2.bmob.cn/1/classes/Community?where='+param;
        var fetchOptions = {
         method: 'GET',
         headers: {
@@ -65,14 +92,22 @@ class UserCommunity extends React.Component{
     .then((responseText) => {
         console.log(responseText);
         const data = JSON.parse(responseText);
+        
         that.setState({
             name:data.results[0].community_name,
             id:data.results[0].community_id,
             number:data.results[0].community_number,
             create_name:data.results[0].create_user_name,
             create_id:data.results[0].create_user_id,
+            create_phone:data.results[0].create_user_phone,
             objectId:data.results[0].objectId
         })
+        if(that.state.community_number == undefined ){
+            that.setState({
+                number:0
+            })
+        }
+        console.log(that.state.community_number);
         //this.navigation.goBack();    
     }).done();    
     }
@@ -100,22 +135,13 @@ class UserCommunity extends React.Component{
 
     showCommunityMember(){
       console.log('社区人员');
+      DeviceEventEmitter.emit(Config.USER_FRAGMENT_COMMUNITY_CHANGE,'CommunityMember');
     }
 
     showQRCode(){
       console.log('展示二维码');
+      this.navigation.navigate('user',{itemId:22,key:'QrCodeShow'});
     }
 }
-
-const style = StyleSheet.create({
-    parent:{
-        flex:1
-    },
-    item:{
-        height:100,
-        fontSize:20,
-        marginTop:20
-    }
-});
 
 export default UserCommunity;

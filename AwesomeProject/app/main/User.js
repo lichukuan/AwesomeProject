@@ -6,7 +6,8 @@ import {
   View,
   Text,
   Image,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  Button
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -22,8 +23,14 @@ export default class User extends React.Component {
     constructor(props){
       super(props);
       this.navigation = props.navigation;
-      this.state={
-          userName:null
+      if(Config.IS_LOGIN){
+        this.state = {
+            userName:Config.LOGIN_USER_NAME
+        }
+      }else{
+        this.state = {
+            userName:'无'
+        } 
       }
       that = this;
     }
@@ -48,25 +55,26 @@ export default class User extends React.Component {
     }
 
     render(){  
+       const title = Config.authentication?"已认证":"未认证" 
        return <View style={style.parent}>
            <View style = {style.header}>
                <Icon press = {() => this.navigation.navigate('user',{
                    itemId:1,
                    key:'Icon'})}/>
-               <Name name = {this.state.userName} press = {() => this.navigation.navigate('user',{
-                   itemId:2,
-                   key:'Name'})}/>
+              <View style={style.container}>
+                  <Name name = {this.state.userName} press = {() => this.navigation.navigate('user',{
+                         itemId:2,key:'Name'})}/>
+                  <Button title={title} style={style.authortion}></Button>
+              </View>
            </View>
            <View style={style.list}>
                <CommunityManager press = {() => this.navigation.navigate('user',{itemId:3,key:'CommunityManager'})}/>
-               <Setting press = {() => this.navigation.navigate('user',{itemId:4,key:'Setting'})}/>
                <NFC press = {() => this.navigation.navigate('user',{itemId:5,key:'NFC'})}/>
                <CheckUserID press = {() => this.navigation.navigate('user',{itemId:6,key:'CheckUserID'})}/>
-               <ApplyForJoinCommunityList press={() => this.navigation.navigate('user',{itemId:17,key:'ApplyForJoinCommunityList'})} />
+               <Setting press = {() => this.navigation.navigate('user',{itemId:4,key:'Setting'})}/>
            </View>
        </View>
     }
-
     
 }
 
@@ -86,10 +94,10 @@ const style = StyleSheet.create({
         borderRadius:50
         },
     name:{
-        height:100,
         fontSize:20,
         textAlignVertical: 'center',
-        marginLeft:20
+        marginLeft:20,
+        flex:1
     },
     list:{
         flex:10,
@@ -99,6 +107,14 @@ const style = StyleSheet.create({
         fontSize:20,
         color:'red',
         height:50
+    },
+    container:{
+        flex:1,
+        margin:10
+    },
+    authortion:{
+        flex:1,
+        backgroundColor:'red'
     }
 });
 
