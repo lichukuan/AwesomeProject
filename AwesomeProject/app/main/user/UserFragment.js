@@ -33,11 +33,11 @@ import CommunityMember from './CommunityMember'
     }else if(key == 'NFC'){
       page = <NFC />;
     }else if(key == 'CheckUserID'){
-      page = <CheckUserID />;
+      page = <CheckUserID navigation={navigation}/>;
     }else if(key == 'CreateCommunity'){
       page = <CreateCommunity />;
     }else if(key == 'JoinCommunity'){
-      page =  <JoinCommunity />;
+      page =  <JoinCommunity navigation={navigation}/>;
     }else if(key == 'UserCommunity'){
       page = <UserCommunity navigation={navigation}/>;
     }else if(key == 'ApplyForJoinCommunityList'){

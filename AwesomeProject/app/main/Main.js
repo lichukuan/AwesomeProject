@@ -109,7 +109,6 @@ class Main extends React.Component {
     }
 
     findCommunity(id,session,create_community_id){
-           
             var url = 'https://api2.bmob.cn/1/classes/CmmunityMember?where='+JSON.stringify({
                 user_id:id
             });
@@ -138,7 +137,7 @@ class Main extends React.Component {
                             communityInfo:'你加入'+userData.apply_for_name+'的申请已经被拒绝'
                         })
                     }else if(userData.state == 'agree'){
-                        Config.apply_for_id = userData.commuinty_id;
+                        Config.apply_for_id = userData.community_id;
                         Config.apply_for_name = userData.community_name;
                         Config.apply_state = userData.state;
                         that.setState({
@@ -195,7 +194,7 @@ getmyDate() {
           <Location message = {message} city = {city}/>
           <HealthCode press={()=>this.showHealthCode()}/>
           <Card press = {()=>this.card()}/>
-          <Text style={style.community_info} onPress={()=>{this.qrcode()}}>扫描二维码</Text>
+          <Text style={style.community_info} onPress={()=>{this.qrcode()}}>出入管理</Text>
           <Text style={style.community_info} onPress={()=>{this.showInfo()}}>疫情</Text>
         </View>
           
@@ -212,8 +211,8 @@ getmyDate() {
     }
 
     qrcode(){
-       console.log('扫描二维码');
-       this.navigation.navigate('home',{itemId:12,key:'ScanQrcode'});
+       console.log('出入管理');
+       this.navigation.navigate('出入管理');
     }
 
     showHealthCode(){

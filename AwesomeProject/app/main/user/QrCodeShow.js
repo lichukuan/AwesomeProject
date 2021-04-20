@@ -10,13 +10,19 @@ import {
   Text,
   StatusBar,
 } from 'react-native';
+import Config from '../Config';
 class QrCodeShow extends React.Component{
 
+   constructor(props){
+     super(props);
+     
+   }
 
    render(){
+       const value = Config.apply_for_id+'&'+Config.LOGIN_USER_ID;
        return (
         <View style={style.parent}>
-         <QRCode value={"This is a QR code string, string cannot be null"} size={300} />
+         <QRCode value={value} size={300} />
          <View style={{height:20}}></View>
         </View>   
        )

@@ -91,10 +91,6 @@ import {RNCamera} from 'react-native-camera';
 
 export default class ScanQrcode extends React.Component {
   
-  static navigationOptions = {
-    title: 'Scanner',
-  };
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -214,20 +210,21 @@ export default class ScanQrcode extends React.Component {
       if (e) {
         Vibration.vibrate([0, 500], false);
         let result = e.data;
-        Alert.alert(
-          '扫描成功',
-          '扫描结果：' + result,
-          [
-            {
-              text: '确定', onPress: () => {
-                this.setState({
-                  show: true
-                })
-              }
-            }
-          ],
-          {cancelable: false}
-        )
+        
+        // Alert.alert(
+        //   '扫描成功',
+        //   '扫描结果：' + result,
+        //   [
+        //     {
+        //       text: '确定', onPress: () => {
+        //         this.setState({
+        //           show: true
+        //         })
+        //       }
+        //     }
+        //   ],
+        //   {cancelable: false}
+        // )
       } else {
         Alert.alert(
           '提示',

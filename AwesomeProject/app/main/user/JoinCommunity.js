@@ -18,6 +18,7 @@ class JoinCommunity extends React.Component{
             name:null,
             id:null
         }
+        this.navigation = props.navigation;
         that = this;
     }
 
@@ -115,7 +116,7 @@ class JoinCommunity extends React.Component{
         .then((responseText) => {
             const data = JSON.parse(responseText);
             console.log(data);
-            //this.navigation.goBack();    
+            that.navigation.goBack();    
         }).done(); 
         console.log('创建社区');
     }

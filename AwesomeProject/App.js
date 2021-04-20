@@ -25,6 +25,10 @@ import ApplyForJoinCommunityNumberinfor from "./app/main/user/ApplyForJoinCommun
 import EpidemicSelect from "./app/main/Epidemic/EpidemicSelect";
 import EpidemicCheck from "./app/main/Epidemic/EpidemicCheck";
 import EpidemicFragment from "./app/main/Epidemic/EpidemicFragment";
+import OutAndInManager from './app/main/extrance/OutAndInManager'
+import Apply from './app/main/extrance/Apply'
+import OutAndInInfo from './app/main/extrance/OutAndInInfo'
+import ScanQrcode from './app/main/home/ScanQrcode'
 const Tab = createBottomTabNavigator();
 
 function MainFragment() {
@@ -70,7 +74,11 @@ export default class App extends React.Component {
                   <MainStack.Screen name="user" component={UserFragment} /> 
                   <MainStack.Screen name="home" component={HomeFragment} />
                   <MainStack.Screen name='疫情' component = {EpidemicSituation}/>
-                  <MainStack.Screen name="info" component = {ApplyForJoinCommunityNumberinfor}/>         
+                  <MainStack.Screen name="info" component = {ApplyForJoinCommunityNumberinfor}/>
+                  <MainStack.Screen name='出入管理' component = {OutAndInManager}/>   
+                  <MainStack.Screen name='出入申请' component={Apply}/>
+                  <MainStack.Screen name='出入详情'component={OutAndInInfo}/>
+                  <MainStack.Screen name='扫描二维码' component={ScanQrcode}/>      
               </MainStack.Navigator>      
             </NavigationContainer>
         );

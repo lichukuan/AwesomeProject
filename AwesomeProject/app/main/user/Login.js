@@ -35,6 +35,7 @@ class Login extends React.Component{
             <View>
                 <TextInput onChangeText={(text) => {this.setName(text)}} style={style.name} placeholder="请输入用户名"></TextInput>
                 <TextInput  onChangeText={(text) => {this.setPas(text)}} style={style.password} password = {true} placeholder="请输入密码" ></TextInput>
+                <TextInput  onChangeText={(text) => {this.setPas(text)}} style={style.password} password = {true} placeholder="请输入电话" ></TextInput>
                 <Button  onPress={()=>{this.register()}} style={style.button}  title="登录/注册"></Button>
             </View>
         );
@@ -48,10 +49,15 @@ class Login extends React.Component{
         this.setState({pas:data});
     }
 
+    setPhone(data){
+        this.setState({phone:data})
+    }
+
     register(){
         const  url = 'https://api2.bmob.cn/1/users';
         const name = this.state.name;
         const pas = this.state.pas+"";
+        const phone = this.state.phone;
         var fetchOptions = {
             method: 'POST',
             headers: {
@@ -61,7 +67,8 @@ class Login extends React.Component{
             },
             body: JSON.stringify({
                 username : name,
-                password : pas
+                password : pas,
+                mobilePhoneNumber:phone
             })
         };
         fetch(url, fetchOptions)

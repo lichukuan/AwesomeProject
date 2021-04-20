@@ -25,7 +25,8 @@ var  options = {
      path:  'images'
    }
 };
-
+let user_real_url = '';
+let user_id_url = '';
 class CheckUserID extends React.Component{
 
   constructor(props){
@@ -39,6 +40,7 @@ class CheckUserID extends React.Component{
         real_picture_url:null,
         id_card_picture_url:null
      }
+     this.navigation=props.navigation;   
      that = this;
   }
 
@@ -58,7 +60,7 @@ class CheckUserID extends React.Component{
              </View>
             <Image  source={real_picture_url} style={{marginTop:10,height:this.state.real_image_height}}></Image> 
             <Button title='上传真人相片' onPress={()=>{this.takeRealPicture()}} style={style.button}></Button>
-            <Image source={{uri:id_card_picture_url}} style={{marginTop:10,height:this.state.id_card_picture_url}}></Image>
+            <Image source={id_card_picture_url} style={{marginTop:10,height:this.state.id_image_height}}></Image>
             <Button title='上传身份证正面照' onPress={()=>{this.takeIDCardPicture()}} style={style.button}></Button>
             <View style={{height:10}}></View>
             <Button onPress={()=>{this.check()}} style={style.button}  title="认证"></Button>
@@ -73,7 +75,9 @@ class CheckUserID extends React.Component{
    }
 
    setAddress(data){
-
+      this.setState({
+        address:data
+      })
    }
    setCode(data){
       this.setState({code:data})
@@ -123,10 +127,26 @@ class CheckUserID extends React.Component{
         let source = { uri: response.uri };
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setState({
-          real_picture_url: source,
-          real_image_height:200
-        });
+        uploadImage(response)
+          .then( res=>{
+              //请求成功
+              const data = JSON.parse(res)
+              if(data.code === '200'){
+                  //这里设定服务器返回的header中statusCode为success时数据返回成功
+                  this.setState({
+                    real_picture_url: source,
+                    real_image_height:200
+                  });
+                  user_real_url = data.info;
+                  console.log('user_real_url = '+user_real_url);
+              }else{
+                   //服务器返回异常，设定服务器返回的异常信息保存在 header.msgArray[0].desc
+                  console.log(res);
+              }
+          }).catch( err => { 
+            console.log('uploadImage', err.message);
+               //请求失败
+          })
       }
     });
    }
@@ -148,10 +168,27 @@ class CheckUserID extends React.Component{
         let source = { uri: response.uri };
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setState({
-          id_card_picture_url: source,
-          id_image_height:200
-        });
+        
+
+        uploadImage(response)
+          .then( res=>{
+              //请求成功
+              const data = JSON.parse(res)
+              if(data.code === '200'){
+                  //这里设定服务器返回的header中statusCode为success时数据返回成功
+                  this.setState({
+                    id_card_picture_url: source,
+                    id_image_height:200
+                  });
+                  user_id_url = data.info;
+              }else{
+                   //服务器返回异常，设定服务器返回的异常信息保存在 header.msgArray[0].desc
+                  console.log(res);
+              }
+          }).catch( err => { 
+            console.log('uploadImage', err.message);
+               //请求失败
+          })
       }
     });
    }
@@ -177,16 +214,17 @@ class CheckUserID extends React.Component{
     .then((response) => response.text())
     .then((responseText) => {
         const data = JSON.parse(responseText);
-        console.log(data.msg);
+        console.log(data);
         if(data.msg == 'ok'){//电话验证通过
-          that.update(name,'http://cdn.lichukuan.club/044867399a124eb6a08c9cf7b8b2454d.jpg','http://cdn.lichukuan.club/0dc5ba9a-cd64-4765-b0ac-c4539622e6fc.jpg');
+          that.update(name);
         }else{
           console.log('电话验证失败');
         }
     }).done();    
    }
 
-   update(name,pic1,pic2){
+   update(name){
+     const address = this.state.address;
       const url = 'https://api2.bmob.cn/1/users/'+Config.LOGIN_USER_ID;
       var fetchOptions = {
         method: 'PUT',
@@ -197,23 +235,54 @@ class CheckUserID extends React.Component{
         'X-Bmob-Session-Token':Config.SESSION_TOKEN
         },
         body: JSON.stringify({
-           id_card_picture_url:pic1,
-           real_picture_url:pic2,
-           real_name:name
+           id_card_picture_url:user_id_url,
+           real_picture_url:user_real_url,
+           real_name:name,
+           address:address,
+           authentication:true
         })
     };
     fetch(url, fetchOptions)
     .then((response) => response.text())
     .then((responseText) => {
       console.log(responseText);
-        const data = JSON.parse(responseText);
-        console.log(data.msg);
-      
+        //const data = JSON.parse(responseText);
+        console.log(responseText);
+        that.navigation.goBack();
     }).done();    
    }
+
 }
 
 
+function uploadImage(params){
+  return new Promise(function (resolve, reject) {
+    const formData = new FormData();
+    const file = {
+          uri: params.uri,
+          type: params.type,
+          name:params.fileName,
+          size: params.fileSize,
+     };
+    formData.append('image', file);
+      //let file = {uri: params.path};
+      fetch('http://106.52.124.32:8088/uploadImg', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'multipart/form-data;',
+          },
+          body: formData,
+      }).then((response) => response.text())
+          .then((responseData)=> {
+              console.log('uploadImage', responseData);
+              resolve(responseData);
+          })
+          .catch((err)=> {
+              console.log('err', err);
+              reject(err);
+          });
+  });
+}
 
 const style = StyleSheet.create({
   parent:{
