@@ -88,14 +88,17 @@ import {
   Platform
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
-
+import { OutAndInApplyResult } from "../extrance/OutAndInApplyResult";
 export default class ScanQrcode extends React.Component {
   
   constructor(props) {
     super(props);
+    this.navigation = props.navigation;
     this.state = {
       show:true,
       animation: new Animated.Value(0),
+      value:props.route.params.value,
+      type:props.route.params.type
     };
   }
   
@@ -210,7 +213,12 @@ export default class ScanQrcode extends React.Component {
       if (e) {
         Vibration.vibrate([0, 500], false);
         let result = e.data;
-        
+        this.navigation.goBack();
+        this.navigation.navigate('出入结果',{
+          item:this.state.value,
+          type:this.state.type,
+          res:result
+        }) 
         // Alert.alert(
         //   '扫描成功',
         //   '扫描结果：' + result,

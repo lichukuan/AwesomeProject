@@ -80,11 +80,11 @@ class OutAndInInfo extends React.Component{
                    </View>
                    <View style={styles.item_container}>
                        <Text style={styles.item_left}>等待离开</Text>
-                       <Text style={{ fontSize:18,color:outColor}} onPress={()=>{this.scan()}}>{outRes}</Text>
+                       <Text style={{ fontSize:18,color:outColor}} onPress={()=>{this.scanOut()}}>{outRes}</Text>
                    </View>
                    <View style={styles.item_container}>
                        <Text style={styles.item_left}>等待返回</Text>
-                       <Text style={{ fontSize:18,color:inColor}} onPress={()=>{this.scan()}}>{inRes}</Text>
+                       <Text style={{ fontSize:18,color:inColor}} onPress={()=>{this.scanIn()}}>{inRes}</Text>
                    </View>
              </View>      
              <Text style={{height:50,textAlignVertical:'center',fontSize:20}}>申请详情</Text>
@@ -118,14 +118,18 @@ class OutAndInInfo extends React.Component{
         )
    }
 
-   scan(){
-      console.log('开始扫码');
-      const item = this.state.item;
-      if(item.request_state == 'agree' && isOut == false){//离开扫码
-          this.navigation.navigate('扫描二维码',{
-              type:'out'
-              ,value:item})
-      }else if(item.request_state == 'agree' && isIn == false){//返回扫码
+   scanOut(){
+    const item = this.state.item;
+    if(item.request_state == 'agree' && isOut == false){//离开扫码
+        this.navigation.navigate('扫描二维码',{
+            type:'out'
+            ,value:item})
+    }
+   }
+
+   scanIn(){
+    const item = this.state.item;
+    if(item.request_state == 'agree' &&isOut == true &&isIn == false){//返回扫码
         this.navigation.navigate('扫描二维码',{
             type:'in'
             ,value:item})

@@ -29,6 +29,9 @@ import OutAndInManager from './app/main/extrance/OutAndInManager'
 import Apply from './app/main/extrance/Apply'
 import OutAndInInfo from './app/main/extrance/OutAndInInfo'
 import ScanQrcode from './app/main/home/ScanQrcode'
+import OutAndInApplyResult from "./app/main/extrance/OutAndInApplyResult";
+import LeaveList from "./app/main/extrance/LeaveList";
+import OutAndInErrorList from "./app/main/extrance/OutAndInErrorList";
 const Tab = createBottomTabNavigator();
 
 function MainFragment() {
@@ -78,7 +81,10 @@ export default class App extends React.Component {
                   <MainStack.Screen name='出入管理' component = {OutAndInManager}/>   
                   <MainStack.Screen name='出入申请' component={Apply}/>
                   <MainStack.Screen name='出入详情'component={OutAndInInfo}/>
-                  <MainStack.Screen name='扫描二维码' component={ScanQrcode}/>      
+                  <MainStack.Screen name='扫描二维码' component={ScanQrcode}/>  
+                  <MainStack.Screen name='出入结果' component={OutAndInApplyResult}/>    
+                  <MainStack.Screen name='请假列表' component={LeaveList}/>
+                  <MainStack.Screen name='出入异常列表' component={OutAndInErrorList}/>
               </MainStack.Navigator>      
             </NavigationContainer>
         );

@@ -60,8 +60,24 @@ class UserCommunity extends React.Component{
                      <Text style={{width:20}}></Text>
                      <Button title=' 申请列表 ' onPress={()=>{this.applyCommunityList()}}></Button>
                 </View>
+                <View style={{flexDirection:'row',height:40,margin:10}}>
+                     <Button title="请假列表"  onPress={()=>{this.askForLeave()}}></Button>
+                     <Text style={{width:20}}></Text>
+                     <Button title="出入异常列表" onPress={()=>{this.errorList()}}></Button>
+                     <Text style={{width:20}}></Text>
+                     <Button title='体温异常列表' onPress={()=>{this.applyCommunityList()}}></Button>
+                </View>
             </View>
         );
+    }
+
+    askForLeave(){
+        this.navigation.navigate('请假列表')
+    }
+
+    errorList(){
+        //OutAndInErrorList
+        this.navigation.navigate('出入异常列表')
     }
 
     componentDidMount(){

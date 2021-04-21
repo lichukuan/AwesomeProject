@@ -1,3 +1,4 @@
+//健康打卡
 import React from 'react';
 import {
   SafeAreaView,
@@ -17,7 +18,7 @@ import Config from '../Config';
 var that = null;
 const default_type = '请选择'
 
-class Apply extends React.Component{
+class HealthCard extends React.Component{
 
   constructor(props){
      super(props);
@@ -230,4 +231,4 @@ const style = StyleSheet.create({
 });
 
 
-export default Apply;
+export default HealthCard;
