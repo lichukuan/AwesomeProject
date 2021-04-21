@@ -32,6 +32,7 @@ import ScanQrcode from './app/main/home/ScanQrcode'
 import OutAndInApplyResult from "./app/main/extrance/OutAndInApplyResult";
 import LeaveList from "./app/main/extrance/LeaveList";
 import OutAndInErrorList from "./app/main/extrance/OutAndInErrorList";
+import HealthCard from './app/main/health/HealthCard'
 const Tab = createBottomTabNavigator();
 
 function MainFragment() {
@@ -76,7 +77,7 @@ export default class App extends React.Component {
                   <MainStack.Screen name="首页"  component={MainFragment}/>
                   <MainStack.Screen name="user" component={UserFragment} /> 
                   <MainStack.Screen name="home" component={HomeFragment} />
-                  <MainStack.Screen name='疫情' component = {EpidemicSituation}/>
+                  <MainStack.Screen name='当前疫情' component = {EpidemicSituation}/>
                   <MainStack.Screen name="info" component = {ApplyForJoinCommunityNumberinfor}/>
                   <MainStack.Screen name='出入管理' component = {OutAndInManager}/>   
                   <MainStack.Screen name='出入申请' component={Apply}/>
@@ -85,6 +86,7 @@ export default class App extends React.Component {
                   <MainStack.Screen name='出入结果' component={OutAndInApplyResult}/>    
                   <MainStack.Screen name='请假列表' component={LeaveList}/>
                   <MainStack.Screen name='出入异常列表' component={OutAndInErrorList}/>
+                  <MainStack.Screen name='健康打卡' component={HealthCard}/>
               </MainStack.Navigator>      
             </NavigationContainer>
         );

@@ -203,11 +203,11 @@ getmyDate() {
 
     //打卡
     card(){
-         this.navigation.navigate('home',{itemId:10,key:'CardHealth'});
+         this.navigation.navigate('健康打卡');
     }
 
     showInfo(){
-        this.navigation.navigate('epide',{itemId:10,key:'epide'});
+        this.navigation.navigate('当前疫情');
     }
 
     qrcode(){
