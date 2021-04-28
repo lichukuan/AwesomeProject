@@ -5,7 +5,9 @@ import {
   ScrollView,
   View,
   Text,
-  StatusBar
+  StatusBar,
+  TouchableHighlight,
+  Image
 } from 'react-native';
 import DeviceStorage from './storage/DeviceStorage';
 import Key from "./storage/Keys";
@@ -179,23 +181,53 @@ getmyDate() {
       const communityInfo = this.state.communityInfo; 
       const communityId = this.state.communityId;
       const communityMember = this.state.communityMember;
-      return <ScrollView>
-        <View style={{backgroundColor:'skyblue',height:100}}>
-            <View style={{flexDirection:'row'}}>
+      return <ScrollView style={{}}>
+        <View style={{flexDirection:'row',backgroundColor:'#F6F6F6',height:70,alignItems:'center'}}>
+              <Text style={{backgroundColor:'white',height:40,borderRadius:20,textAlignVertical:'center',paddingLeft:20,marginLeft:10,marginRight:10,flex:1}}>搜索社区</Text> 
+              <Image source={require('../images/sao.png')} style={{height:35,width:35,marginRight:10}}></Image>
+        </View>  
+        <View style={{margin:10,marginTop:0}}>
+        <Image style={{backgroundColor:'skyblue',height:200,width:'100%',marginRight:10}} source={require('../images/community_bag.jpg')}>
+        </Image >
+        {/* <View style={{flexDirection:'row'}} >
                 <Text>社区: </Text>
                 <Text onPress={()=>this.goCreateCommunityOrShowCommunityInformation()}>{communityInfo}</Text>
             </View>  
             <View style={{flexDirection:'row'}}>
                 <Text>职责: </Text>
                 <Text>{communityMember}</Text>
+            
+        </View>   */}
+        
+
+            <View style={style.item_container}>
+                    <Text style={style.item_left}>社区</Text>
+                    <Text style={{fontSize:18,color:'black'}} onPress={()=>this.goCreateCommunityOrShowCommunityInformation()}>{communityInfo}</Text>
+            </View>    
+            <View style={style.item_container}>
+                    <Text style={style.item_left}>职责</Text>
+                    <Text style={{fontSize:18,color:'black'}}>{communityMember}</Text>
+            </View>    
+            <View style={style.item_container}>
+                    <Text style={style.item_left}>位置</Text>
+                    <Text style={{fontSize:18,color:'black'}}>{city}</Text>
             </View>
-        </View>  
-        <View style={{flexDirection:'row',flexWrap:'wrap-reverse',alignContent:'space-around'}}>
-          <Location message = {message} city = {city}/>
-          <HealthCode press={()=>this.showHealthCode()}/>
-          <Card press = {()=>this.card()}/>
-          <Text style={style.community_info} onPress={()=>{this.qrcode()}}>出入管理</Text>
-          <Text style={style.community_info} onPress={()=>{this.showInfo()}}>疫情</Text>
+            <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.showInfo()}}>
+                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>疫情</Text>
+            </TouchableHighlight>
+            <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.card()}}>
+                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>打卡</Text>
+            </TouchableHighlight>
+            <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.showHealthCode()}}>
+                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>健康码</Text>
+            </TouchableHighlight>
+            <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.qrcode()}}>
+                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>出入管理</Text>
+            </TouchableHighlight>
         </View>
           
       </ScrollView>
@@ -278,6 +310,26 @@ const style = StyleSheet.create({
         backgroundColor:'skyblue',
        color:'white',
         textAlignVertical: 'center',
+    },
+    item_container:{
+        flex:1,
+        flexDirection:'row',
+        marginVertical:5
+     },
+     item_left:{
+         flex:1,fontSize:18,
+         color:'gray'
+     },
+     item_right:{
+         fontSize:18,
+         color:'gray'
+     },
+     item:{
+        height:50,
+        borderColor:'white',
+        borderWidth:2,
+        marginTop:10,
+        backgroundColor:'skyblue'
     }
   });
 

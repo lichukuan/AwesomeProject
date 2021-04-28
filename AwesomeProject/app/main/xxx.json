@@ -1,10 +1,29 @@
 {
-    "value": {
-        "address": "205",
-        "apply_for_id": "7f2a5c2d-c970-4ff4-a9a1-d80bd4dda15a",
-        "apply_for_name": "重庆邮电大学",
-        "authentication": true,
-        "createdAt": "2021-04-18 13:35:01",
-        "id_card_picture_url": "http://cdn.lichukuan.club/006f458e73b04178bdf2cd4090ee67c8.jpg
-", "mobilePhoneNumber": "12345678910", "mobilePhoneNumberVerified": false, "objectId": "13dqOOOj", "real_name": "lck", "real_picture_url": "http: //cdn.lichukuan.club/006f458e73b04178bdf2cd4090ee67c8.jpg
-", "updatedAt": "2021-04-18 16: 54: 21", "username": "test"}}
+    "reqId": 16195944179793018,
+    "code": 10000,
+    "msg": "成功",
+    "data": {
+        "items": [
+            {
+                "cityId": "500000",
+                "city": "重庆",
+                "leavePolicyDate": "2021年1月8日",
+                "backPolicyDate": "2021年1月27日",
+                "poiList": [],
+                "leavePolicyList": [
+                    "当地暂无最新官方政策发布，若有，会第一时间更新。"
+                ],
+                "backPolicyList": [
+                    "\r",
+                    "\r",
+                    "低风险地区的人员只需健康码绿码，体温检测正常即可正常通行。\r",
+                    ""
+                ],
+                "stayInfoList": [
+                    "暂无消息，建议咨询住宿酒店前台"
+                ]
+            }
+        ]
+    },
+    "timestamp": 1619594417979
+}

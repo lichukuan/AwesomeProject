@@ -32,10 +32,10 @@ class Login extends React.Component{
 
     render(){
         return (
-            <View>
+            <View style={{margin:10}}>
                 <TextInput onChangeText={(text) => {this.setName(text)}} style={style.name} placeholder="请输入用户名"></TextInput>
-                <TextInput  onChangeText={(text) => {this.setPas(text)}} style={style.password} password = {true} placeholder="请输入密码" ></TextInput>
-                <TextInput  onChangeText={(text) => {this.setPas(text)}} style={style.password} password = {true} placeholder="请输入电话" ></TextInput>
+                <TextInput  onChangeText={(text) => {this.setPas(text)}} style={style.name} password = {true} placeholder="请输入密码" ></TextInput>
+                <TextInput  onChangeText={(text) => {this.setPhone(text)}} style={style.password} password = {true} placeholder="请输入电话" ></TextInput>
                 <Button  onPress={()=>{this.register()}} style={style.button}  title="登录/注册"></Button>
             </View>
         );
@@ -149,7 +149,10 @@ class Login extends React.Component{
 
 const style = StyleSheet.create({
     name:{
-        height:50
+        height:50,
+        borderColor:'skyblue',
+        borderWidth:1,
+        marginTop:10
     },
     password:{
         height:50,

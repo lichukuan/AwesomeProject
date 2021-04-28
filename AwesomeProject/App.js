@@ -33,21 +33,33 @@ import OutAndInApplyResult from "./app/main/extrance/OutAndInApplyResult";
 import LeaveList from "./app/main/extrance/LeaveList";
 import OutAndInErrorList from "./app/main/extrance/OutAndInErrorList";
 import HealthCard from './app/main/health/HealthCard'
-const Tab = createBottomTabNavigator();
 
+const Tab = createBottomTabNavigator();
+let that = null;
 function MainFragment() {
-    return ( <Tab.Navigator >
+    return ( <Tab.Navigator 
+
+        screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+            //   let iconName;
+              return <Text style={{paddingTop:10,fontSize:20,color:color}}>{route.name}</Text>;
+            },
+
+          })}
+
+          
+    >
         <Tab.Screen name = "首页"
         component = { Main }
         options = {
-            { title: "首页" }
+            { title: "" }
         }
         /> 
         
         <Tab.Screen name = "用户"
         component = { User }
         options = {
-            { title: "用户" }
+            { title: "" }
         }/> 
         </Tab.Navigator >
     );
@@ -56,6 +68,14 @@ function MainFragment() {
 const MainStack = createStackNavigator();
 
 export default class App extends React.Component {
+
+   constructor(props){
+       super(props);
+       that = this;
+       this.state = {
+           title:"首页"
+       }
+   }
 
     componentDidMount() {
         AsyncStorage.getItem(Key.user_class).then((value) => {
@@ -71,10 +91,22 @@ export default class App extends React.Component {
     }
 
     render() {
+        const v = this.state.title;
         return (
-            <NavigationContainer>
+            <NavigationContainer
+            >
               <MainStack.Navigator>
-                  <MainStack.Screen name="首页"  component={MainFragment}/>
+                  <MainStack.Screen
+                  options={
+                      {
+                          title:"",
+                          headerStyle:{
+                              height:0
+                          }
+                      }
+                      
+                  }
+                  name="首页"  component={MainFragment}/>
                   <MainStack.Screen name="user" component={UserFragment} /> 
                   <MainStack.Screen name="home" component={HomeFragment} />
                   <MainStack.Screen name='当前疫情' component = {EpidemicSituation}/>

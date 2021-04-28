@@ -7,6 +7,7 @@ import {
   Text,
   Image,
   DeviceEventEmitter,
+  TouchableHighlight,
   Button
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,7 +30,7 @@ export default class User extends React.Component {
         }
       }else{
         this.state = {
-            userName:'无'
+            userName:'请输入用户名'
         } 
       }
       that = this;
@@ -56,7 +57,7 @@ export default class User extends React.Component {
 
     render(){  
        const title = Config.authentication?"已认证":"未认证" 
-       return <View style={style.parent}>
+       return <ScrollView style={style.parent}>
            <View style = {style.header}>
                <Icon press = {() => this.navigation.navigate('user',{
                    itemId:1,
@@ -64,7 +65,7 @@ export default class User extends React.Component {
               <View style={style.container}>
                   <Name name = {this.state.userName} press = {() => this.navigation.navigate('user',{
                          itemId:2,key:'Name'})}/>
-                  <Button title={title} style={style.authortion}></Button>
+                  <Text style={style.authortion}>{title}</Text>
               </View>
            </View>
            <View style={style.list}>
@@ -72,49 +73,64 @@ export default class User extends React.Component {
                <NFC press = {() => this.navigation.navigate('user',{itemId:5,key:'NFC'})}/>
                <CheckUserID press = {() => this.navigation.navigate('user',{itemId:6,key:'CheckUserID'})}/>
                <Setting press = {() => this.navigation.navigate('user',{itemId:4,key:'Setting'})}/>
+               <Text style={style.list_item}>关于应用</Text>
+               <Text style={style.list_item}>意见与反馈</Text>
            </View>
-       </View>
+
+           <View style={{marginTop:20,flex:1,justifyContent:'center',flex:1,alignContent:'center'}}>
+               <TouchableHighlight  activeOpacity={0.6} underlayColor="#DDDDDD" style={{height:50,width:200,borderRadius:25,marginLeft:'20%'}} onPress={()=>{}}>
+                       <Text style={style.login}>马上登录</Text>
+               </TouchableHighlight>
+           </View>
+           
+       </ScrollView>
     }
     
 }
 
 const style = StyleSheet.create({
     parent:{
-        flex:1,
         flexDirection:'column',
-        margin:20
+        padding:20,
+        paddingTop:40,
+        height:500
         },
     header:{
-        flex:2,
         flexDirection:'row'
     },
     icon:{
-        width:100,
-        height:100,
-        borderRadius:50
+        width:70,
+        height:70,
+        borderRadius:35
         },
     name:{
-        fontSize:20,
+        fontSize:25,
         textAlignVertical: 'center',
         marginLeft:20,
-        flex:1
+        marginTop:5
     },
     list:{
-        flex:10,
+        marginTop:20,
         flexDirection:'column'
         },
     list_item:{
         fontSize:20,
-        color:'red',
         height:50
     },
     container:{
         flex:1,
-        margin:10
     },
     authortion:{
-        flex:1,
-        backgroundColor:'red'
+        borderColor:'skyblue',
+        color:'red',
+        borderWidth:1,
+        marginLeft:20,
+        width:50,
+        paddingLeft:3
+    },
+    login:{
+        fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:50,backgroundColor:'skyblue',
+        width:200,borderRadius:25,alignContent:'center',alignItems:'center'
     }
 });
 
@@ -126,14 +142,14 @@ function Icon(props) {
     }else{
         url = props.url;   
     }
-    return <Image source={{uri: url}}
+    return <Image source={require('../images/defacult_icon.png')}
     style={style.icon}/>
 }
 
 function Name(params) {
     let name = null;
     if(params == null || params.name == null){
-        name = "点击登录"
+        name = "请填写用户名"
     }else{
         name = params.name;
     }

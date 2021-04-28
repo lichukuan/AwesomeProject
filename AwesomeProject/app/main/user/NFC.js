@@ -43,6 +43,8 @@ function readNdef() {
   return new Promise((resolve) => {
     let tagFound = null;
     NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
+      console.log("tag============");
+      console.log(log);
       tagFound = tag;
       resolve(tagFound);
       NfcManager.setAlertMessageIOS('NDEF tag found');

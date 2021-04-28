@@ -24,4 +24,7 @@ export default class Config{
    static json_epidemic_data = null;
    static user = null;
    static apply_state = null;//申请状态
+
+   static city = '';
+   static city_code = 0;
 }
