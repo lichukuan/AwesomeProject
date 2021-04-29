@@ -44,6 +44,7 @@ class OutAndInApplyResult extends React.Component{
               updateData();
            }else{
               applyRes = '时间超时'
+              updateErrorData();
            }
        }
        //返回时间超时
@@ -54,6 +55,7 @@ class OutAndInApplyResult extends React.Component{
            updateData();
         }else{
            applyRes = '时间超时'
+           updateErrorData();
         }
        }
        return (
@@ -94,7 +96,37 @@ class OutAndInApplyResult extends React.Component{
         'Content-Type': 'application/json'
         },
         body:JSON.stringify({
-            state:state,//出入状态,wait_out wait_in
+            state:state,//出入状态,wait_out wait_in  out_error 出去超时 in_error 回来超时
+         })
+    };
+    fetch(url, fetchOptions)
+    .then((response) => response.text())
+    .then((responseData) => {
+        console.log(responseData);
+        that.navigation.goBack();
+    }).done();   
+   }
+
+   updateErrorData(){
+    //objectId
+    const item = this.state.item;
+    const type = this.state.type;
+    let state = '';
+    if(type === 'out'){
+       state = 'out_error'
+    }else{
+        state = 'in_error'
+    }   
+    const url = 'https://api2.bmob.cn/1/classes/Record'+item.objectId
+    var fetchOptions = {
+        method: 'PUT',
+        headers: {
+        'X-Bmob-Application-Id': Config.BMOB_APP_ID,
+        'X-Bmob-REST-API-Key': Config.REST_API_ID,
+        'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
+            state:state,//出入状态,wait_out wait_in  out_error 出去超时 in_error 回来超时
          })
     };
     fetch(url, fetchOptions)

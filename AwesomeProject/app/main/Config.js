@@ -14,8 +14,7 @@ export default class Config{
    static authentication = false;
    static apply_for_id = null;
    static apply_for_name = null;
-   static joined_id = null;
-   static joined_name = null;
+   static create_community_id = null;//管理员创建的社区id
    
    static BMOB_APP_ID = '6ff9c68a13e661734e423db5c32da5e8';
    static REST_API_ID = 'b1af538d4e7e039a876546bdc8cd121b';
@@ -27,4 +26,6 @@ export default class Config{
 
    static city = '';
    static city_code = 0;
+
+   static IS_ROOT = false;//是否为管理员
 }

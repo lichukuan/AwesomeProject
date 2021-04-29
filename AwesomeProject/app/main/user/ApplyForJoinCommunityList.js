@@ -72,7 +72,7 @@ export default class ApplyForJoinCommunityList extends React.Component {
             <TouchableHighlight  onPress={()=>{that.click(item)}}>
                 <View style={styles.container}>
                 <Image
-                    source={require('../../images/icon.jpg')}
+                    source={require('../../images/defacult_icon.png')}
                     style={styles.thumbnail}/>
                 <View style={styles.rightContainer}>
                     <Text style={styles.title}>{item.user_name}</Text>

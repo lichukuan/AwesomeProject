@@ -79,12 +79,19 @@ export default class OutAndInErrorList extends React.Component {
              if(nowTime <= requestOutTime){
                  
              }else{
-                applyRes = '时间超时'
-                res[index] = {
-                    type:applyRes,
-                    item:item
+                if(item.state == 'wait_in'){
+                    applyRes = '时间超时'
+                    res[index] = {
+                        type:applyRes,
+                        item:item
+                    }
+                    index++;
                 }
-                index++;
+                
+                if(item.state == 'wait_out'){
+                    
+                }
+                
              }
          } 
         return res;      

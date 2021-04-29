@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, Text, View,Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -22,9 +22,6 @@ import Key from "./app/main/storage/Keys";
 import Config from './app/main/Config';
 import ApplyForJoinCommunityList from "./app/main/user/ApplyForJoinCommunityList";
 import ApplyForJoinCommunityNumberinfor from "./app/main/user/ApplyForJoinCommunityNumberinfor";
-import EpidemicSelect from "./app/main/Epidemic/EpidemicSelect";
-import EpidemicCheck from "./app/main/Epidemic/EpidemicCheck";
-import EpidemicFragment from "./app/main/Epidemic/EpidemicFragment";
 import OutAndInManager from './app/main/extrance/OutAndInManager'
 import Apply from './app/main/extrance/Apply'
 import OutAndInInfo from './app/main/extrance/OutAndInInfo'
@@ -33,6 +30,8 @@ import OutAndInApplyResult from "./app/main/extrance/OutAndInApplyResult";
 import LeaveList from "./app/main/extrance/LeaveList";
 import OutAndInErrorList from "./app/main/extrance/OutAndInErrorList";
 import HealthCard from './app/main/health/HealthCard'
+import EpidemicMethod from './app/main/Epidemic/EpidemicMethod'
+import Search from './app/main/Search'
 
 const Tab = createBottomTabNavigator();
 let that = null;
@@ -109,7 +108,7 @@ export default class App extends React.Component {
                   name="首页"  component={MainFragment}/>
                   <MainStack.Screen name="user" component={UserFragment} /> 
                   <MainStack.Screen name="home" component={HomeFragment} />
-                  <MainStack.Screen name='当前疫情' component = {EpidemicSituation}/>
+                  <MainStack.Screen name='当前疫情' component = {EpidemicSituation} options={{title:"最新疫情消息"}}/>
                   <MainStack.Screen name="info" component = {ApplyForJoinCommunityNumberinfor}/>
                   <MainStack.Screen name='出入管理' component = {OutAndInManager}/>   
                   <MainStack.Screen name='出入申请' component={Apply}/>
@@ -119,6 +118,18 @@ export default class App extends React.Component {
                   <MainStack.Screen name='请假列表' component={LeaveList}/>
                   <MainStack.Screen name='出入异常列表' component={OutAndInErrorList}/>
                   <MainStack.Screen name='健康打卡' component={HealthCard}/>
+                  <MainStack.Screen name='防疫方法' component={EpidemicMethod} 
+                      options={
+                        {
+                            title:"科学防疫",
+                        }
+                        
+                    }  
+                  />
+                  <MainStack.Screen name='登录' component={Login}/>
+                  <MainStack.Screen name='注册' component={Register}/>
+                  <MainStack.Screen name='搜索社区' component={Search} options={Search.navigationOptions}/>
+                  <MainStack.Screen name='我的社区' component={UserCommunity}/>
               </MainStack.Navigator>      
             </NavigationContainer>
         );

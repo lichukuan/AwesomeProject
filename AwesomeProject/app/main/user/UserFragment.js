@@ -16,7 +16,6 @@ import CheckUserID from "./CheckUserID";
 import ApplyForJoinCommunityNumberinfor from './ApplyForJoinCommunityNumberinfor'
 import ApplyForJoinCommunityList from "./ApplyForJoinCommunityList";
 import EpidemicCheck from "../Epidemic/EpidemicCheck";
-import EpidemicSelect from "../Epidemic/EpidemicSelect";
 import CommunityMember from './CommunityMember'
   // const UserStack = createStackNavigator();
   export default function UserFragment({navigation,route}) {

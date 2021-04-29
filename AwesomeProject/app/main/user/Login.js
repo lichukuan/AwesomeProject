@@ -7,7 +7,9 @@ import {
   TextInput,
   Button,
   DeviceEventEmitter,
+  Text,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -17,14 +19,15 @@ import Key from '../storage/Keys'
 import AsyncStorage from '@react-native-community/async-storage';
 
 import Config from '../Config'
+import { TouchableHighlight } from 'react-native-gesture-handler';
 var that = null;
 class Login extends React.Component{
 
     constructor(props){
         super(props);
         this.state = {
-            name:"lck",
-            pas:"xxx"
+            name:"",
+            pas:""
         }
         that = this;
         this.navigation=props.navigation;
@@ -35,8 +38,14 @@ class Login extends React.Component{
             <View style={{margin:10}}>
                 <TextInput onChangeText={(text) => {this.setName(text)}} style={style.name} placeholder="请输入用户名"></TextInput>
                 <TextInput  onChangeText={(text) => {this.setPas(text)}} style={style.name} password = {true} placeholder="请输入密码" ></TextInput>
-                <TextInput  onChangeText={(text) => {this.setPhone(text)}} style={style.password} password = {true} placeholder="请输入电话" ></TextInput>
-                <Button  onPress={()=>{this.register()}} style={style.button}  title="登录/注册"></Button>
+                <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.login()}}>
+                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>登录</Text>
+               </TouchableHighlight>
+               <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.navigation.navigate('注册')}}>
+                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>注册</Text>
+               </TouchableHighlight>
             </View>
         );
     }
@@ -47,57 +56,6 @@ class Login extends React.Component{
 
     setPas(data){
         this.setState({pas:data});
-    }
-
-    setPhone(data){
-        this.setState({phone:data})
-    }
-
-    register(){
-        const  url = 'https://api2.bmob.cn/1/users';
-        const name = this.state.name;
-        const pas = this.state.pas+"";
-        const phone = this.state.phone;
-        var fetchOptions = {
-            method: 'POST',
-            headers: {
-            'X-Bmob-Application-Id': Config.BMOB_APP_ID,
-            'X-Bmob-REST-API-Key': Config.REST_API_ID,
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username : name,
-                password : pas,
-                mobilePhoneNumber:phone
-            })
-        };
-        fetch(url, fetchOptions)
-        .then((response) => response.text())
-        .then((responseText) => {
-             console.log(responseText);
-            const data = JSON.parse(responseText);
-            if(data.code == 202){//登录
-                that.login();
-            }else{//注册
-                var user = {
-                    user_name:name,
-                    user_id:data.objectId,
-                    session_token:data.sessionToken,
-                    phone:data.mobilephone
-                }
-                AsyncStorage.setItem(Key.USER_INFO, JSON.stringify(user), err => {
-                    err && console.log(err.toString());
-                });  
-                Config.IS_LOGIN = true;
-                Config.LOGIN_USER_NAME = name;
-                Config.LOGIN_USER_ID = data.objectId;
-                console.log("用户id = "+data.objectId);
-                DeviceEventEmitter.emit(Config.UPDATE_USER_LOGIN_INFO,true);
-                console.log("name = "+name +"  pas = "+pas);
-                this.navigation.goBack();   
-            }    
-        }).done();        
-        
     }
 
     login(){
@@ -117,11 +75,27 @@ class Login extends React.Component{
         .then((responseText) => {
             console.log(responseText);
             const data = JSON.parse(responseText);
+            if(data.code  != undefined){
+                Alert.alert(
+                    '登录失败',
+                    '请检查用户名或者密码是否错误',
+                    [
+                       
+                      {
+                        text: '确定', onPress: () => {
+                        }
+                      }
+                    ],
+                    {cancelable: false}
+                  ) 
+                return;
+            }
             Config.IS_LOGIN = true;
             Config.LOGIN_USER_NAME = name;
             Config.LOGIN_USER_ID = data.objectId;
             Config.SESSION_TOKEN = data.sessionToken;
             Config.authentication = data.authentication;
+            Config.create_community_id = data.create_community_id;
             console.log("用户id = "+data.objectId);
             var user = {
                 user_name:name,
@@ -163,6 +137,13 @@ const style = StyleSheet.create({
         height:50,
         marginTop:50,
         fontSize:20
+    },
+    item:{
+        height:50,
+        borderColor:'white',
+        borderWidth:2,
+        marginTop:10,
+        backgroundColor:'skyblue'
     }
 });
 

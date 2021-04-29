@@ -13,9 +13,10 @@ class Setting extends React.Component{
    render(){
        return (
            <View>
-             <Button title='检查更新' onPress={()=>{this.update()}}></Button>
-             <Button title='反馈' onPress={()=>{this.feedback()}}></Button>
-             <Button title='退出登录' onPress={()=>{this.logout()}}></Button>
+             <Button title='修改密码' onPress={()=>{this.update()}}></Button>
+             <Button title='找回账号' onPress={()=>{this.feedback()}}></Button>
+             <Button title='找回密码' onPress={()=>{this.logout()}}></Button>
+             <Button title='修改手机号' onPress={()=>{this.logout()}}></Button>
            </View>
        )
    }

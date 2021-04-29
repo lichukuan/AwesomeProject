@@ -8,6 +8,7 @@ import {
   Image,
   DeviceEventEmitter,
   TouchableHighlight,
+  Alert,
   Button
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -57,29 +58,61 @@ export default class User extends React.Component {
 
     render(){  
        const title = Config.authentication?"已认证":"未认证" 
+       const loginInfo = Config.IS_LOGIN?'退出登录':'马上登录'
        return <ScrollView style={style.parent}>
            <View style = {style.header}>
-               <Icon press = {() => this.navigation.navigate('user',{
-                   itemId:1,
-                   key:'Icon'})}/>
+              <Icon press = {() => {loginCheck()}}/>
               <View style={style.container}>
-                  <Name name = {this.state.userName} press = {() => this.navigation.navigate('user',{
-                         itemId:2,key:'Name'})}/>
+                  <Name name = {this.state.userName} press = {() => {
+                      loginCheck()
+                  }}/>
                   <Text style={style.authortion}>{title}</Text>
               </View>
            </View>
            <View style={style.list}>
-               <CommunityManager press = {() => this.navigation.navigate('user',{itemId:3,key:'CommunityManager'})}/>
-               <NFC press = {() => this.navigation.navigate('user',{itemId:5,key:'NFC'})}/>
-               <CheckUserID press = {() => this.navigation.navigate('user',{itemId:6,key:'CheckUserID'})}/>
-               <Setting press = {() => this.navigation.navigate('user',{itemId:4,key:'Setting'})}/>
-               <Text style={style.list_item}>关于应用</Text>
-               <Text style={style.list_item}>意见与反馈</Text>
+               <CommunityManager press = {() => 
+                    {
+                    if(loginCheck()){
+                        this.navigation.navigate('user',{itemId:3,key:'CommunityManager'})}
+
+                    }
+                }/>
+               <NFC press = {() => {
+                   if(loginCheck()){
+                    this.navigation.navigate('user',{itemId:5,key:'NFC'})
+                   }
+               }}/>
+               <CheckUserID press = {() => {
+                   if(loginCheck()){
+                    this.navigation.navigate('user',{itemId:6,key:'CheckUserID'})
+                   }
+               }}/>
+               <Setting press = {() => {
+                   if(loginCheck()){
+                    this.navigation.navigate('user',{itemId:4,key:'Setting'})
+                   }
+               }}/>
+               <Text style={style.list_item} onPress={()=>{
+                   if(loginCheck()){
+
+                   }
+               }}>关于应用</Text>
+               <Text style={style.list_item} onPress={()=>{
+                   if(loginCheck()){
+
+                   }
+               }}>意见与反馈</Text>
            </View>
 
            <View style={{marginTop:20,flex:1,justifyContent:'center',flex:1,alignContent:'center'}}>
-               <TouchableHighlight  activeOpacity={0.6} underlayColor="#DDDDDD" style={{height:50,width:200,borderRadius:25,marginLeft:'20%'}} onPress={()=>{}}>
-                       <Text style={style.login}>马上登录</Text>
+               <TouchableHighlight  activeOpacity={0.6} underlayColor="#DDDDDD" style={{height:50,width:200,borderRadius:25,marginLeft:'20%'}} onPress={()=>{
+                   if(Config.IS_LOGIN){//退出登录
+
+                   }else{
+                      that.navigation.navigate('登录')
+                   }
+               }}>
+                       <Text style={style.login}>{loginInfo}</Text>
                </TouchableHighlight>
            </View>
            
@@ -87,7 +120,8 @@ export default class User extends React.Component {
     }
     
 }
-
+//this.navigation.navigate('user',{
+//    itemId:2,key:'Name'})
 const style = StyleSheet.create({
     parent:{
         flexDirection:'column',
@@ -142,8 +176,34 @@ function Icon(props) {
     }else{
         url = props.url;   
     }
-    return <Image source={require('../images/defacult_icon.png')}
-    style={style.icon}/>
+    return (<TouchableHighlight onPress={props.press} underlayColor="#DDDDDD" style={{borderRadius:35}}>
+        <Image source={require('../images/defacult_icon.png')}  style={style.icon}/>
+    </TouchableHighlight>);
+}
+
+function loginCheck(){
+    if(!Config.IS_LOGIN){
+        Alert.alert(
+            '是否登录',
+            '只有登录了才能使用此功能哦~',
+            [
+              {
+                  text:'我再看看',onPress:() => {
+
+                  }
+              }  
+              ,  
+              {
+                text: '去登录', onPress: () => {
+                   that.navigation.navigate('登录')
+                }
+              }
+            ],
+            {cancelable: false}
+          )
+        return false;  
+    }
+    return true;
 }
 
 function Name(params) {
@@ -157,7 +217,7 @@ function Name(params) {
 }
 
 function Setting(params) {
-    return <Text style={style.list_item} onPress={params.press}>设置</Text>
+    return <Text style={style.list_item} onPress={params.press}>账号与安全</Text>
 }
 
 function NFC(params) {

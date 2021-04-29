@@ -1,0 +1,17 @@
+{
+    "data": [
+      {
+        "img" : "http://ww2.sinaimg.cn/large/7a8aed7bjw1exfffnlf2gj20hq0qoju9.jpg",
+        "title" : "我的社区"
+      },
+      {
+        "img" : "http://ww1.sinaimg.cn/large/7a8aed7bgw1esahpyv86sj20hs0qomzo.jpg",
+        "title" : "科学防疫"
+      }
+      ,
+      {
+        "img" : "http://ww1.sinaimg.cn/large/7a8aed7bgw1esahpyv86sj20hs0qomzo.jpg",
+        "title" : "最新疫情消息"
+      }
+    ]
+  }

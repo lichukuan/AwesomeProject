@@ -7,30 +7,39 @@ import {
   Text,
   StatusBar,
   TouchableHighlight,
-  Image
+  Image,
+  Alert,
+  DeviceEventEmitter
 } from 'react-native';
 import DeviceStorage from './storage/DeviceStorage';
 import Key from "./storage/Keys";
 var REQUEST_URL = 'https://ipservice.3g.163.com/ip';
 import AsyncStorage from '@react-native-community/async-storage';
 import Config from './Config';
+import BagView from './BagView'
 //获取位置数据
 //获取登录信息
 
 var that = null;
+
+
 class Main extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             message:"请稍后",
             city:"正在查询...",
-            communityInfo:"你未加入社区，点击加入社区",
+            communityInfo:"你未加入社区，请加入社区",
             communityId:null,
             communityMember:'无'
         }
         this.navigation = props.navigation;
         that = this;
     }
+
+   componentWillUnmount(){
+    this.listener.remove();
+   }
 
     fetchData()
     {
@@ -139,20 +148,24 @@ class Main extends React.Component {
                             communityInfo:'你加入'+userData.apply_for_name+'的申请已经被拒绝'
                         })
                     }else if(userData.state == 'agree'){
+                        console.log(JSON.stringify(userData));
                         Config.apply_for_id = userData.community_id;
                         Config.apply_for_name = userData.community_name;
                         Config.apply_state = userData.state;
                         that.setState({
                             communityInfo:userData.community_name
                         })
-                        if(create_community_id != null && create_community_id == userData.commuinty_id){
+                        console.log('create_community_id  = ' + create_community_id + " commuinty_id = "+userData.community_id);
+                        if(create_community_id != null && create_community_id == userData.community_id){
                             this.setState({
                                 communityMember:'管理员'
                             })
+                            Config.IS_ROOT = true;
                         }else{
                             this.setState({
                                 communityMember:'租户'
                             })
+                            Config.IS_ROOT = false;
                         }
                     }
                     
@@ -172,7 +185,29 @@ getmyDate() {
 
     componentDidMount()
     {
+        this.listener = DeviceEventEmitter.addListener(Config.UPDATE_USER_LOGIN_INFO,(e)=>{
+            if(Config.apply_for_name != null){
+                that.findCommunity(Config.LOGIN_USER_ID,Config.SESSION_TOKEN,Config.create_community_id)
+              }
+        });
         this.fetchData();
+    }
+
+    _renderPage(data, pageID) {
+        return (
+            <Image
+                source={data}
+                style={style.img}/>
+        );
+    }
+
+    searchCommunity(){
+         this.navigation.navigate('搜索社区')
+    }
+
+    startQt(){
+       //出入管理
+       this.navigation.navigate('出入管理')
     }
 
     render(){
@@ -181,25 +216,17 @@ getmyDate() {
       const communityInfo = this.state.communityInfo; 
       const communityId = this.state.communityId;
       const communityMember = this.state.communityMember;
-      return <ScrollView style={{}}>
+      return (
+        <ScrollView style={{}}>
+
         <View style={{flexDirection:'row',backgroundColor:'#F6F6F6',height:70,alignItems:'center'}}>
-              <Text style={{backgroundColor:'white',height:40,borderRadius:20,textAlignVertical:'center',paddingLeft:20,marginLeft:10,marginRight:10,flex:1}}>搜索社区</Text> 
-              <Image source={require('../images/sao.png')} style={{height:35,width:35,marginRight:10}}></Image>
+              <Text style={{backgroundColor:'white',height:40,borderRadius:20,textAlignVertical:'center',paddingLeft:20,marginLeft:10,marginRight:10,flex:1}} onPress={()=>this.searchCommunity()}>搜索社区</Text> 
+              <TouchableHighlight onPress={()=>this.startQt()}>
+              <Image source={require('../images/sao.png')} style={{height:35,width:35,marginRight:10}} ></Image>
+              </TouchableHighlight>
         </View>  
         <View style={{margin:10,marginTop:0}}>
-        <Image style={{backgroundColor:'skyblue',height:200,width:'100%',marginRight:10}} source={require('../images/community_bag.jpg')}>
-        </Image >
-        {/* <View style={{flexDirection:'row'}} >
-                <Text>社区: </Text>
-                <Text onPress={()=>this.goCreateCommunityOrShowCommunityInformation()}>{communityInfo}</Text>
-            </View>  
-            <View style={{flexDirection:'row'}}>
-                <Text>职责: </Text>
-                <Text>{communityMember}</Text>
-            
-        </View>   */}
-        
-
+            <BagView  nav={this.navigation}/>
             <View style={style.item_container}>
                     <Text style={style.item_left}>社区</Text>
                     <Text style={{fontSize:18,color:'black'}} onPress={()=>this.goCreateCommunityOrShowCommunityInformation()}>{communityInfo}</Text>
@@ -230,34 +257,66 @@ getmyDate() {
             </TouchableHighlight>
         </View>
           
-      </ScrollView>
+      </ScrollView>     
+      
+)
     }
 
     //打卡
     card(){
-         this.navigation.navigate('健康打卡');
+         if(loginCheck())
+           this.navigation.navigate('健康打卡');
     }
 
     showInfo(){
+        if(loginCheck())
         this.navigation.navigate('当前疫情');
     }
 
     qrcode(){
        console.log('出入管理');
+       if(loginCheck())
        this.navigation.navigate('出入管理');
     }
 
     showHealthCode(){
       console.log("展示健康码");
+      if(loginCheck())
       this.navigation.navigate('home',{itemId:13,key:'ShowHealthCode'});
     }
 
     goCreateCommunityOrShowCommunityInformation(){
-        console.log("设置社区");
-        if(Config.apply_for_name == null){
-            this.navigation.navigate('user',{itemId:11,key:'JoinCommunity'});
-        }
+        // console.log("设置社区");
+        // if(Config.apply_for_name == null){
+        //     if(loginCheck)
+        //     this.navigation.navigate('user',{itemId:11,key:'JoinCommunity'});
+        // }
     }
+}
+
+function loginCheck(){
+    if(!Config.IS_LOGIN){
+        Alert.alert(
+            '是否登录',
+            '只有登录了才能使用此功能哦~',
+            [
+              {
+                  text:'我再看看',onPress:() => {
+
+                  }
+              }  
+              ,  
+              {
+                text: '去登录', onPress: () => {
+                   that.navigation.navigate('登录')
+                }
+              }
+            ],
+            {cancelable: false}
+          )
+        return false;  
+    }
+    return true;
 }
 
 function CommunityInfo(props){
@@ -330,7 +389,15 @@ const style = StyleSheet.create({
         borderWidth:2,
         marginTop:10,
         backgroundColor:'skyblue'
+    },
+    swiper: {
+
+    },
+    img: {
+        width: '100%',
+        height: 200,
     }
+
   });
 
 export default Main;
