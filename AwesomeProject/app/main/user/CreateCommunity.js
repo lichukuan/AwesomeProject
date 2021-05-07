@@ -7,7 +7,11 @@ import {
   TextInput,
   Button,
   StatusBar,
-  Text
+  Text,
+  Alert,
+  Image,
+  TouchableHighlight,
+  Linking
 } from 'react-native';
 import Config from '../Config';
 const url = 'https://api2.bmob.cn/1/batch';
@@ -18,9 +22,20 @@ class CreateCommunity extends React.Component{
             communityName:null,
             communitydId:null
         }
-        Config.LOGIN_USER_NAME = '123'
-        Config.LOGIN_USER_ID = '8e9c025932'
-        Config.SESSION_TOKEN = '8c39a6eb40c0ec0480047a714acc8bfd';
+    }
+
+    componentDidMount(){
+        Alert.alert(
+            '创建社区须知',
+            '本应用采取人工认证的模式，您必须通过人工认证，才能创建您的社区',
+            [ 
+              {
+                text: '确定', onPress: () => {
+                }
+              }
+            ],
+            {cancelable: false}
+          )
     }
 
     render(){
@@ -30,9 +45,132 @@ class CreateCommunity extends React.Component{
         }
         return (
             <View style={style.parent}>
-                <TextInput style={style.community_name} onChangeText={(text) => {this.setCommunityName(text)}} placeholder="请输入社区名" maxLength={10}/>
-                <Text  style={style.item} onPress={()=>{this.createCommunityId()}}>{id}</Text>
-                <Button onPress={()=>{this.createCommunity()}} style={style.button} title="创建"></Button>
+                <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
+                    <View style={{flexDirection:'row'}}>
+                        <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>管理员</Text>
+                        <Text style={{marginTop:10,fontSize:18,color:'black',marginLeft:10}}>李楚宽</Text>
+                    </View>    
+                <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
+                <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{
+                                    Linking.canOpenURL('mqq:2896754286').then(supported => {
+                                        if (!supported) {
+                                           this.props.setToastMsg('请先安装QQ')
+                                        } else {
+                                           return Linking.openURL('mqq:2896754286')
+                                        }
+                                     })
+                                 }}>
+                    <View style={{flexDirection:'column'}}>
+                        <Image source={require('../../images/QQ.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
+                        <Text>QQ</Text>
+                    </View>
+                </TouchableHighlight>    
+
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{
+                                    Linking.canOpenURL('tel:${"15207067001"}').then(supported => {
+                                        if (!supported) {
+                                           this.props.setToastMsg('出错了')
+                                        } else {
+                                           return Linking.openURL('tel:${"15207067001"}')
+                                        }
+                                     })
+                                 }}>
+                    <View style={{flexDirection:'column',marginLeft:40,marginBottom:5}}>
+                        <Image source={require('../../images/电话.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>电话</Text>
+                    </View>
+                    </TouchableHighlight>
+                </View>
+            </View>
+
+
+            <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
+                    <View style={{flexDirection:'row'}}>
+                        <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>管理员</Text>
+                        <Text style={{marginTop:10,fontSize:18,color:'black',marginLeft:10}}>超级无敌强·唐三桂</Text>
+                    </View>    
+                <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
+                <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{
+                                    Linking.canOpenURL('mqq://975096573').then(supported => {
+                                        if (!supported) {
+                                           this.props.setToastMsg('请先安装QQ')
+                                        } else {
+                                           return Linking.openURL('mqqwpa://im/chat?chat_type=wpa&uin=975096573')
+                                        }
+                                     })
+                                 }}>
+                    <View style={{flexDirection:'column'}}>
+                        <Image source={require('../../images/QQ.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
+                        <Text>QQ</Text>
+                    </View>
+                </TouchableHighlight>    
+
+
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{
+                                    Linking.canOpenURL('tel:${"13340262094"}').then(supported => {
+                                        if (!supported) {
+                                           this.props.setToastMsg('出错了')
+                                        } else {
+                                           return Linking.openURL('tel:${"13340262094"}')
+                                        }
+                                     })
+                                 }}>
+                    <View style={{flexDirection:'column',marginLeft:40,marginBottom:5}}>
+                        <Image source={require('../../images/电话.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>电话</Text>
+                    </View>
+                    </TouchableHighlight>
+                </View>
+
+            </View>
+
+
+            <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
+                    <View style={{flexDirection:'row'}}>
+                        <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>管理员</Text>
+                        <Text style={{marginTop:10,fontSize:18,color:'black',marginLeft:10}}>刘彦斌</Text>
+                    </View>    
+                <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
+                <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{
+                                    Linking.canOpenURL('mqq://247804779').then(supported => {
+                                        if (!supported) {
+                                           this.props.setToastMsg('请先安装QQ')
+                                        } else {
+                                           return Linking.openURL('mqqwpa://im/chat?chat_type=wpa&uin=247804779')
+                                        }
+                                     })
+                                 }}>
+                    <View style={{flexDirection:'column'}}>
+                        <Image source={require('../../images/QQ.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
+                        <Text>QQ</Text>
+                    </View>
+                </TouchableHighlight>    
+
+
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{
+                                    Linking.canOpenURL('tel:${"13509443150"}').then(supported => {
+                                        if (!supported) {
+                                           this.props.setToastMsg('出错了')
+                                        } else {
+                                           return Linking.openURL('tel:${"13509443150"}')
+                                        }
+                                     })
+                                 }}>
+                    <View style={{flexDirection:'column',marginLeft:40,marginBottom:5}}>
+                        <Image source={require('../../images/电话.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>电话</Text>
+                    </View>
+                    </TouchableHighlight>
+                </View>
+
+            </View>
+
             </View>
         );
     }
@@ -113,10 +251,10 @@ function getUUid() {
 const style = StyleSheet.create({
     parent:{
         flex:1,
-        margin:20
+        marginHorizontal:10
     },
     community_name:{
-        height:50
+        height:50,
     },
     item:{
         height:100,

@@ -27,11 +27,13 @@ export default class User extends React.Component {
       this.navigation = props.navigation;
       if(Config.IS_LOGIN){
         this.state = {
-            userName:Config.LOGIN_USER_NAME
+            userName:Config.LOGIN_USER_NAME,
+            change:false
         }
       }else{
         this.state = {
-            userName:'请输入用户名'
+            userName:'请输入用户名',
+            change:false
         } 
       }
       that = this;
@@ -49,11 +51,30 @@ export default class User extends React.Component {
         this.change_community_listener = DeviceEventEmitter.addListener(Config.USER_FRAGMENT_COMMUNITY_CHANGE,(e)=>{
             that.navigation.navigate('user',{itemId:3,key:e})
         });
+
+        this.out_login_listener = DeviceEventEmitter.addListener(Config.USER_OUT_LOGIN_IN,(e)=>{
+                that.setState({
+                   userName:'请输入用户名'
+                })
+        })
+
+        this.authentication = DeviceEventEmitter.addListener(Config.AUTHENTICATION,(e)=>{
+            that.setState({
+              change:true
+            })
+        })
     }
 
     componentWillUnmount(){
         this.listener.remove();
         this.change_community_listener.remove();
+        this.out_login_listener.remove();
+        this.authentication.remove();
+    }
+
+    showEpidemicData(){
+        //疫情数据
+        that.navigation.navigate('疫情数据')
     }
 
     render(){  
@@ -69,27 +90,43 @@ export default class User extends React.Component {
                   <Text style={style.authortion}>{title}</Text>
               </View>
            </View>
+           <View style={{flexDirection:'column',backgroundColor:'white',borderRadius:15,height:120,justifyContent:'center',marginTop:10}}>
+              <View style={{marginLeft:10,flexDirection:'row'}}>
+                  <Text style={{color:'black',fontSize:20,flex:1}}>疫情数据</Text>
+                  <TouchableHighlight onPress={()=>{this.showEpidemicData()}}>
+                     <Text style={{width:40,height:20,color:'skyblue',borderRadius:10,borderColor:'skyblue',borderWidth:2,textAlign:'center',marginEnd:20}} >详情</Text>
+                  </TouchableHighlight>
+              </View> 
+              <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                <View style={{flexDirection:'column',marginLeft:10,marginTop:10,alignItems:'center'}}>
+                   <Text style={{color:'skyblue'}}>{Config.epidmic.name}</Text>
+                   <Text style={{color:'gray',marginTop:5}}>地区</Text>
+                </View>
+                <View style={{flexDirection:'column',marginLeft:10,marginTop:10,alignContent:'center',alignItems:'center'}}>
+                   <Text style={{color:'skyblue'}}>{Config.epidmic.total.confirm}</Text>
+                   <Text style={{color:'gray',marginTop:5}}>累计确诊</Text>
+                </View>
+                <View style={{flexDirection:'column',marginLeft:10,marginTop:10,alignItems:'center'}}>
+                   <Text style={{color:'skyblue'}}>{Config.epidmic.total.dead}</Text>
+                   <Text style={{color:'gray',marginTop:5}}>累计死亡</Text>
+                </View>
+                <View style={{flexDirection:'column',marginLeft:10,marginTop:10,marginEnd:20,alignItems:'center'}}>
+                   <Text style={{color:'skyblue'}}>{Config.epidmic.total.heal}</Text>
+                   <Text style={{color:'gray',marginTop:5}}>累计治愈</Text>
+                </View>
+              </View>
+           </View>
            <View style={style.list}>
                <CommunityManager press = {() => 
                     {
                     if(loginCheck()){
-                        this.navigation.navigate('user',{itemId:3,key:'CommunityManager'})}
+                        this.navigation.navigate('社区管理',{itemId:3,key:'CommunityManager'})}
 
                     }
                 }/>
-               <NFC press = {() => {
-                   if(loginCheck()){
-                    this.navigation.navigate('user',{itemId:5,key:'NFC'})
-                   }
-               }}/>
                <CheckUserID press = {() => {
                    if(loginCheck()){
-                    this.navigation.navigate('user',{itemId:6,key:'CheckUserID'})
-                   }
-               }}/>
-               <Setting press = {() => {
-                   if(loginCheck()){
-                    this.navigation.navigate('user',{itemId:4,key:'Setting'})
+                    this.navigation.navigate('身份认证',{itemId:6,key:'CheckUserID'})
                    }
                }}/>
                <Text style={style.list_item} onPress={()=>{
@@ -97,6 +134,11 @@ export default class User extends React.Component {
 
                    }
                }}>关于应用</Text>
+              <Setting press = {() => {
+                   if(loginCheck()){
+                    this.navigation.navigate('账号与安全',{itemId:4,key:'Setting'})
+                   }
+               }}/>
                <Text style={style.list_item} onPress={()=>{
                    if(loginCheck()){
 
@@ -107,7 +149,10 @@ export default class User extends React.Component {
            <View style={{marginTop:20,flex:1,justifyContent:'center',flex:1,alignContent:'center'}}>
                <TouchableHighlight  activeOpacity={0.6} underlayColor="#DDDDDD" style={{height:50,width:200,borderRadius:25,marginLeft:'20%'}} onPress={()=>{
                    if(Config.IS_LOGIN){//退出登录
-
+                       Config.IS_LOGIN = false;
+                       Config.LOGIN_USER_ID = '';
+                       Config.LOGIN_USER_NAME = '';
+                       DeviceEventEmitter.emit(Config.USER_OUT_LOGIN_IN,true);
                    }else{
                       that.navigation.navigate('登录')
                    }
@@ -127,7 +172,8 @@ const style = StyleSheet.create({
         flexDirection:'column',
         padding:20,
         paddingTop:40,
-        height:500
+        height:600,
+        paddingBottom:20
         },
     header:{
         flexDirection:'row'
@@ -225,7 +271,7 @@ function NFC(params) {
 }
 
 function CheckUserID(params) {
-    return <Text style={style.list_item} onPress={params.press}>认证</Text>
+    return <Text style={style.list_item} onPress={params.press}>身份认证</Text>
 }
 
 function CommunityManager(params) {

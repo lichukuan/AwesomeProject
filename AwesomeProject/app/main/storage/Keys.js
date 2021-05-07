@@ -20,8 +20,8 @@ export default class Key{
    static xBmobSessionToken = 'X-Bmob-Session-Token';
 
 
-   static LOCATION_KEY = 'LOCATION_KEY';
-   static USER_INFO = 'USER_INFO';
-
+   static LOCATION_KEY = 'LOCATION_KEY';//位置信息
+   static USER_INFO = 'USER_INFO';//用户信息
+   static EPIDEMIC_INFO = 'EPIDEMIC_INFO';//当地疫情信息
 
 }

@@ -110,6 +110,7 @@ class Login extends React.Component{
                 real_picture_url:data.real_picture_url,
                 create_community_id:data.create_community_id,
             }
+            Config.user = user;
             AsyncStorage.setItem(Key.USER_INFO, JSON.stringify(user), err => {
                 err && console.log(err.toString());
             });  

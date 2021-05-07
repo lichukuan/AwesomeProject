@@ -6,8 +6,10 @@ import {
     Image,
     ScrollView,
     Dimensions,
-    TouchableHighlight
+    TouchableHighlight,
+    Alert
 } from 'react-native';
+import Config from './Config'
 var JsonData=require('./banner.json');
 const ScreenWidth  = Dimensions.get('window').width
 const BANNER_IMGS = [
@@ -43,6 +45,7 @@ class BagView extends React.Component{
     }
 
    deal(item,i){
+    if(loginCheck()){
         console.log('i = '+i);
         if(i == 0){
             this.navigation.navigate('我的社区');
@@ -51,8 +54,10 @@ class BagView extends React.Component{
         }else{
             this.navigation.navigate('当前疫情');
         }
+    }
         
    }
+
 
     //渲染圆
     renderCircles = ()=>{
@@ -134,6 +139,31 @@ class BagView extends React.Component{
     componentWillUnmount =() => {
         clearInterval(this.timer);
     }
+}
+
+function loginCheck(){
+    if(!Config.IS_LOGIN){
+        Alert.alert(
+            '是否登录',
+            '只有登录了才能使用此功能哦~',
+            [
+              {
+                  text:'我再看看',onPress:() => {
+
+                  }
+              }  
+              ,  
+              {
+                text: '去登录', onPress: () => {
+                   that.navigation.navigate('登录')
+                }
+              }
+            ],
+            {cancelable: false}
+          )
+        return false;  
+    }
+    return true;
 }
 
 var styles = StyleSheet.create({

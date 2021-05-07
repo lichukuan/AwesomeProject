@@ -140,14 +140,15 @@ class EpidemicSituation extends React.Component {
       console.log('WebView onLoadEnd e：',e.nativeEvent);
      //const data = JSON.stringify(result);
      //this.web.postMessage(JSON.stringify(data));
-     that.fetchData();
+     //that.fetchData();
   };
 
 
   render() {
     var source = (Platform.OS == 'ios') ? require('../asset/index.html') : { uri: 'file:///android_asset/index.html' }
+    const ll = 'https://news.163.com/special/epidemic';
     return (
-      <WebView source={source} 
+      <WebView source={{uri:ll}} 
       allowFileAccess = {true} 
       javaScriptEnabled={true}
       startInLoadingState={true}

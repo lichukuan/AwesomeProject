@@ -37,15 +37,16 @@ class Main extends React.Component {
         that = this;
     }
 
-   componentWillUnmount(){
-    this.listener.remove();
-   }
+  
 
     fetchData()
     {
         AsyncStorage.getItem(Key.LOCATION_KEY).then(value => {
-            console.log(value +" time = "+that.getmyDate());
             const data = JSON.parse(value);
+            console.log('location =======');
+            console.log(value);
+            console.log(data);
+            console.log('================');
             if(data == null||data.time != that.getmyDate()){
                 //获取位置信息
                 fetch(REQUEST_URL, {
@@ -68,6 +69,7 @@ class Main extends React.Component {
                     AsyncStorage.setItem(Key.LOCATION_KEY, JSON.stringify(location), err => {
                         err && console.log(err.toString());
                     })
+                    that.getEpidmicInfo();
                 })
                 .catch((error) => {
                     console.log('error = '+error);
@@ -77,6 +79,7 @@ class Main extends React.Component {
                     cityCode:data.code,
                     city:data.city
                 });
+                that.getEpidmicInfo();
             }
         }).catch(err => {
             console.log(err.toString());
@@ -117,9 +120,60 @@ class Main extends React.Component {
             err && console.log(err.toString());
         })
 
+        
     }
 
+    getEpidmicInfo(){
+//获取疫情信息
+AsyncStorage.getItem(Key.EPIDEMIC_INFO).then(value => {
+    const data = JSON.parse(value);
+    if(data == null||data.time != that.getmyDate()){
+        fetch('https://c.m.163.com/ug/api/wuhan/app/data/list-total', {
+            method: 'GET',
+            headers: {
+                'Accept': '*/*',
+                'User-Agent':'PostmanRuntime/7.26.8',
+        
+                }
+        })
+        .then((response) => response.text())
+        .then((responseData) => {
+            const data = JSON.parse(responseData);
+            const country = data.data.areaTree;
+            for(let i = 0;i < country.length;i++){
+                if(country[i].name == '中国'){
+                    const city = country[i].children;
+                    for(let j = 0;j < city.length;j++){
+                        if(city[j].name == this.state.city){
+                            Config.epidmic = city[j];
+                            var result = {
+                                city:city[j],
+                                time:that.getmyDate()
+                            }
+                            AsyncStorage.setItem(Key.EPIDEMIC_INFO, JSON.stringify(result), err => {
+                                err && console.log(err.toString());
+                            })
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        })
+        .catch((error) => {
+            console.log('error = '+error);
+        });
+    }else{
+        Config.epidmic = data.city;
+    }
+}).catch(err => {
+    console.log(err.toString());
+})
+    }
+
+
     findCommunity(id,session,create_community_id){
+            console.log('id = '+id);
             var url = 'https://api2.bmob.cn/1/classes/CmmunityMember?where='+JSON.stringify({
                 user_id:id
             });
@@ -135,8 +189,10 @@ class Main extends React.Component {
                  //request 已申请
                  //agree 同意
                  //refuse 拒绝
+                 console.log('======社区信息=======');
                  const data = JSON.parse(responseText);
-                 console.log(data.results);
+                 console.log(responseText);
+                 console.log('======社区信息=======');
                  if(data.results.length != 0){
                     const userData = data.results[0]; 
                     if(userData.state == 'request'){
@@ -155,15 +211,20 @@ class Main extends React.Component {
                         that.setState({
                             communityInfo:userData.community_name
                         })
-                        console.log('create_community_id  = ' + create_community_id + " commuinty_id = "+userData.community_id);
-                        if(create_community_id != null && create_community_id == userData.community_id){
+                        Config.USER_POST = userData.post;
+                        if(userData.post == 'root'){
                             this.setState({
                                 communityMember:'管理员'
                             })
                             Config.IS_ROOT = true;
-                        }else{
+                        }else if(userData.post == 'custom'){
                             this.setState({
                                 communityMember:'租户'
+                            })
+                            Config.IS_ROOT = false;
+                        }else if(userData.post == 'worker'){
+                            this.setState({
+                                communityMember:'社区服务人员'
                             })
                             Config.IS_ROOT = false;
                         }
@@ -186,11 +247,26 @@ getmyDate() {
     componentDidMount()
     {
         this.listener = DeviceEventEmitter.addListener(Config.UPDATE_USER_LOGIN_INFO,(e)=>{
-            if(Config.apply_for_name != null){
+            if(Config.IS_LOGIN){
                 that.findCommunity(Config.LOGIN_USER_ID,Config.SESSION_TOKEN,Config.create_community_id)
               }
         });
+
+        this.out_login_listener = DeviceEventEmitter.addListener(Config.USER_OUT_LOGIN_IN,(e)=>{
+            this.state = {
+                message:"请稍后",
+                city:"正在查询...",
+                communityInfo:"你未加入社区，请加入社区",
+                communityId:null,
+                communityMember:'无'
+            }
+        })
         this.fetchData();
+    }
+
+    componentWillUnmount(){
+        this.listener.remove();
+        this.out_login_listener.remove();
     }
 
     _renderPage(data, pageID) {
@@ -202,14 +278,15 @@ getmyDate() {
     }
 
     searchCommunity(){
+         if(loginCheck())
          this.navigation.navigate('搜索社区')
     }
 
     startQt(){
        //出入管理
+       if(loginCheck())
        this.navigation.navigate('出入管理')
     }
-
     render(){
       const message = this.state.message; 
       const city = this.state.city;
@@ -227,6 +304,8 @@ getmyDate() {
         </View>  
         <View style={{margin:10,marginTop:0}}>
             <BagView  nav={this.navigation}/>
+            <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
+            <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>基本信息</Text>
             <View style={style.item_container}>
                     <Text style={style.item_left}>社区</Text>
                     <Text style={{fontSize:18,color:'black'}} onPress={()=>this.goCreateCommunityOrShowCommunityInformation()}>{communityInfo}</Text>
@@ -239,22 +318,75 @@ getmyDate() {
                     <Text style={style.item_left}>位置</Text>
                     <Text style={{fontSize:18,color:'black'}}>{city}</Text>
             </View>
-            <TouchableHighlight  activeOpacity={0.6}
-                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.showInfo()}}>
-                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>疫情</Text>
-            </TouchableHighlight>
-            <TouchableHighlight  activeOpacity={0.6}
-                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.card()}}>
-                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>打卡</Text>
-            </TouchableHighlight>
-            <TouchableHighlight  activeOpacity={0.6}
-                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.showHealthCode()}}>
-                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>健康码</Text>
-            </TouchableHighlight>
-            <TouchableHighlight  activeOpacity={0.6}
-                                 underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.qrcode()}}>
-                <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>出入管理</Text>
-            </TouchableHighlight>
+            </View>
+            
+            <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
+                <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>社区管理</Text>
+                <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
+                    <View style={{flexDirection:'column'}}>
+                        <Image source={require('../images/社区.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
+                        <Text>我的社区</Text>
+                    </View>
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.qrcode()}}>
+                    <View style={{flexDirection:'column',marginLeft:40}}>
+                        <Image source={require('../images/出入口.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
+                        <Text>出入管理</Text>
+                    </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.showHealthCode()}}>
+                    <View style={{flexDirection:'column',marginLeft:40,marginBottom:5}}>
+                        <Image source={require('../images/健康码.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>健康码</Text>
+                    </View>
+                    </TouchableHighlight>
+                </View>
+
+            </View>
+
+            <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:180}}>
+                <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>社区服务</Text>
+                <View style={{flexDirection:'row',marginLeft:10,marginEnd:10,marginTop:10,flex:1,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
+                    <View style={{flexDirection:'column'}}>
+                        <Image source={require('../images/水电费.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
+                        <Text>代缴水电费</Text>
+                    </View>
+                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
+                        <Image source={require('../images/房租.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>代缴房租</Text>
+                    </View>
+                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
+                        <Image source={require('../images/停车场.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>停车服务</Text>
+                    </View>
+                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:10}}>
+                        <Image source={require('../images/失物招领.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>失物招领</Text>
+                    </View>
+                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:10,marginTop:10}}>
+                        <Image source={require('../images/快递员.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>代取快递</Text>
+                    </View>
+                </View>
+            </View>
+
+            <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
+                <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>疫情消息</Text>
+                <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
+                <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="#DDDDDD" onPress={()=>{this.showInfo()}}>
+                    <View style={{flexDirection:'column'}}>
+                        <Image source={require('../images/疫情.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
+                        <Text>辟谣一线</Text>
+                    </View>
+                </TouchableHighlight>    
+                    <View style={{flexDirection:'column',marginLeft:40,marginBottom:5}}>
+                        <Image source={require('../images/本地政策.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>隔离政策</Text>
+                    </View>
+                </View>
+            </View>
         </View>
           
       </ScrollView>     
@@ -270,7 +402,7 @@ getmyDate() {
 
     showInfo(){
         if(loginCheck())
-        this.navigation.navigate('当前疫情');
+        this.navigation.navigate('辟谣一线');
     }
 
     qrcode(){
@@ -373,7 +505,9 @@ const style = StyleSheet.create({
     item_container:{
         flex:1,
         flexDirection:'row',
-        marginVertical:5
+        marginVertical:5,
+        marginLeft:10,
+        marginEnd:10
      },
      item_left:{
          flex:1,fontSize:18,

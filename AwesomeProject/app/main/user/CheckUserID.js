@@ -8,7 +8,9 @@ import {
   Button,
   StatusBar,
   Image,
-  Text
+  Text,
+  TouchableHighlight,
+  DeviceEventEmitter
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Config from '../Config';
@@ -27,6 +29,7 @@ var  options = {
 };
 let user_real_url = '';
 let user_id_url = '';
+let isSendCode = false;
 class CheckUserID extends React.Component{
 
   constructor(props){
@@ -38,7 +41,9 @@ class CheckUserID extends React.Component{
         real_image_height:0,
         id_image_height:0,
         real_picture_url:null,
-        id_card_picture_url:null
+        id_card_picture_url:null,
+        second:600,
+
      }
      this.navigation=props.navigation;   
      that = this;
@@ -55,7 +60,10 @@ class CheckUserID extends React.Component{
              <View height={60}>
                 <View style={style.sms}>
                     <TextInput  onChangeText={(text) => {this.setCode(text)}} style={style.sms_code} placeholder="验证码" ></TextInput>
-                    <Button title='发送' style={style.send} onPress={()=>{this.sendMessage()}}></Button>
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" style={style.send} onPress={()=>{this.sendMessage()}}>
+                            <Text style={{backgroundColor:'skyblue',color:'white',fontSize:18,textAlign:'center',textAlignVertical:'center',height:50}}>{isSendCode?this.state.second+'':'发送'}</Text>
+                    </TouchableHighlight>
                 </View>
              </View>
             <Image  source={real_picture_url} style={{marginTop:10,height:this.state.real_image_height}}></Image> 
@@ -87,7 +95,25 @@ class CheckUserID extends React.Component{
      this.setState({name:data})
    }
 
+  tick(){
+    this.setState({
+      second:this.state.second - 1
+    })
+    if(this.state.second == 0){
+      isSendCode = false;
+      this.setState({
+        second:600
+      })
+      clearInterval(this.interval);
+    }
+  }
+
    sendMessage(){
+     if(isSendCode){
+       return;
+     }
+     isSendCode = true;
+     this.interval = setInterval(() => this.tick(), 1000);
       const url = 'https://api2.bmob.cn/1/requestSmsCode';
       const phone = this.state.phone;
       var fetchOptions = {
@@ -248,7 +274,15 @@ class CheckUserID extends React.Component{
       console.log(responseText);
         //const data = JSON.parse(responseText);
         console.log(responseText);
-        that.navigation.goBack();
+        const data = JSON.parse(responseText);
+        if(data.code == null){
+          Config.user.realName = name;
+          Config.user.id_card_picture_url = user_id_url;
+          Config.real_picture_url = user_real_url;
+          Config.authentication = true;
+          DeviceEventEmitter.emit(Config.AUTHENTICATION,true);
+          that.navigation.goBack();
+        }
     }).done();    
    }
 

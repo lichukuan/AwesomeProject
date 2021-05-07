@@ -32,7 +32,9 @@ import OutAndInErrorList from "./app/main/extrance/OutAndInErrorList";
 import HealthCard from './app/main/health/HealthCard'
 import EpidemicMethod from './app/main/Epidemic/EpidemicMethod'
 import Search from './app/main/Search'
-
+import EpidemicErrorMessage from './app/main/Epidemic/EpidemicErrorMessage'
+import ErrorMessageShow from './app/main/Epidemic/ErrorMessageShow';
+// import EpidemicDataShow from './app/main/Epidemic/EpidemicDataShow'
 const Tab = createBottomTabNavigator();
 let that = null;
 function MainFragment() {
@@ -130,6 +132,13 @@ export default class App extends React.Component {
                   <MainStack.Screen name='注册' component={Register}/>
                   <MainStack.Screen name='搜索社区' component={Search} options={Search.navigationOptions}/>
                   <MainStack.Screen name='我的社区' component={UserCommunity}/>
+                  <MainStack.Screen name='辟谣一线' component={EpidemicErrorMessage}/>
+                  <MainStack.Screen name='error_message' component={ErrorMessageShow} options={ErrorMessageShow.navigationOptions}/>
+                  <MainStack.Screen name='身份认证' component={CheckUserID}/>
+                  <MainStack.Screen name='社区管理' component={CommunityManager}/>
+                  <MainStack.Screen name='账号与安全' component={Setting}/>
+                  <MainStack.Screen name='创建社区' component={CreateCommunity}/>
+                  {/* <MainStack.Screen name='疫情数据' component={EpidemicDataShow}/> */}
               </MainStack.Navigator>      
             </NavigationContainer>
         );
