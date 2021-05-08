@@ -34,6 +34,7 @@ import EpidemicMethod from './app/main/Epidemic/EpidemicMethod'
 import Search from './app/main/Search'
 import EpidemicErrorMessage from './app/main/Epidemic/EpidemicErrorMessage'
 import ErrorMessageShow from './app/main/Epidemic/ErrorMessageShow';
+import ImageShow from './app/main/other/ImageShow'
 // import EpidemicDataShow from './app/main/Epidemic/EpidemicDataShow'
 const Tab = createBottomTabNavigator();
 let that = null;
@@ -138,6 +139,12 @@ export default class App extends React.Component {
                   <MainStack.Screen name='社区管理' component={CommunityManager}/>
                   <MainStack.Screen name='账号与安全' component={Setting}/>
                   <MainStack.Screen name='创建社区' component={CreateCommunity}/>
+                  <MainStack.Screen name='显示图片' component={ImageShow} options={{
+                      title:'',
+                      headerStyle:{
+                          backgroundColor:'black'
+                      }
+                  }}/>
                   {/* <MainStack.Screen name='疫情数据' component={EpidemicDataShow}/> */}
               </MainStack.Navigator>      
             </NavigationContainer>

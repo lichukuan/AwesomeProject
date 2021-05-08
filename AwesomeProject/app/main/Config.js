@@ -31,6 +31,7 @@ export default class Config{
    static user = null;
    static apply_state = null;//申请状态
    static epidmic = null;//疫情信息
+   static policy = null;//隔离政策信息
 
    static city = '';
    static city_code = 0;

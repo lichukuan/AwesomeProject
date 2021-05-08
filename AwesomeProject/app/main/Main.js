@@ -17,6 +17,14 @@ var REQUEST_URL = 'https://ipservice.3g.163.com/ip';
 import AsyncStorage from '@react-native-community/async-storage';
 import Config from './Config';
 import BagView from './BagView'
+import Dialog, {
+    DialogTitle,
+    DialogContent,
+    DialogFooter,
+    DialogButton,
+    SlideAnimation,
+    ScaleAnimation,
+} from 'react-native-popup-dialog';
 //获取位置数据
 //获取登录信息
 
@@ -31,7 +39,11 @@ class Main extends React.Component {
             city:"正在查询...",
             communityInfo:"你未加入社区，请加入社区",
             communityId:null,
-            communityMember:'无'
+            communityMember:'无',
+            customBackgroundDialog: false,
+            defaultAnimationDialog: false,
+            scaleAnimationDialog: false,
+            slideAnimationDialog: false,
         }
         this.navigation = props.navigation;
         that = this;
@@ -69,6 +81,7 @@ class Main extends React.Component {
                     AsyncStorage.setItem(Key.LOCATION_KEY, JSON.stringify(location), err => {
                         err && console.log(err.toString());
                     })
+                    that.fetchPolicy();
                     that.getEpidmicInfo();
                 })
                 .catch((error) => {
@@ -79,6 +92,7 @@ class Main extends React.Component {
                     cityCode:data.code,
                     city:data.city
                 });
+                that.fetchPolicy();
                 that.getEpidmicInfo();
             }
         }).catch(err => {
@@ -121,6 +135,31 @@ class Main extends React.Component {
         })
 
         
+        
+    }
+
+    //获取隔离信息
+    fetchPolicy(){
+        if(Config.policy != null){
+            return;
+        }
+        console.log('隔离信息code = '+this.state.cityCode);
+       const url = 'https://c.m.163.com/ug/api/wuhan/app/manage/track-map?cityId='+this.state.cityCode;
+       var fetchOptions = {
+        method: 'GET',
+        headers: {
+          'Accept': '*/*',
+          'User-Agent':'PostmanRuntime/7.26.8',
+        }
+    };
+    fetch(url, fetchOptions)
+    .then((response) => response.text())
+    .then((responseData) => {
+        const data = JSON.parse(responseData);
+        console.log('result === ');
+        console.log(responseData);
+        Config.policy = data;
+    }).done();   
     }
 
     getEpidmicInfo(){
@@ -293,6 +332,12 @@ getmyDate() {
       const communityInfo = this.state.communityInfo; 
       const communityId = this.state.communityId;
       const communityMember = this.state.communityMember;
+      let leavePolicyList = '';
+      if(Config.policy != null)
+          leavePolicyList = Config.policy.data.items[0].leavePolicyList.join('')
+      let backPolicyList = '';
+      if(Config.policy != null)
+         backPolicyList = Config.policy.data.items[0].backPolicyList.join('')    
       return (
         <ScrollView style={{}}>
 
@@ -323,10 +368,13 @@ getmyDate() {
             <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
                 <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>社区管理</Text>
                 <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.myCommunity()}}>
                     <View style={{flexDirection:'column'}}>
                         <Image source={require('../images/社区.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
                         <Text>我的社区</Text>
                     </View>
+                    </TouchableHighlight>
                     <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="white" onPress={()=>{this.qrcode()}}>
                     <View style={{flexDirection:'column',marginLeft:40}}>
@@ -375,24 +423,101 @@ getmyDate() {
                 <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>疫情消息</Text>
                 <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
                 <TouchableHighlight  activeOpacity={0.6}
-                                 underlayColor="#DDDDDD" onPress={()=>{this.showInfo()}}>
+                                 underlayColor="white" onPress={()=>{this.showInfo()}}>
                     <View style={{flexDirection:'column'}}>
                         <Image source={require('../images/疫情.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
                         <Text>辟谣一线</Text>
                     </View>
                 </TouchableHighlight>    
+                <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.policy()}}>
                     <View style={{flexDirection:'column',marginLeft:40,marginBottom:5}}>
                         <Image source={require('../images/本地政策.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>隔离政策</Text>
                     </View>
+                    </TouchableHighlight>    
                 </View>
             </View>
         </View>
           
+        <Dialog
+          onDismiss={() => {
+            this.setState({ defaultAnimationDialog: false });
+          }}
+          width={0.9}
+          visible={this.state.defaultAnimationDialog}
+          rounded
+          actionsBordered
+          // actionContainerStyle={{
+          //   height: 100,
+          //   flexDirection: 'column',
+          // }}
+          dialogTitle={
+            <DialogTitle
+              title="隔离政策"
+              style={{
+                backgroundColor: '#F7F7F8',
+                alignItems:'center',
+                fontSize:30
+              }}
+              hasTitleBar={false}
+              align="left"
+            />
+          }
+          footer={
+            <DialogFooter>
+              {/* <DialogButton
+                text="CANCEL"
+                bordered
+                onPress={() => {
+                  this.setState({ defaultAnimationDialog: false });
+                }}
+                key="button-1"
+              />   */}
+              <DialogButton
+                text="确定"
+                bordered
+                onPress={() => {
+                  this.setState({ defaultAnimationDialog: false });
+                }}
+                key="button-1"
+              />
+            </DialogFooter>
+          }
+        >
+          <DialogContent
+            style={{
+              backgroundColor: '#F7F7F8',
+            }}
+          >
+            <Text style={{color:'black',fontSize:20}}>
+                {'出城政策（'+this.state.city+'）'}
+            </Text>
+            <Text style={{color:'gray',fontSize:18,marginTop:10}}>{leavePolicyList}</Text>
+            <Text style={{color:'black',fontSize:20,marginTop:10}}>
+            {'入城政策（'+this.state.city+'）'}
+            </Text>
+            <Text style={{color:'gray',fontSize:18,marginTop:10}}>{backPolicyList}</Text>
+          </DialogContent>
+        </Dialog>
+  
       </ScrollView>     
       
 )
     }
+
+    myCommunity(){
+        if(loginCheck()){
+            this.navigation.navigate('显示图片')
+        }
+    }
+
+    policy(){
+        this.setState({
+            defaultAnimationDialog: true,
+          });
+    }
+
 
     //打卡
     card(){

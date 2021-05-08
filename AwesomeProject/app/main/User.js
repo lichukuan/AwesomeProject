@@ -93,7 +93,10 @@ export default class User extends React.Component {
            <View style={{flexDirection:'column',backgroundColor:'white',borderRadius:15,height:120,justifyContent:'center',marginTop:10}}>
               <View style={{marginLeft:10,flexDirection:'row'}}>
                   <Text style={{color:'black',fontSize:20,flex:1}}>疫情数据</Text>
-                  <TouchableHighlight onPress={()=>{this.showEpidemicData()}}>
+                  <TouchableHighlight 
+                  activeOpacity={0.6}
+                  underlayColor="white"
+                  onPress={()=>{this.showEpidemicData()}}>
                      <Text style={{width:40,height:20,color:'skyblue',borderRadius:10,borderColor:'skyblue',borderWidth:2,textAlign:'center',marginEnd:20}} >详情</Text>
                   </TouchableHighlight>
               </View> 
