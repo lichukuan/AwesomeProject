@@ -37,6 +37,7 @@ import ErrorMessageShow from './app/main/Epidemic/ErrorMessageShow';
 import ImageShow from './app/main/other/ImageShow'
 import CommunityInfo from './app/main/community/CommunityInfo'
 import EpidemicDataShow from './app/main/Epidemic/EpidemicDataShow'
+import InfoScanQrcode from './app/main/home/InfoScanQrcode'
 const Tab = createBottomTabNavigator();
 let that = null;
 function MainFragment() {
@@ -130,8 +131,8 @@ export default class App extends React.Component {
                         
                     }  
                   />
-                  <MainStack.Screen name='登录' component={Login}/>
-                  <MainStack.Screen name='注册' component={Register}/>
+                  <MainStack.Screen name='登录' component={Login} options={{headerTransparent: true}}/>
+                  <MainStack.Screen name='注册' component={Register} options={{headerTransparent: true}}/>
                   <MainStack.Screen name='搜索社区' component={Search} options={Search.navigationOptions}/>
                   <MainStack.Screen name='我的社区' component={UserCommunity}/>
                   <MainStack.Screen name='辟谣一线' component={EpidemicErrorMessage}/>
@@ -142,14 +143,19 @@ export default class App extends React.Component {
                   <MainStack.Screen name='创建社区' component={CreateCommunity}/>
                   <MainStack.Screen name='显示图片' component={ImageShow} options={{
                       title:'',
-                      headerStyle:{
-                          backgroundColor:'black'
-                      }
+                      headerTransparent: true,
+                      headerTintColor:'white' 
                   }}/>
                   <MainStack.Screen name='社区信息' component={CommunityInfo} options={{
                       title:''
                   }}/>
                   <MainStack.Screen name='疫情数据' component={EpidemicDataShow}/>
+                  <MainStack.Screen name='InfoScanQrcode' component={InfoScanQrcode} options={{
+                      title:''
+                      ,
+                      headerTransparent: true,
+                      headerTintColor:'white'                
+                  }}/>
               </MainStack.Navigator>      
             </NavigationContainer>
         );

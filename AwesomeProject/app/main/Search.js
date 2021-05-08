@@ -3,7 +3,7 @@ import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View,TouchableHigh
 import Config from './Config'
 var that;
 let searchText = '';
-
+let all = null;//所有数据
 export default class Search extends React.Component {
     constructor(props){
       super(props);
@@ -43,6 +43,7 @@ export default class Search extends React.Component {
             .then((responseData) => {
                 const data = JSON.parse(responseData);
                 if(data.results.length > 0){
+                    all = data.results;
                     this.setState({
                         data: data.results,
                         loaded: true
@@ -68,7 +69,8 @@ export default class Search extends React.Component {
         const p = item.item;
         const type = item.type;
         return (
-            <View  >
+            <TouchableHighlight  activeOpacity={0.6}
+                    underlayColor="white" onPress={()=>{that.click(item)}}>
             <View style={styles.container}>
             <Image
                 source={{uri:item.community_pic}}
@@ -78,7 +80,7 @@ export default class Search extends React.Component {
                 <Text style={styles.title}>{'管理员: '+item.create_user_name}</Text>
             </View>
             </View>
-        </View>
+        </TouchableHighlight>
         );
     }
 
@@ -92,7 +94,7 @@ export default class Search extends React.Component {
      }
 
      back(){
-
+        this.navigation.goBack();
      }
 
 
@@ -110,23 +112,35 @@ export default class Search extends React.Component {
          // console.log(item);
          // DeviceEventEmitter.emit(Config.USER_FRAGMENT_COMMUNITY_CHANGE,'ApplyForJoinCommunityNumberinfor');
          //this.navigation.navigate('info',{value:item});
+         this.navigation.navigate('社区信息',{id:item.community_id})
      }
 
     render(){  
        return (
            <View>
              <View style={{flexDirection:'row',backgroundColor:'white',height:60,alignItems:'center'}}>
-                         <TouchableHighlight onPress={()=>this.back()}>
-                         <Image source={require('../images/back_gray.png')} style={{height:35,width:35,marginLeft:10}} ></Image>
+                         <TouchableHighlight activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>this.back()}>
+                         <Image source={require('../images/返回.png')} style={{height:20,width:20,marginLeft:10}} ></Image>
                          </TouchableHighlight>
                          <TextInput onChangeText={(text) => {
                              console.log('内容为 = '+text);
                              this.searchText = text}}  style={{backgroundColor:'#F6F6F6',height:40,borderRadius:20,textAlignVertical:'center',paddingLeft:20,marginLeft:10,marginRight:10,flex:1}} placeholder='搜索社区...'></TextInput> 
                          
-                         <TouchableHighlight onPress={()=>{
+                         <TouchableHighlight activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{
                                  console.log('--搜索'); 
+                                 const res = [];
+                                 let index = 0;
+                                 for(let i = 0;i < all.length;i++){
+                                     const p = all[i];
+                                     if(p.community_name.indexOf(this.searchText) != -1){
+                                         res[index] = p;
+                                         index++;
+                                     }
+                                 }
                                  this.setState({
-                                     data:searchText
+                                     data:res
                                  })
                          }}>
                          <Image source={require('../images/news_search.png')} style={{height:40,width:40,marginRight:10}} ></Image>

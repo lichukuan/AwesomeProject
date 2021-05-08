@@ -1,18 +1,29 @@
 import React from 'react';
 import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View,TouchableHighlight,DeviceEventEmitter, TextInput} from "react-native";
 import Config from '../Config'
+import Dialog, {
+    DialogTitle,
+    DialogContent,
+    DialogFooter,
+    DialogButton,
+    SlideAnimation,
+    ScaleAnimation,
+} from 'react-native-popup-dialog';
 var that;
-let searchText = '';
 //社区信息页
 export default class CommunityInfo extends React.Component {
     constructor(props){
       super(props);
       this.navigation = props.navigation;
       this.state = {
-          data:searchText
+          data:{},
+          id:props.route.params.id,
+          customBackgroundDialog: false,
+            defaultAnimationDialog: false,
+            scaleAnimationDialog: false,
+            slideAnimationDialog: false,
       }
       that = this;
-      searchText = '';
     }
 
     static navigationOptions = 
@@ -21,12 +32,12 @@ export default class CommunityInfo extends React.Component {
     };
 
     componentDidMount(){
-        //this.fetchData();
+        this.fetchData();
     }
 
 
     fetchData(){
-            const url = 'https://api2.bmob.cn/1/classes/Community';
+            const url = 'https://api2.bmob.cn/1/classes/Community/'+this.state.id;
             var fetchOptions = {
                 method: 'GET',
                 headers: {
@@ -39,39 +50,50 @@ export default class CommunityInfo extends React.Component {
             .then((response) => response.text())
             .then((responseData) => {
                 const data = JSON.parse(responseData);
-                if(data.results.length > 0){
                     this.setState({
-                        data: data.results,
+                        data: data,
                         loaded: true
                     });
-                }
             }).done();        
     }
 
 
+    communityImages(){
+        this.navigation.navigate('显示图片',{
+            images:this.state.data.images
+        })
+    }
     
+    location(){
+        this.setState({
+            defaultAnimationDialog: true,
+          });
+    }
 
     render(){  
+       const community = this.state.data; 
+       const page = Config.apply_for_id != null?<View/>:<JoinCommunityCompont/>;
+       console.log('Config.apply_for_id = '+Config.apply_for_id);
        return (
            <View style={{flexDirection:'column',flex:1}}>
               {/* 社区基本信息  */}
               <View style={{flexDirection:'column',backgroundColor:'white',paddingTop:10,paddingLeft:10,height:120}}>
               <View style={{flexDirection:'row',alignItems:'center'}}>
                 <Image
-                    source={require('../../images/defacult_icon.png')}
-                    style={{width:60,height:60}}/>
+                    source={{uri:community.community_pic}}
+                    style={{width:56,height:56,borderRadius:28}}/>
                 <View style={{flexDirection:'column',marginLeft:10}}>
-                    <Text style={{color:'black',fontSize:18}}>{'社区名'}</Text>
-                    <Text style={{color:'black',fontSize:18}}>{'id'}</Text>
+                    <Text style={{color:'black',fontSize:18}}>{community.community_name}</Text>
+                    <Text style={{color:'gray',fontSize:16}}>{community.community_id}</Text>
                 </View>
               </View>  
               <View style={{flexDirection:'row',alignItems:'center',marginTop:10}}>
               <Image
-                    source={require('../../images/defacult_icon.png')}
-                    style={{width:20,height:20}}/>
-                  <Text style={{marginLeft:10,flex:1}}>{'2020/9/1'}</Text>
+                    source={require('../../images/时钟.png')}
+                    style={{width:14,height:14,marginLeft:2}}/>
+                  <Text style={{marginLeft:10,flex:1}}>{community.createdAt}</Text>
                   <Image
-                    source={require('../../images/defacult_icon.png')}
+                    source={require('../../images/二维码.png')}
                     style={{width:20,height:20,marginEnd:20}}/>    
               </View>  
               </View>
@@ -81,67 +103,77 @@ export default class CommunityInfo extends React.Component {
             <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>负责人信息</Text>    
             <View style={style.item_container}>
                     <Text style={style.item_left}>姓名</Text>
-                    <Text style={{fontSize:18,color:'black'}}>{'刘彦斌'}</Text> 
+                    <Text style={{fontSize:18,color:'black'}}>{community.create_user_name}</Text> 
             </View>    
             <View style={style.item_container}>
                     <Text style={style.item_left}>联系电话</Text>
-                    <Text style={{fontSize:18,color:'black'}}>{'xxxxxxxxxxxx'}</Text> 
+                    <Text style={{fontSize:18,color:'black'}}>{community.create_user_phone}</Text> 
             </View>   
             </View>
 
             {/* 社区详情 */}
-            <View style={{marginTop:10,backgroundColor:'white',flexDirection:'column',height:180}}>
+            <View style={{marginTop:10,backgroundColor:'white',flexDirection:'column',height:160}}>
             <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>社区详情</Text>    
+            <TouchableHighlight  activeOpacity={0.6}  style={{flex:1,marginBottom:10}}
+                                 underlayColor="white" onPress={()=>{this.location()}}>
             <View style={style.item_container}>
                     <Text style={style.item_left}>位置</Text>
                     <Image
-                    source={require('../../images/defacult_icon.png')}
-                    style={{width:20,height:20,marginEnd:20}}/> 
-            </View>    
+                    source={require('../../images/向右.png')}
+                    style={{width:20,height:20,marginEnd:10}}/> 
+            </View>   
+            </TouchableHighlight> 
             <View style={style.item_container}>
                     <Text style={style.item_left}>管理员</Text>
                     <Image
-                    source={require('../../images/defacult_icon.png')}
-                    style={{width:20,height:20,marginEnd:20}}/> 
+                    source={require('../../images/向右.png')}
+                    style={{width:20,height:20,marginEnd:10}}/> 
             </View>    
-            <View style={style.item_container}>
+            {/* <View style={style.item_container}>
                     <Text style={style.item_left}>社区成员</Text>
                     <Image
-                    source={require('../../images/defacult_icon.png')}
-                    style={{width:20,height:20,marginEnd:20}}/>  
-            </View>
+                    source={require('../../images/向右.png')}
+                    style={{width:20,height:20,marginEnd:10}}/>  
+            </View> */}
+            <TouchableHighlight  activeOpacity={0.6}  style={{flex:1,marginBottom:10}}
+                                 underlayColor="white" onPress={()=>{this.communityImages()}}>
             <View style={style.item_container}>
                     <Text style={style.item_left}>社区图片</Text>
                     <Image
-                    source={require('../../images/defacult_icon.png')}
-                    style={{width:20,height:20,marginEnd:20}}/>  
+                    source={require('../../images/向右.png')}
+                    style={{width:20,height:20,marginEnd:10}}/>  
             </View>
+            </TouchableHighlight>
             </View>
-
+            
 
             {/* 管理员功能 */}
-            <View style={{marginTop:10,backgroundColor:'white',flexDirection:'column',height:180}}>
+            <View style={{marginTop:10,backgroundColor:'white',flexDirection:'column',height:200}}>
                 <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>管理员功能</Text>
                 <View style={{flexDirection:'row',marginLeft:10,marginEnd:10,marginTop:10,flex:1,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
                     <View style={{flexDirection:'column'}}>
-                        <Image source={require('../../images/水电费.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
-                        <Text>代缴水电费</Text>
+                        <Image source={require('../../images/二维码.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
+                        <Text>出入二维码</Text>
                     </View>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
-                        <Image source={require('../../images/房租.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
-                        <Text>代缴房租</Text>
+                        <Image source={require('../../images/人.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>社区人员</Text>
                     </View>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
-                        <Image source={require('../../images/停车场.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
-                        <Text>停车服务</Text>
+                        <Image source={require('../../images/申请开班.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>申请列表</Text>
                     </View>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:10}}>
-                        <Image source={require('../../images/失物招领.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
-                        <Text>失物招领</Text>
+                        <Image source={require('../../images/请假.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>请假列表</Text>
                     </View>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:10,marginTop:10}}>
-                        <Image source={require('../../images/快递员.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
-                        <Text>代取快递</Text>
+                        <Image source={require('../../images/异常.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>出入异常</Text>
+                    </View>
+                    <View style={{flexDirection:'column',marginBottom:5,marginTop:10}}>
+                        <Image source={require('../../images/体温计.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>体温异常列表</Text>
                     </View>
                 </View>
             </View>
@@ -149,18 +181,78 @@ export default class CommunityInfo extends React.Component {
 
             </View>
             {/* 申请加入 */}
-            <View style={{marginTop:10,alignContent:'center',backgroundColor:'white'}}>
-               <TouchableHighlight  activeOpacity={0.6} underlayColor="#DDDDDD" style={{height:50,borderRadius:25,margin:10}} onPress={()=>{
-                   
-               }}>
-                <Text style={{ fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:50,backgroundColor:'skyblue',
-                      borderRadius:10,alignContent:'center',alignItems:'center'}}>申请加入</Text>
-               </TouchableHighlight>
-           </View>
+            {page}
+
+            <Dialog
+          onDismiss={() => {
+            this.setState({ defaultAnimationDialog: false });
+          }}
+          width={0.9}
+          visible={this.state.defaultAnimationDialog}
+          rounded
+          actionsBordered
+          // actionContainerStyle={{
+          //   height: 100,
+          //   flexDirection: 'column',
+          // }}
+          dialogTitle={
+            <DialogTitle
+              title="详细位置"
+              style={{
+                backgroundColor: '#F7F7F8',
+                alignItems:'center',
+                fontSize:30
+              }}
+              hasTitleBar={false}
+              align="left"
+            />
+          }
+          footer={
+            <DialogFooter>
+              {/* <DialogButton
+                text="CANCEL"
+                bordered
+                onPress={() => {
+                  this.setState({ defaultAnimationDialog: false });
+                }}
+                key="button-1"
+              />   */}
+              <DialogButton
+                text="确定"
+                bordered
+                onPress={() => {
+                  this.setState({ defaultAnimationDialog: false });
+                }}
+                key="button-1"
+              />
+            </DialogFooter>
+          }
+        >
+          <DialogContent
+            style={{
+              backgroundColor: '#F7F7F8',
+            }}
+          >
+        <Text style={{color:'gray',fontSize:18,marginTop:10}}>{community.location}</Text>
+
+          </DialogContent>
+        </Dialog>
+  
            </View>
        )
     }
     
+}
+
+function JoinCommunityCompont(){
+    return (<View style={{marginTop:10,alignContent:'center',backgroundColor:'white'}}>
+    <TouchableHighlight  activeOpacity={0.6} underlayColor="#DDDDDD" style={{height:50,borderRadius:25,margin:10}} onPress={()=>{
+        
+    }}>
+     <Text style={{ fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:50,backgroundColor:'skyblue',
+           borderRadius:10,alignContent:'center',alignItems:'center'}}>申请加入</Text>
+    </TouchableHighlight>
+</View>)
 }
 
 const style = StyleSheet.create({

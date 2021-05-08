@@ -25,6 +25,7 @@ import Dialog, {
     SlideAnimation,
     ScaleAnimation,
 } from 'react-native-popup-dialog';
+
 //获取位置数据
 //获取登录信息
 
@@ -47,6 +48,8 @@ class Main extends React.Component {
         }
         this.navigation = props.navigation;
         that = this;
+
+
     }
 
   
@@ -324,7 +327,7 @@ getmyDate() {
     startQt(){
        //出入管理
        if(loginCheck())
-       this.navigation.navigate('出入管理')
+       this.navigation.navigate('InfoScanQrcode')
     }
     render(){
       const message = this.state.message; 
@@ -508,7 +511,21 @@ getmyDate() {
 
     myCommunity(){
         if(loginCheck()){
-            this.navigation.navigate('社区信息')
+            if(Config.apply_for_id == null){
+                Alert.alert(
+                    '未加入社区',
+                    '只有加入了社区才能使用此功能哦~',
+                    [
+                      {
+                        text: '确定', onPress: () => {
+                        }
+                      }
+                    ],
+                    {cancelable: false}
+                  )
+            }else{
+                this.navigation.navigate('社区信息',{id:Config.apply_for_id})
+            }
         }
     }
 

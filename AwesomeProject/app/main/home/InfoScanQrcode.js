@@ -88,8 +88,7 @@ import {
   Platform
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
-import { OutAndInApplyResult } from "../extrance/OutAndInApplyResult";
-export default class ScanQrcode extends React.Component {
+export default class InfoScanQrcode extends React.Component {
   
   constructor(props) {
     super(props);
@@ -97,8 +96,6 @@ export default class ScanQrcode extends React.Component {
     this.state = {
       show:true,
       animation: new Animated.Value(0),
-      value:props.route.params.value,
-      type:props.route.params.type
     };
   }
   
@@ -124,9 +121,6 @@ export default class ScanQrcode extends React.Component {
       }).start(()=>this.startAnimation());
     }
   }
-  //type&content
-  //type:1表示用户信息，2表示社区信息，3表示出入二维码
-  //content:具体内容
   render() {
     let scanView = null;
     if (Platform.OS === 'ios') {
@@ -215,12 +209,8 @@ export default class ScanQrcode extends React.Component {
       if (e) {
         Vibration.vibrate([0, 500], false);
         let result = e.data;
-        this.navigation.goBack();
-        this.navigation.navigate('出入结果',{
-          item:this.state.value,
-          type:this.state.type,
-          res:result
-        }) 
+        //
+        console.log('二维码扫码结果 ： '+result);
         // Alert.alert(
         //   '扫描成功',
         //   '扫描结果：' + result,
