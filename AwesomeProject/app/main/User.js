@@ -74,7 +74,7 @@ export default class User extends React.Component {
 
     showEpidemicData(){
         //疫情数据
-        that.navigation.navigate('疫情数据')
+        this.navigation.navigate('疫情数据')
     }
 
     render(){  

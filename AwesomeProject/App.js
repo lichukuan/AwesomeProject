@@ -35,7 +35,8 @@ import Search from './app/main/Search'
 import EpidemicErrorMessage from './app/main/Epidemic/EpidemicErrorMessage'
 import ErrorMessageShow from './app/main/Epidemic/ErrorMessageShow';
 import ImageShow from './app/main/other/ImageShow'
-// import EpidemicDataShow from './app/main/Epidemic/EpidemicDataShow'
+import CommunityInfo from './app/main/community/CommunityInfo'
+import EpidemicDataShow from './app/main/Epidemic/EpidemicDataShow'
 const Tab = createBottomTabNavigator();
 let that = null;
 function MainFragment() {
@@ -145,7 +146,10 @@ export default class App extends React.Component {
                           backgroundColor:'black'
                       }
                   }}/>
-                  {/* <MainStack.Screen name='疫情数据' component={EpidemicDataShow}/> */}
+                  <MainStack.Screen name='社区信息' component={CommunityInfo} options={{
+                      title:''
+                  }}/>
+                  <MainStack.Screen name='疫情数据' component={EpidemicDataShow}/>
               </MainStack.Navigator>      
             </NavigationContainer>
         );

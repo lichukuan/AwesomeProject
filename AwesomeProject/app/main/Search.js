@@ -71,15 +71,12 @@ export default class Search extends React.Component {
             <View  >
             <View style={styles.container}>
             <Image
-                source={require('../images/defacult_icon.png')}
-                style={{width:100,height:100}}/>
+                source={{uri:item.community_pic}}
+                style={{width:80,height:80}}/>
             <View style={styles.rightContainer}>
                 <Text style={styles.title}>{item.community_name}</Text>
                 <Text style={styles.title}>{'管理员: '+item.create_user_name}</Text>
             </View>
-            <TouchableHighlight onPress={()=>{this.click(item)}} style={{alignSelf:'center',marginRight:10}}>
-                  <Text >申请加入</Text>
-            </TouchableHighlight >
             </View>
         </View>
         );

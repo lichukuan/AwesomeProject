@@ -508,7 +508,7 @@ getmyDate() {
 
     myCommunity(){
         if(loginCheck()){
-            this.navigation.navigate('显示图片')
+            this.navigation.navigate('社区信息')
         }
     }
 
