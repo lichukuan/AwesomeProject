@@ -70,6 +70,43 @@ export default class CommunityInfo extends React.Component {
           });
     }
 
+
+    showQrInfo(){
+      this.navigation.navigate('二维码信息',{
+        type:0,
+        data:this.state.data
+      })
+    }
+
+    askForLeave(){
+      this.navigation.navigate('请假列表')
+  }
+
+  errorList(){
+      //OutAndInErrorList
+      this.navigation.navigate('出入异常列表')
+  }
+
+  applyCommunityList(){//申请列表
+    this.navigation.navigate('申请列表');
+  }
+
+  showCommunityMember(){
+    console.log('社区人员');
+    this.navigation.navigate('社区人员');
+  }
+
+  showQRCode(){
+    console.log('展示二维码');
+    this.navigation.navigate('出入二维码',{itemId:22,key:'QrCodeShow'});
+  }
+
+  //体温异常列表
+  healthErrorList(){
+
+  }
+
+
     render(){  
        const community = this.state.data; 
        const page = Config.apply_for_id != null?<View/>:<JoinCommunityCompont/>;
@@ -92,9 +129,13 @@ export default class CommunityInfo extends React.Component {
                     source={require('../../images/时钟.png')}
                     style={{width:14,height:14,marginLeft:2}}/>
                   <Text style={{marginLeft:10,flex:1}}>{community.createdAt}</Text>
+                  <TouchableHighlight  activeOpacity={0.6}  style={{width:20,height:20,marginEnd:20}}
+                                 underlayColor="white" onPress={()=>{this.showQrInfo()}}>
                   <Image
                     source={require('../../images/二维码.png')}
-                    style={{width:20,height:20,marginEnd:20}}/>    
+                    style={{width:20,height:20}}/>   
+                                 </TouchableHighlight>
+                  
               </View>  
               </View>
 
@@ -151,30 +192,51 @@ export default class CommunityInfo extends React.Component {
             <View style={{marginTop:10,backgroundColor:'white',flexDirection:'column',height:200}}>
                 <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>管理员功能</Text>
                 <View style={{flexDirection:'row',marginLeft:10,marginEnd:10,marginTop:10,flex:1,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
+                <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.showQRCode()}}>
                     <View style={{flexDirection:'column'}}>
                         <Image source={require('../../images/二维码.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
                         <Text>出入二维码</Text>
                     </View>
-                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
+                </TouchableHighlight>  
+
+                <TouchableHighlight  activeOpacity={0.6} style={{marginLeft:20}}
+                                 underlayColor="white" onPress={()=>{this.showCommunityMember()}}>  
+                    <View style={{flexDirection:'column'}}>
                         <Image source={require('../../images/人.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>社区人员</Text>
                     </View>
-                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
+                </TouchableHighlight>   
+
+                 <TouchableHighlight  activeOpacity={0.6} style={{marginLeft:20}}
+                                 underlayColor="white" onPress={()=>{this.applyCommunityList()}}>   
+                    <View style={{flexDirection:'column'}}>
                         <Image source={require('../../images/申请开班.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>申请列表</Text>
                     </View>
-                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:10}}>
-                        <Image source={require('../../images/请假.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                </TouchableHighlight> 
+                <TouchableHighlight  activeOpacity={0.6} style={{marginLeft:10}}
+                                 underlayColor="white" onPress={()=>{this.askForLeave()}}>  
+                    <View style={{flexDirection:'column',paddingTop:3}}>
+                        <Image source={require('../../images/请假.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
                         <Text>请假列表</Text>
                     </View>
-                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:10,marginTop:10}}>
-                        <Image source={require('../../images/异常.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                  </TouchableHighlight>  
+                  <TouchableHighlight  activeOpacity={0.6} style={{marginBottom:10,marginLeft:20}}
+                                 underlayColor="white" onPress={()=>{this.errorList()}}> 
+                    <View style={{flexDirection:'column'}}>
+                        <Image source={require('../../images/异常.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
                         <Text>出入异常</Text>
                     </View>
-                    <View style={{flexDirection:'column',marginBottom:5,marginTop:10}}>
+                    </TouchableHighlight>
+
+                    <TouchableHighlight  activeOpacity={0.6} style={{marginTop:20}}
+                                 underlayColor="white" onPress={()=>{this.healthErrorList()}}> 
+                    <View style={{flexDirection:'column',marginBottom:5,}}>
                         <Image source={require('../../images/体温计.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>体温异常列表</Text>
                     </View>
+                    </TouchableHighlight>
                 </View>
             </View>
             <View style={{flex:1}}>

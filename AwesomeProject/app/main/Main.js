@@ -266,7 +266,7 @@ AsyncStorage.getItem(Key.EPIDEMIC_INFO).then(value => {
                             Config.IS_ROOT = false;
                         }else if(userData.post == 'worker'){
                             this.setState({
-                                communityMember:'社区服务人员'
+                                communityMember:'工作人员'
                             })
                             Config.IS_ROOT = false;
                         }
@@ -346,7 +346,8 @@ getmyDate() {
 
         <View style={{flexDirection:'row',backgroundColor:'#F6F6F6',height:70,alignItems:'center'}}>
               <Text style={{backgroundColor:'white',height:40,borderRadius:20,textAlignVertical:'center',paddingLeft:20,marginLeft:10,marginRight:10,flex:1}} onPress={()=>this.searchCommunity()}>搜索社区</Text> 
-              <TouchableHighlight onPress={()=>this.startQt()}>
+              <TouchableHighlight activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>this.startQt()}>
               <Image source={require('../images/sao.png')} style={{height:35,width:35,marginRight:10}} ></Image>
               </TouchableHighlight>
         </View>  
@@ -400,22 +401,23 @@ getmyDate() {
                 <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>社区服务</Text>
                 <View style={{flexDirection:'row',marginLeft:10,marginEnd:10,marginTop:10,flex:1,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
                     <View style={{flexDirection:'column'}}>
-                        <Image source={require('../images/水电费.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
-                        <Text>代缴水电费</Text>
+                        <Image source={require('../images/打扫.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
+                        <Text>房屋清洁</Text>
                     </View>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
-                        <Image source={require('../images/房租.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
-                        <Text>代缴房租</Text>
+                        <Image source={require('../images/维修.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                        <Text>家电维修</Text>
                     </View>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
                         <Image source={require('../images/停车场.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>停车服务</Text>
                     </View>
-                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:10}}>
+                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
                         <Image source={require('../images/失物招领.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>失物招领</Text>
                     </View>
-                    <View style={{flexDirection:'column',marginBottom:5,marginLeft:10,marginTop:10}}>
+                    <View style={{width:20}}></View>
+                    <View style={{flexDirection:'column',marginBottom:5,marginTop:10}}>
                         <Image source={require('../images/快递员.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>代取快递</Text>
                     </View>

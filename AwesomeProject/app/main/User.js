@@ -72,6 +72,38 @@ export default class User extends React.Component {
         this.authentication.remove();
     }
 
+
+    showQrInfo(){
+        if(loginCheck()){
+            if(Config.authentication){
+                this.navigation.navigate('二维码信息',{
+                    type:1,
+                    data:Config.user
+                  })
+            }else{
+                Alert.alert(
+                    '是否认证',
+                    '只有认证了才能使用此功能哦~',
+                    [
+                      {
+                          text:'我再看看',onPress:() => {
+        
+                          }
+                      }  
+                      ,  
+                      {
+                        text: '去认证', onPress: () => {
+                           that.navigation.navigate('身份认证')
+                        }
+                      }
+                    ],
+                    {cancelable: false}
+                  )
+            }
+        }
+        
+    }
+
     showEpidemicData(){
         //疫情数据
         this.navigation.navigate('疫情数据')
@@ -82,12 +114,26 @@ export default class User extends React.Component {
        const loginInfo = Config.IS_LOGIN?'退出登录':'马上登录'
        return <ScrollView style={style.parent}>
            <View style = {style.header}>
-              <Icon press = {() => {loginCheck()}}/>
+              <Icon press = {() => {
+                  if(loginCheck()){
+                      this.navigation.navigate('用户信息',{
+                          id:Config.user.user_id
+                      })
+                  }}}/>
               <View style={style.container}>
                   <Name name = {this.state.userName} press = {() => {
                       loginCheck()
                   }}/>
+                  <View style={{flexDirection:'row'}}>
                   <Text style={style.authortion}>{title}</Text>
+                  <View style={{flex:1}}></View>
+                  <TouchableHighlight  activeOpacity={0.6}  style={{width:20,height:20,marginEnd:20}}
+                                 underlayColor="white" onPress={()=>{this.showQrInfo()}}>
+                  <Image
+                    source={require('../images/二维码.png')}
+                    style={{width:20,height:20}}/>   
+                                 </TouchableHighlight>
+                  </View>
               </View>
            </View>
            <View style={{flexDirection:'column',backgroundColor:'white',borderRadius:15,height:120,justifyContent:'center',marginTop:10}}>

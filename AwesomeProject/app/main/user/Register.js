@@ -50,7 +50,7 @@ class Register extends React.Component{
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: '#F5FCFF',}} resizeMode="cover"
-            source={require('../../images/login_bg.jpg')}>
+            source={require('../../images/login_bg.png')}>
                 <TextInput onChangeText={(text) => {this.setName(text)}} style={{ paddingHorizontal:20,width: '80%',height: 50,fontSize: 17,backgroundColor:'#ffffffbb',color: '#000000',borderRadius:8}} placeholder="请输入用户名" secureTextEntry={false}  //设置为密码输入框
                 autoCapitalize='none'  //设置首字母不自动大写
                 underlineColorAndroid={'transparent'}  //将下划线颜色改为透明

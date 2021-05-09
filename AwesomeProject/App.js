@@ -38,6 +38,10 @@ import ImageShow from './app/main/other/ImageShow'
 import CommunityInfo from './app/main/community/CommunityInfo'
 import EpidemicDataShow from './app/main/Epidemic/EpidemicDataShow'
 import InfoScanQrcode from './app/main/home/InfoScanQrcode'
+import QrCodeInfoShow from './app/main/other/QrCodeInfoShow'
+import QrCodeShow from './app/main/user/QrCodeShow'
+import CommunityMember from './app/main/user/CommunityMember'
+import UserInfo from './app/main/user/UserInfo'
 const Tab = createBottomTabNavigator();
 let that = null;
 function MainFragment() {
@@ -155,6 +159,20 @@ export default class App extends React.Component {
                       ,
                       headerTransparent: true,
                       headerTintColor:'white'                
+                  }}/>
+                  <MainStack.Screen name='二维码信息' component={QrCodeInfoShow} options={{
+                      header: ()=>(
+                        <View style={{height:0}}></View>
+                      )
+                  }}/>
+                  <MainStack.Screen name='出入二维码' component={QrCodeShow}/>
+                  <MainStack.Screen name='社区人员' component={CommunityMember} options={{
+                      title:'社区成员'
+                  }}/>
+                  <MainStack.Screen name='申请列表' component={ApplyForJoinCommunityList}/>
+                  <MainStack.Screen name='用户信息' component={UserInfo} options={{
+                      title:'',
+                      headerTransparent: true,
                   }}/>
               </MainStack.Navigator>      
             </NavigationContainer>
