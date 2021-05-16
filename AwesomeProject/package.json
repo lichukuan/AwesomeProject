@@ -18,6 +18,7 @@
     "@react-navigation/stack": "^5.14.3",
     "react": "16.13.1",
     "react-native": "0.64.0",
+    "react-native-action-button": "^2.8.5",
     "react-native-camera": "^3.43.0",
     "react-native-exception-handler": "^2.10.9",
     "react-native-gesture-handler": "^1.10.3",

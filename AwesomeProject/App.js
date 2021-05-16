@@ -42,6 +42,8 @@ import QrCodeInfoShow from './app/main/other/QrCodeInfoShow'
 import QrCodeShow from './app/main/user/QrCodeShow'
 import CommunityMember from './app/main/user/CommunityMember'
 import UserInfo from './app/main/user/UserInfo'
+import CleanManager from './app/main/service/clean/CleanManager'
+import FixManager from './app/main/service/fix/FixManager'
 const Tab = createBottomTabNavigator();
 let that = null;
 function MainFragment() {
@@ -174,6 +176,8 @@ export default class App extends React.Component {
                       title:'',
                       headerTransparent: true,
                   }}/>
+                  <MainStack.Screen name='保洁服务' component={CleanManager}/>
+                  <MainStack.Screen name='家电维修' component={FixManager}/>
               </MainStack.Navigator>      
             </NavigationContainer>
         );

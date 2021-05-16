@@ -1,9 +1,8 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, Alert,Image, StyleSheet,Dimensions, Text, View,TouchableHighlight,DeviceEventEmitter} from "react-native";
+import {ActivityIndicator, FlatList, Alert,Image, StyleSheet, Text, View,TouchableHighlight,DeviceEventEmitter} from "react-native";
 import Config from '../../Config'
-import ActionButton from 'react-native-action-button';
 var that;
-export default class CleanManager extends React.Component {
+export default class CleanDealList extends React.Component {
     constructor(props){
       super(props);
       this.navigation = props.navigation;
@@ -16,21 +15,13 @@ export default class CleanManager extends React.Component {
 
     componentDidMount(){
         this.fetchData();
-
-        // this.change_community_listener = DeviceEventEmitter.addListener(Config.USER_FRAGMENT_COMMUNITY_CHANGE,(e)=>{
-        //     that.navigation.navigate('user',{itemId:3,key:e})
-        // });
-    }
-
-    componentWillUnmount(){
-        //this.change_community_listener.remove();
     }
 
     fetchData(){
             const url = 'https://api2.bmob.cn/1/classes/Service?where='+JSON.stringify({
-                  create_user_id:Config.LOGIN_USER_ID,
                   community_id:Config.apply_for_id,
-                  tag:'保洁服务'
+                  tag:'保洁服务',
+                  state:'wait_deal'
             });
             var fetchOptions = {
                 method: 'GET',
@@ -60,52 +51,36 @@ export default class CleanManager extends React.Component {
         );
     }
 
+
+    userInfo(item){
+      this.navigation.navigate('用户信息',{
+          id:item.create_user_id
+      });
+    }
+
     static renderMovie({item}) {
         // { item }是一种“解构”写法，请阅读ES2015语法的相关文档
-        // item也是FlatList中固定的参数名，请阅读FlatList的相关文档
-        let state = '';
-        let func = '详情';
-        let worker = item.deal_name
-        let time = item.updatedAt;
-        switch(item.state){
-           case 'wait_deal':
-            state = '待处理';
-            func = '结束'
-            worker = '待定',
-            time = '待定'
-            break;
-           case 'end':
-               state = '用户结束';
-               break;
-            case 'dealing':
-                state = '处理中';
-                break;
-            case 'over':
-                state = '完成';
-                break;        
-        }
-        
+        // item也是FlatList中固定的参数名，请阅读FlatList的相关文档    
         return (
-            <View>
-                <View style={{margin:5,backgroundColor:'white',padding:5,borderRadius:10,padding:10}}>
+            <View >
+                <View style={{margin:5,backgroundColor:'white',padding:5}}>
                    <View style={styles.item_container}>
                        <Text style={styles.item_left}>订单号</Text>
                        <Text style={styles.item_right}>{item.objectId}</Text>
                    </View>
                    <View style={styles.item_container}>
-                       <Text style={styles.item_left}>状态</Text>
-                       <Text style={styles.item_right}>{state}</Text>
+                       <Text style={styles.item_left}>{item.create_user_name}</Text>
+                       <TouchableHighlight activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>that.userInfo()}>
+                       <Text style={{fontSize:18,color:'skyblue'}}>详情</Text>
+                       </TouchableHighlight>   
                    </View>
                    <View style={styles.item_container}>
-                       <Text style={styles.item_left}>工作人员</Text>
-                       <Text style={styles.item_right}>{worker}</Text>
-                   </View>
-                   <View style={styles.item_container}>
-                       <Text style={styles.item_left}>完成时间</Text>
-                       <Text style={styles.item_right}>{time}</Text>
+                       <Text style={styles.item_left}>发布时间</Text>
+                       <Text style={styles.item_right}>{item.createdAt}</Text>
                    </View>
                    <View style={{height:2,backgroundColor:'gray'}}></View>
-                   <Text onPress={()=>{that.click(item)}} style={{height:60,fontSize:20,textAlignVertical:'center',textAlign:'center'}}>{func}</Text>
+                   <Text onPress={()=>{that.click(item)}} style={{height:60,fontSize:20,textAlignVertical:'center',textAlign:'center'}}>接受</Text>
                 </View>
             </View>
         );
@@ -115,27 +90,32 @@ export default class CleanManager extends React.Component {
     click(item){
        console.log("item==============");
        console.log(item);
-    //    DeviceEventEmitter.emit(Config.USER_FRAGMENT_COMMUNITY_CHANGE,'ApplyForJoinCommunityNumberinfor');
-    //    this.navigation.navigate('出入详情',{value:item});
-       if(item.state == 'wait_deal'){//结束
-
-       }else{//详情
-
-       }
+              
     }
 
-    
+    requestApply(){
+        Alert.alert(
+            '确定申请',
+            '请问您是否要在'+Config.user.address+'申请保洁服务',
+            [
+
+                {
+                    text: '取消', onPress: () => {
+                    }
+                  },
+              {
+                text: '确定', onPress: () => {
+                  that.appalyClean();
+                }
+              }
+            ],
+            {cancelable: false}
+          )
+    }
 
 
     appalyClean(){
-        const p = {
-            create_user_id:Config.LOGIN_USER_ID,
-            create_user_name:Config.user.realName,
-            community_id:Config.apply_for_id,
-            clean_location:Config.user.address,
-            tag:'保洁服务',
-            state:'wait_deal',
-         }
+           
            const url = 'https://api2.bmob.cn/1/classes/Service'
             var fetchOptions = {
                 method: 'POST',
@@ -171,42 +151,18 @@ export default class CleanManager extends React.Component {
        return (
            <View>
                <Text
-               onPress={()=>{requestApply()}}
+               onPress={()=>{this.requestApply()}}
                style={{height:100,backgroundColor:'skyblue',fontSize:20,textAlignVertical:'center',color:'white',textAlign:'center'}}>申请入口</Text>
                <FlatList
                 data={this.state.data}
                 ItemSeparatorComponent={ItemDivideComponent}
-                renderItem={CleanManager.renderMovie}
+                renderItem={CleanDealList.renderMovie}
                 keyExtractor={(item, index) => item.objectId}
                />
-                {/* <ActionButton 
-                        onPress={()=>requestApply()} 
-                        buttonColor="rgba(231,76,60,1)" offsetY={Dimensions.get('window').height*0.8}>
-               </ActionButton> */}
            </View>
        )
     }
     
-}
-
-function requestApply(){
-    Alert.alert(
-        '确定申请',
-        '请问您是否要在'+Config.user.address+'申请保洁服务',
-        [
-
-            {
-                text: '取消', onPress: () => {
-                }
-              },
-          {
-            text: '确定', onPress: () => {
-              that.appalyClean();
-            }
-          }
-        ],
-        {cancelable: false}
-      )
 }
 
 class ItemDivideComponent extends React.Component {

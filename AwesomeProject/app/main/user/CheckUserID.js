@@ -10,7 +10,8 @@ import {
   Image,
   Text,
   TouchableHighlight,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  ImageBackground
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Config from '../Config';
@@ -56,7 +57,7 @@ class CheckUserID extends React.Component{
            <ScrollView style={style.parent}>
              <TextInput onChangeText={(text) => {this.setName(text)}} style={style.name} placeholder="请输入真实姓名"></TextInput>
              <TextInput onChangeText={(text) => {this.setAddress(text)}} style={style.name} placeholder="请输入社区地址"></TextInput>
-             <TextInput onChangeText={(text) => {this.setPhone(text)}} style={style.name} placeholder="请输入电话号码"></TextInput>
+             {/* <TextInput onChangeText={(text) => {this.setPhone(text)}} style={style.name} placeholder="请输入电话号码"></TextInput>
              <View height={60}>
                 <View style={style.sms}>
                     <TextInput  onChangeText={(text) => {this.setCode(text)}} style={style.sms_code} placeholder="验证码" ></TextInput>
@@ -65,9 +66,12 @@ class CheckUserID extends React.Component{
                             <Text style={{backgroundColor:'skyblue',color:'white',fontSize:18,textAlign:'center',textAlignVertical:'center',height:50}}>{isSendCode?this.state.second+'':'发送'}</Text>
                     </TouchableHighlight>
                 </View>
-             </View>
+             </View> */}
             <Image  source={real_picture_url} style={{marginTop:10,height:this.state.real_image_height}}></Image> 
             <Button title='上传真人相片' onPress={()=>{this.takeRealPicture()}} style={style.button}></Button>
+            {/* <ImageBackground source={require('../../')}>
+
+            </ImageBackground> */}
             <Image source={id_card_picture_url} style={{marginTop:10,height:this.state.id_image_height}}></Image>
             <Button title='上传身份证正面照' onPress={()=>{this.takeIDCardPicture()}} style={style.button}></Button>
             <View style={{height:10}}></View>

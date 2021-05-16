@@ -41,7 +41,7 @@ class OutAndInApplyResult extends React.Component{
            const requestOutTime = this.conver(item.out_time) + parseInt(item.day) - 1;
            if(nowTime <= requestOutTime){
               applyRes = '允许离开'
-              updateData();
+              this.updateData();
            }else{
               applyRes = '时间超时'
               updateErrorData();
@@ -52,7 +52,7 @@ class OutAndInApplyResult extends React.Component{
         const requestOutTime = this.conver(item.out_time) + parseInt(item.day) - 1;
         if(nowTime <= requestOutTime){
            applyRes = '允许进入'
-           updateData();
+           this.updateData();
         }else{
            applyRes = '时间超时'
            updateErrorData();
@@ -103,7 +103,7 @@ class OutAndInApplyResult extends React.Component{
     .then((response) => response.text())
     .then((responseData) => {
         console.log(responseData);
-        that.navigation.goBack();
+        //that.navigation.goBack();
     }).done();   
    }
 

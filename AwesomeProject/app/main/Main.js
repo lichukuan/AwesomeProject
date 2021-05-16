@@ -141,6 +141,10 @@ class Main extends React.Component {
         
     }
 
+    clean(){
+        this.navigation.navigate('保洁服务')
+    }
+
     //获取隔离信息
     fetchPolicy(){
         if(Config.policy != null){
@@ -329,6 +333,11 @@ getmyDate() {
        if(loginCheck())
        this.navigation.navigate('InfoScanQrcode')
     }
+
+    fix(){
+        if(loginCheck())
+           this.navigation.navigate('家电维修')
+    }
     render(){
       const message = this.state.message; 
       const city = this.state.city;
@@ -399,15 +408,22 @@ getmyDate() {
 
             <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:180}}>
                 <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>社区服务</Text>
+                
                 <View style={{flexDirection:'row',marginLeft:10,marginEnd:10,marginTop:10,flex:1,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
+                <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.clean()}}>
                     <View style={{flexDirection:'column'}}>
                         <Image source={require('../images/打扫.png')} style={{width:30,height:30,alignSelf:'center'}}></Image>
                         <Text>房屋清洁</Text>
                     </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.fix()}}>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
                         <Image source={require('../images/维修.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>家电维修</Text>
                     </View>
+                    </TouchableHighlight>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
                         <Image source={require('../images/停车场.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>停车服务</Text>

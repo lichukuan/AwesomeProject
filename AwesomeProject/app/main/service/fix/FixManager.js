@@ -1,15 +1,26 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, Alert,Image, StyleSheet,Dimensions, Text, View,TouchableHighlight,DeviceEventEmitter} from "react-native";
+import {ActivityIndicator, FlatList, Alert,Image, StyleSheet,Dimensions, Text, View,TouchableHighlight,DeviceEventEmitter, TextInput} from "react-native";
 import Config from '../../Config'
 import ActionButton from 'react-native-action-button';
+import Dialog, {
+    DialogTitle,
+    DialogContent,
+    DialogFooter,
+    DialogButton,
+    SlideAnimation,
+    ScaleAnimation,
+} from 'react-native-popup-dialog';
 var that;
-export default class CleanManager extends React.Component {
+export default class FixManager extends React.Component {
     constructor(props){
       super(props);
       this.navigation = props.navigation;
       this.state = {
           data:[],
-
+          customBackgroundDialog: false,
+          defaultAnimationDialog: false,
+          scaleAnimationDialog: false,
+          slideAnimationDialog: false,
       }
       that = this;
     }
@@ -30,7 +41,7 @@ export default class CleanManager extends React.Component {
             const url = 'https://api2.bmob.cn/1/classes/Service?where='+JSON.stringify({
                   create_user_id:Config.LOGIN_USER_ID,
                   community_id:Config.apply_for_id,
-                  tag:'保洁服务'
+                  tag:'家电维修'
             });
             var fetchOptions = {
                 method: 'GET',
@@ -97,6 +108,10 @@ export default class CleanManager extends React.Component {
                        <Text style={styles.item_right}>{state}</Text>
                    </View>
                    <View style={styles.item_container}>
+                       <Text style={styles.item_left}>问题描述</Text>
+                       <Text style={styles.item_right}>{item.fix_content}</Text>
+                   </View>
+                   <View style={styles.item_container}>
                        <Text style={styles.item_left}>工作人员</Text>
                        <Text style={styles.item_right}>{worker}</Text>
                    </View>
@@ -133,8 +148,9 @@ export default class CleanManager extends React.Component {
             create_user_name:Config.user.realName,
             community_id:Config.apply_for_id,
             clean_location:Config.user.address,
-            tag:'保洁服务',
+            tag:'家电维修',
             state:'wait_deal',
+            fix_content:this.state.intro
          }
            const url = 'https://api2.bmob.cn/1/classes/Service'
             var fetchOptions = {
@@ -156,9 +172,10 @@ export default class CleanManager extends React.Component {
                     create_user_name:Config.user.realName,
                     community_id:Config.apply_for_id,
                     clean_location:Config.user.address,
-                    tag:'保洁服务',
+                    tag:'家电维修',
                     state:'wait_deal',
-                    objectId:pp.objectId
+                    objectId:pp.objectId,
+                    fix_content:this.state.intro
                  }
                 that.state.data[that.state.data.length] = p;
                 this.setState({
@@ -167,47 +184,93 @@ export default class CleanManager extends React.Component {
             }).done(); 
     }
 
+    requestApply(){
+        this.setState({
+            defaultAnimationDialog: true,
+          });
+    }
+
     render(){  
        return (
            <View>
                <Text
-               onPress={()=>{requestApply()}}
+               onPress={()=>{this.requestApply()}}
                style={{height:100,backgroundColor:'skyblue',fontSize:20,textAlignVertical:'center',color:'white',textAlign:'center'}}>申请入口</Text>
                <FlatList
                 data={this.state.data}
                 ItemSeparatorComponent={ItemDivideComponent}
-                renderItem={CleanManager.renderMovie}
+                renderItem={FixManager.renderMovie}
                 keyExtractor={(item, index) => item.objectId}
                />
-                {/* <ActionButton 
-                        onPress={()=>requestApply()} 
-                        buttonColor="rgba(231,76,60,1)" offsetY={Dimensions.get('window').height*0.8}>
-               </ActionButton> */}
+                <Dialog
+          onDismiss={() => {
+            this.setState({ defaultAnimationDialog: false });
+          }}
+          width={0.9}
+          visible={this.state.defaultAnimationDialog}
+          rounded
+          actionsBordered
+          // actionContainerStyle={{
+          //   height: 100,
+          //   flexDirection: 'column',
+          // }}
+          dialogTitle={
+            <DialogTitle
+              title="家电维修"
+              style={{
+                backgroundColor: '#F7F7F8',
+                alignItems:'center',
+                fontSize:30
+              }}
+              hasTitleBar={false}
+              align="left"
+            />
+          }
+          footer={
+            <DialogFooter>
+              <DialogButton
+                text="取消"
+                bordered
+                onPress={() => {
+                  this.setState({ defaultAnimationDialog: false });
+                }}
+                key="button-1"
+              />  
+              <DialogButton
+                text="确定"
+                bordered
+                onPress={() => {
+                  this.appalyClean();
+                  this.setState({ defaultAnimationDialog: false });
+                }}
+                key="button-1"
+              />
+            </DialogFooter>
+          }
+        >
+          <DialogContent
+            style={{
+              backgroundColor: '#F7F7F8',
+            }}
+          >
+             <TextInput
+                style={[ {width: "100%", height: 100, textAlignVertical: 'top'}]}
+                placeholder={"请输入具体的故障原因..."}
+                placeholderTextColor={"#5d5d7e"}
+                value={this.state.intro}
+                maxLength={200}
+                multiline = {true}
+                onChangeText={(intro) => this.setState({intro})}
+            />
+          </DialogContent>
+        </Dialog>
            </View>
        )
     }
     
 }
 
-function requestApply(){
-    Alert.alert(
-        '确定申请',
-        '请问您是否要在'+Config.user.address+'申请保洁服务',
-        [
 
-            {
-                text: '取消', onPress: () => {
-                }
-              },
-          {
-            text: '确定', onPress: () => {
-              that.appalyClean();
-            }
-          }
-        ],
-        {cancelable: false}
-      )
-}
 
 class ItemDivideComponent extends React.Component {
     render() {

@@ -68,6 +68,20 @@ class Register extends React.Component{
                 underlineColorAndroid={'transparent'}  //将下划线颜色改为透明
                 placeholderTextColor={'gray'}  //设置占位符颜色
                 ></TextInput>
+                <View style={{flexDirection:'row',width:'88%',justifyContent:'space-around'}}>
+                <TextInput  
+                 onChangeText={(text) => {this.setPhone(text)}} style={{ paddingHorizontal:20,width: '50%',height: 50,fontSize: 17,backgroundColor:'#ffffffbb',color: '#000000',marginTop:10,borderRadius:8}} password = {true} 
+                 secureTextEntry={true}  //设置为密码输入框
+                 autoCapitalize='none'  //设置首字母不自动大写
+                 underlineColorAndroid={'transparent'}  //将下划线颜色改为透明
+                 placeholderTextColor={'gray'}  //设置占位符颜色
+                 placeholder="验证码" ></TextInput>
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" style={{}} onPress={()=>{}}>
+                            <Text style={{backgroundColor:'blue',color:'white',fontSize:18,textAlign:'center',textAlignVertical:'center',height:50,marginTop:10,borderRadius:8,width:100,marginLeft:10}}>{'发送'}</Text>
+                    </TouchableHighlight>
+                </View>
+                
                <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="#DDDDDD00" style={style.item} onPress={()=>{this.register()}}>
                 <Text style={{fontSize:20,borderRadius:8,backgroundColor:'#0000ffbb',color:'white',textAlignVertical:'center',textAlign:'center',height:50,width:'80%'}}>注册</Text>

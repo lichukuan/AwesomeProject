@@ -1,29 +1,16 @@
 {
-    "reqId": 16195944179793018,
-    "code": 10000,
-    "msg": "成功",
-    "data": {
-        "items": [
-            {
-                "cityId": "500000",
-                "city": "重庆",
-                "leavePolicyDate": "2021年1月8日",
-                "backPolicyDate": "2021年1月27日",
-                "poiList": [],
-                "leavePolicyList": [
-                    "当地暂无最新官方政策发布，若有，会第一时间更新。"
-                ],
-                "backPolicyList": [
-                    "\r",
-                    "\r",
-                    "低风险地区的人员只需健康码绿码，体温检测正常即可正常通行。\r",
-                    ""
-                ],
-                "stayInfoList": [
-                    "暂无消息，建议咨询住宿酒店前台"
-                ]
-            }
-        ]
+    "id": 1620816033214,
+    "params": {
+        "PowerSwitch": 0
     },
-    "timestamp": 1619594417979
+    "version": "1.0",
+    "method": "thing.event.property.set"
 }
+
+
+id:任意
+params{
+    PowerSwitch:0是关锁，1是开锁
+    ReserveSwitch:0取消预订，1预定
+}
+method:set是设置属性

@@ -216,6 +216,9 @@ export default class ScanQrcode extends React.Component {
         Vibration.vibrate([0, 500], false);
         let result = e.data;
         this.navigation.goBack();
+        console.log('===========result========');
+        console.log(result);
+        console.log('===========result========');
         this.navigation.navigate('出入结果',{
           item:this.state.value,
           type:this.state.type,
