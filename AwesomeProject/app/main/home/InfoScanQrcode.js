@@ -117,6 +117,7 @@ export default class InfoScanQrcode extends React.Component {
       Animated.timing(this.state.animation,{
         toValue:1,
         duration:1500,
+        useNativeDriver: false,
         easing:Easing.linear,
       }).start(()=>this.startAnimation());
     }

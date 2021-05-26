@@ -54,9 +54,24 @@ class CheckUserID extends React.Component{
       const real_picture_url = this.state.real_picture_url;
       const id_card_picture_url = this.state.id_card_picture_url;
        return (
-           <ScrollView style={style.parent}>
-             <TextInput onChangeText={(text) => {this.setName(text)}} style={style.name} placeholder="请输入真实姓名"></TextInput>
-             <TextInput onChangeText={(text) => {this.setAddress(text)}} style={style.name} placeholder="请输入社区地址"></TextInput>
+           <ScrollView style={{}}>
+             <View style={{backgroundColor:'white',height:120}}>
+                  <View style={{flexDirection:'row',alignItems:'center',height:60,padding:10}}>
+                     <Text style={{fontSize:20,height:40,width:100,textAlignVertical:'center'}}>姓名</Text>
+                     <TextInput onChangeText={(text) => {this.setName(text)}} style={{flex:1,height:50,fontSize:18}} placeholder="请输入真实姓名"></TextInput>
+                  </View>
+                  <View style={{flexDirection:'row',alignItems:'center',height:60,padding:10}}>
+                     <Text style={{fontSize:20,height:40,width:100,textAlignVertical:'center'}}>社区地址</Text>
+                     <TextInput onChangeText={(text) => {this.setAddress(text)}} style={{flex:1,height:50,fontSize:18}} placeholder="请输入社区地址"></TextInput>
+                  </View>
+             </View>
+             <View style={{marginTop:20,backgroundColor:'white'}}>
+               <Text style={{fontSize:20,padding:10}}>个人照片</Text>
+               <Image source={require('../../images/real_pic.png') } style={{alignSelf:'center'}}></Image>
+               <Text style={{fontSize:20,padding:10}}>身份证正面照</Text>
+               <Image source={require('../../images/id_card_pic.png') } style={{alignSelf:'center'}}></Image>
+               <View style={{height:20}}></View>
+             </View>
              {/* <TextInput onChangeText={(text) => {this.setPhone(text)}} style={style.name} placeholder="请输入电话号码"></TextInput>
              <View height={60}>
                 <View style={style.sms}>
@@ -67,15 +82,14 @@ class CheckUserID extends React.Component{
                     </TouchableHighlight>
                 </View>
              </View> */}
-            <Image  source={real_picture_url} style={{marginTop:10,height:this.state.real_image_height}}></Image> 
-            <Button title='上传真人相片' onPress={()=>{this.takeRealPicture()}} style={style.button}></Button>
+            {/* <Button title='上传真人相片' onPress={()=>{this.takeRealPicture()}} style={style.button}></Button> */}
             {/* <ImageBackground source={require('../../')}>
-
             </ImageBackground> */}
             <Image source={id_card_picture_url} style={{marginTop:10,height:this.state.id_image_height}}></Image>
-            <Button title='上传身份证正面照' onPress={()=>{this.takeIDCardPicture()}} style={style.button}></Button>
+            {/* <Button title='上传身份证正面照' onPress={()=>{this.takeIDCardPicture()}} style={style.button}></Button> */}
             <View style={{height:10}}></View>
-            <Button onPress={()=>{this.check()}} style={style.button}  title="认证"></Button>
+            {/* <Button onPress={()=>{this.check()}} style={style.button}  title="认证"></Button> */}
+            <Text style={{color:'white',backgroundColor:'blue',height:50,borderRadius:25,marginHorizontal:20,textAlignVertical:'center',textAlign:'center',fontSize:25}}>申请</Text>
            </ScrollView>
         )
    }

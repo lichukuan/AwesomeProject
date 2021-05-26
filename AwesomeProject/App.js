@@ -4,46 +4,41 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Main from './app/main/Main';
-import User from './app/main/User'
-import EpidemicSituation from './app/main/EpidemicSituation'
-import Login from './app/main/user/Login'
-import Register from './app/main/user/Register'
-import CommunityManager from "./app/main/user/CommunityManager";
-import CreateCommunity from "./app/main/user/CreateCommunity";
-import JoinCommunity from "./app/main/user/JoinCommunity";
-import UserCommunity from "./app/main/user/UserCommunity";
+import User from './app/main/user/User'
+import EpidemicSituation from './app/main/epidemic/EpidemicSituation'
+import Login from './app/main/user/account/Login'
+import Register from './app/main/user/account/Register'
+import CommunityManager from "./app/main/community/manager/CommunityManager";
+import CreateCommunity from "./app/main/community/manager/CreateCommunity";
 import Setting from "./app/main/user/Setting";
-import NFC from "./app/main/user/NFC";
 import CheckUserID from "./app/main/user/CheckUserID";
-import UserFragment from './app/main/user/UserFragment';
-import HomeFragment from './app/main/home/HomeFragment';
 import AsyncStorage from '@react-native-community/async-storage';
-import Key from "./app/main/storage/Keys";
+import Key from "./app/main/other/storage/Keys";
 import Config from './app/main/Config';
-import ApplyForJoinCommunityList from "./app/main/user/ApplyForJoinCommunityList";
-import ApplyForJoinCommunityNumberinfor from "./app/main/user/ApplyForJoinCommunityNumberinfor";
-import OutAndInManager from './app/main/extrance/OutAndInManager'
-import Apply from './app/main/extrance/Apply'
-import OutAndInInfo from './app/main/extrance/OutAndInInfo'
+import ApplyForJoinCommunityList from "./app/main/community/manager/ApplyForJoinCommunityList";
+import ApplyForJoinCommunityNumberinfor from "./app/main/community/manager/ApplyForJoinCommunityNumberinfor";
+import OutAndInManager from './app/main/community/extrance/OutAndInManager'
+import Apply from './app/main/community/extrance/Apply'
+import OutAndInInfo from './app/main/community/extrance/OutAndInInfo'
 import ScanQrcode from './app/main/home/ScanQrcode'
-import OutAndInApplyResult from "./app/main/extrance/OutAndInApplyResult";
-import LeaveList from "./app/main/extrance/LeaveList";
-import OutAndInErrorList from "./app/main/extrance/OutAndInErrorList";
-import HealthCard from './app/main/health/HealthCard'
-import EpidemicMethod from './app/main/Epidemic/EpidemicMethod'
-import Search from './app/main/Search'
-import EpidemicErrorMessage from './app/main/Epidemic/EpidemicErrorMessage'
-import ErrorMessageShow from './app/main/Epidemic/ErrorMessageShow';
+import OutAndInApplyResult from "./app/main/community/extrance/OutAndInApplyResult";
+import LeaveList from "./app/main/community/extrance/LeaveList";
+import OutAndInErrorList from "./app/main/community/extrance/OutAndInErrorList";
+import HealthCard from './app/main/community/health/HealthCard'
+import EpidemicMethod from './app/main/epidemic/EpidemicMethod'
+import Search from './app/main/home/Search'
+import EpidemicErrorMessage from './app/main/epidemic/EpidemicErrorMessage'
+import ErrorMessageShow from './app/main/epidemic/ErrorMessageShow';
 import ImageShow from './app/main/other/ImageShow'
 import CommunityInfo from './app/main/community/CommunityInfo'
-import EpidemicDataShow from './app/main/Epidemic/EpidemicDataShow'
+import EpidemicDataShow from './app/main/epidemic/EpidemicDataShow'
 import InfoScanQrcode from './app/main/home/InfoScanQrcode'
 import QrCodeInfoShow from './app/main/other/QrCodeInfoShow'
 import QrCodeShow from './app/main/user/QrCodeShow'
-import CommunityMember from './app/main/user/CommunityMember'
+import CommunityMember from './app/main/community/manager/CommunityMember'
 import UserInfo from './app/main/user/UserInfo'
-import CleanManager from './app/main/service/clean/CleanManager'
-import FixManager from './app/main/service/fix/FixManager'
+import CleanManager from './app/main/community/service/clean/CleanManager'
+import FixManager from './app/main/community/service/fix/FixManager'
 const Tab = createBottomTabNavigator();
 let that = null;
 function MainFragment() {
@@ -117,8 +112,6 @@ export default class App extends React.Component {
                       
                   }
                   name="首页"  component={MainFragment}/>
-                  <MainStack.Screen name="user" component={UserFragment} /> 
-                  <MainStack.Screen name="home" component={HomeFragment} />
                   <MainStack.Screen name='当前疫情' component = {EpidemicSituation} options={{title:"最新疫情消息"}}/>
                   <MainStack.Screen name="info" component = {ApplyForJoinCommunityNumberinfor}/>
                   <MainStack.Screen name='出入管理' component = {OutAndInManager}/>   
@@ -140,7 +133,6 @@ export default class App extends React.Component {
                   <MainStack.Screen name='登录' component={Login} options={{headerTransparent: true}}/>
                   <MainStack.Screen name='注册' component={Register} options={{headerTransparent: true}}/>
                   <MainStack.Screen name='搜索社区' component={Search} options={Search.navigationOptions}/>
-                  <MainStack.Screen name='我的社区' component={UserCommunity}/>
                   <MainStack.Screen name='辟谣一线' component={EpidemicErrorMessage}/>
                   <MainStack.Screen name='error_message' component={ErrorMessageShow} options={ErrorMessageShow.navigationOptions}/>
                   <MainStack.Screen name='身份认证' component={CheckUserID}/>

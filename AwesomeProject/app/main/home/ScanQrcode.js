@@ -88,7 +88,6 @@ import {
   Platform
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
-import { OutAndInApplyResult } from "../extrance/OutAndInApplyResult";
 export default class ScanQrcode extends React.Component {
   
   constructor(props) {
@@ -121,6 +120,7 @@ export default class ScanQrcode extends React.Component {
         toValue:1,
         duration:1500,
         easing:Easing.linear,
+        useNativeDriver: false
       }).start(()=>this.startAnimation());
     }
   }

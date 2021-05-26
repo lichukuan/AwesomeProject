@@ -11,12 +11,11 @@ import {
   Alert,
   DeviceEventEmitter
 } from 'react-native';
-import DeviceStorage from './storage/DeviceStorage';
-import Key from "./storage/Keys";
+import Key from "./other/storage/Keys";
 var REQUEST_URL = 'https://ipservice.3g.163.com/ip';
 import AsyncStorage from '@react-native-community/async-storage';
 import Config from './Config';
-import BagView from './BagView'
+import BagView from './other/BagView'
 import Dialog, {
     DialogTitle,
     DialogContent,
@@ -25,6 +24,9 @@ import Dialog, {
     SlideAnimation,
     ScaleAnimation,
 } from 'react-native-popup-dialog';
+import { Realtime, setAdapters } from 'leancloud-realtime/im';
+import * as adapters from '@leancloud/platform-adapters-react-native';
+
 
 //获取位置数据
 //获取登录信息
@@ -48,7 +50,7 @@ class Main extends React.Component {
         }
         this.navigation = props.navigation;
         that = this;
-
+        setAdapters(adapters);
 
     }
 
