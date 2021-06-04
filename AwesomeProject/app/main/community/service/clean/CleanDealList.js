@@ -53,6 +53,8 @@ export default class CleanDealList extends React.Component {
 
 
     userInfo(item){
+        console.log("item ====");
+        console.log(item);
       this.navigation.navigate('用户信息',{
           id:item.create_user_id
       });
@@ -71,7 +73,7 @@ export default class CleanDealList extends React.Component {
                    <View style={styles.item_container}>
                        <Text style={styles.item_left}>{item.create_user_name}</Text>
                        <TouchableHighlight activeOpacity={0.6}
-                                 underlayColor="white" onPress={()=>that.userInfo()}>
+                                 underlayColor="white" onPress={()=>that.userInfo(item)}>
                        <Text style={{fontSize:18,color:'skyblue'}}>详情</Text>
                        </TouchableHighlight>   
                    </View>
@@ -88,71 +90,42 @@ export default class CleanDealList extends React.Component {
 
 
     click(item){
-       console.log("item==============");
-       console.log(item);
-              
-    }
-
-    requestApply(){
-        Alert.alert(
-            '确定申请',
-            '请问您是否要在'+Config.user.address+'申请保洁服务',
-            [
-
-                {
-                    text: '取消', onPress: () => {
-                    }
-                  },
-              {
-                text: '确定', onPress: () => {
-                  that.appalyClean();
-                }
-              }
-            ],
-            {cancelable: false}
-          )
+       appalyClean(item);
     }
 
 
-    appalyClean(){
+    dealClean(item){
            
-           const url = 'https://api2.bmob.cn/1/classes/Service'
+           const url = 'https://api2.bmob.cn/1/classes/Service/'+item.objectId;
             var fetchOptions = {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                 'X-Bmob-Application-Id': Config.BMOB_APP_ID,
                 'X-Bmob-REST-API-Key': Config.REST_API_ID,
                 'Content-Type': 'application/json'
                 },
-                body:JSON.stringify(p)
+                body:JSON.stringify({
+                    deal_id:Config.LOGIN_USER_ID,
+                    deal_name:Config.user.realName,
+                    tag:'保洁服务',
+                    state:'dealing',
+                    deal_phone:Config.user.phone
+                })
             };
             fetch(url, fetchOptions)
             .then((response) => response.text())
             .then((responseData) => {
                 console.log('responseData'+responseData);
                 const pp = JSON.parse(responseData)
-                const p = {
-                    create_user_id:Config.LOGIN_USER_ID,
-                    create_user_name:Config.user.realName,
-                    community_id:Config.apply_for_id,
-                    clean_location:Config.user.address,
-                    tag:'保洁服务',
-                    state:'wait_deal',
-                    objectId:pp.objectId
-                 }
-                that.state.data[that.state.data.length] = p;
-                this.setState({
-                    data:that.state.data
-                })
             }).done(); 
     }
 
     render(){  
        return (
            <View>
-               <Text
+               {/* <Text
                onPress={()=>{this.requestApply()}}
-               style={{height:100,backgroundColor:'skyblue',fontSize:20,textAlignVertical:'center',color:'white',textAlign:'center'}}>申请入口</Text>
+               style={{height:100,backgroundColor:'skyblue',fontSize:20,textAlignVertical:'center',color:'white',textAlign:'center'}}>申请入口</Text> */}
                <FlatList
                 data={this.state.data}
                 ItemSeparatorComponent={ItemDivideComponent}

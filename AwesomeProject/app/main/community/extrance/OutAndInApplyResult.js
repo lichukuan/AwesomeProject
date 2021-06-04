@@ -44,7 +44,7 @@ class OutAndInApplyResult extends React.Component{
               this.updateData();
            }else{
               applyRes = '时间超时'
-              updateErrorData();
+              this.updateErrorData();
            }
        }
        //返回时间超时
@@ -55,7 +55,7 @@ class OutAndInApplyResult extends React.Component{
            this.updateData();
         }else{
            applyRes = '时间超时'
-           updateErrorData();
+           this.updateErrorData();
         }
        }
        return (
@@ -133,7 +133,7 @@ class OutAndInApplyResult extends React.Component{
     .then((response) => response.text())
     .then((responseData) => {
         console.log(responseData);
-        that.navigation.goBack();
+        //that.navigation.goBack();
     }).done();   
    }
 

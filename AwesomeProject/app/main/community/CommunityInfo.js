@@ -189,7 +189,10 @@ export default class CommunityInfo extends React.Component {
             
 
             {/* 管理员功能 */}
-            <View style={{marginTop:10,backgroundColor:'white',flexDirection:'column',height:200}}>
+            {
+              Config.IS_ROOT == false?null:
+              (
+                <View style={{marginTop:10,backgroundColor:'white',flexDirection:'column',height:200}}>
                 <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>管理员功能</Text>
                 <View style={{flexDirection:'row',marginLeft:10,marginEnd:10,marginTop:10,flex:1,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
                 <TouchableHighlight  activeOpacity={0.6}
@@ -239,9 +242,10 @@ export default class CommunityInfo extends React.Component {
                     </TouchableHighlight>
                 </View>
             </View>
-            <View style={{flex:1}}>
 
-            </View>
+              )
+            }
+            <View style={{flex:1}}></View>
             {/* 申请加入 */}
             {page}
 
@@ -309,13 +313,48 @@ export default class CommunityInfo extends React.Component {
 function JoinCommunityCompont(){
     return (<View style={{marginTop:10,alignContent:'center',backgroundColor:'white'}}>
     <TouchableHighlight  activeOpacity={0.6} underlayColor="#DDDDDD" style={{height:50,borderRadius:25,margin:10}} onPress={()=>{
-        
+         requestJoin();
     }}>
      <Text style={{ fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:50,backgroundColor:'skyblue',
            borderRadius:10,alignContent:'center',alignItems:'center'}}>申请加入</Text>
     </TouchableHighlight>
 </View>)
 }
+
+function requestJoin(){
+  const user_name = Config.user.user_name;
+  const user_id = Config.user.user_id; 
+  var name = that.state.data.community_name;
+  var id = that.state.data.community_id;
+  const url = 'https://api2.bmob.cn/1/classes/CmmunityMember';
+  var fetchOptions = {
+      method: 'POST',
+      headers: {
+      'X-Bmob-Application-Id': Config.BMOB_APP_ID,
+      'X-Bmob-REST-API-Key': Config.REST_API_ID,
+      'Content-Type': 'application/json',
+      'X-Bmob-Session-Token':Config.SESSION_TOKEN
+      },
+      body: JSON.stringify({
+         user_name:user_name,
+         user_id:user_id,
+         community_user_id:user_id,
+         community_id:id,
+         community_name:name,
+         state:'request',
+         post:'custom'
+      })
+  };
+  fetch(url, fetchOptions)
+  .then((response) => response.text())
+  .then((responseText) => {
+      const data = JSON.parse(responseText);
+      console.log(data);
+      that.navigation.goBack();    
+  }).done(); 
+  console.log('创建社区');   
+}
+
 
 const style = StyleSheet.create({
     item_container:{

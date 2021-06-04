@@ -38,7 +38,15 @@ import QrCodeShow from './app/main/user/QrCodeShow'
 import CommunityMember from './app/main/community/manager/CommunityMember'
 import UserInfo from './app/main/user/UserInfo'
 import CleanManager from './app/main/community/service/clean/CleanManager'
+import CleanDealList from './app/main/community/service/clean/CleanDealList'
 import FixManager from './app/main/community/service/fix/FixManager'
+import FixDealList from './app/main/community/service/fix/FixDealList'
+import ShowHealthCode from './app/main/community/health/ShowHealthCode'
+import ChangePassword from './app/main/user/account/ChangePassword'
+import GetPassword from './app/main/user/account/GetPassword'
+import UpdatePhone from './app/main/user/account/UpdatePhone'
+import AboutApp from './app/main/user/AboutApp'
+import Parking from './app/main/community/service/parking/Parking'
 const Tab = createBottomTabNavigator();
 let that = null;
 function MainFragment() {
@@ -113,7 +121,7 @@ export default class App extends React.Component {
                   }
                   name="首页"  component={MainFragment}/>
                   <MainStack.Screen name='当前疫情' component = {EpidemicSituation} options={{title:"最新疫情消息"}}/>
-                  <MainStack.Screen name="info" component = {ApplyForJoinCommunityNumberinfor}/>
+                  <MainStack.Screen name="info" component = {ApplyForJoinCommunityNumberinfor} options={{title:"用户信息"}}/>
                   <MainStack.Screen name='出入管理' component = {OutAndInManager}/>   
                   <MainStack.Screen name='出入申请' component={Apply}/>
                   <MainStack.Screen name='出入详情'component={OutAndInInfo}/>
@@ -169,7 +177,15 @@ export default class App extends React.Component {
                       headerTransparent: true,
                   }}/>
                   <MainStack.Screen name='保洁服务' component={CleanManager}/>
+                  <MainStack.Screen name="保洁服务处理" component={CleanDealList}/>
                   <MainStack.Screen name='家电维修' component={FixManager}/>
+                  <MainStack.Screen name="维修处理" component={FixDealList}/>
+                  <MainStack.Screen name="健康码" component={ShowHealthCode}/>
+                  <MainStack.Screen name="修改密码" component={ChangePassword}/>
+                  <MainStack.Screen name="找回密码" component={GetPassword}/>
+                  <MainStack.Screen name="更新手机号" component={UpdatePhone}/>
+                  <MainStack.Screen name="关于应用" component={AboutApp}/>
+                  <MainStack.Screen name="停车服务" component={Parking}/>
               </MainStack.Navigator>      
             </NavigationContainer>
         );

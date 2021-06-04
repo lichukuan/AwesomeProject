@@ -9,7 +9,8 @@ import {
   DeviceEventEmitter,
   TouchableHighlight,
   Alert,
-  Button
+  Button,
+  Linking
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -34,6 +35,16 @@ export default class User extends React.Component {
         } 
       }
       that = this;
+      if(Config.epidmic == null){
+          Config.epidmic = {
+             name:'暂无',
+             total:{
+                confirm:0,
+                heal:0,
+                dead:0 
+             }
+          }
+      }
     }
 
     componentDidMount(){
@@ -177,17 +188,23 @@ export default class User extends React.Component {
                }}/>
                <Text style={style.list_item} onPress={()=>{
                    if(loginCheck()){
-
+                    this.navigation.navigate('关于应用',{itemId:4,key:'Setting'})
                    }
                }}>关于应用</Text>
               <Setting press = {() => {
-                   if(loginCheck()){
+                   
                     this.navigation.navigate('账号与安全',{itemId:4,key:'Setting'})
-                   }
+                   
                }}/>
                <Text style={style.list_item} onPress={()=>{
                    if(loginCheck()){
-
+                    Linking.canOpenURL('mqq://975096573').then(supported => {
+                        if (!supported) {
+                           this.props.setToastMsg('请先安装QQ')
+                        } else {
+                           return Linking.openURL('mqqwpa://im/chat?chat_type=group&uin=134011502')
+                        }
+                     })
                    }
                }}>意见与反馈</Text>
            </View>
@@ -203,10 +220,9 @@ export default class User extends React.Component {
                       that.navigation.navigate('登录')
                    }
                }}>
-                       <Text style={style.login}>{loginInfo}</Text>
+               <Text style={style.login}>{loginInfo}</Text>
                </TouchableHighlight>
            </View>
-           
        </ScrollView>
     }
     

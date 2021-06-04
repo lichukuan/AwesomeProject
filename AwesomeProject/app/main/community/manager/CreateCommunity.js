@@ -89,7 +89,7 @@ class CreateCommunity extends React.Component{
             <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
                     <View style={{flexDirection:'row'}}>
                         <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>管理员</Text>
-                        <Text style={{marginTop:10,fontSize:18,color:'black',marginLeft:10}}>超级无敌强·唐三桂</Text>
+                        <Text style={{marginTop:10,fontSize:18,color:'black',marginLeft:10}}>唐三桂</Text>
                     </View>    
                 <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
                 <TouchableHighlight  activeOpacity={0.6}

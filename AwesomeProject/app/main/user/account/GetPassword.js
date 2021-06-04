@@ -19,7 +19,7 @@ import Config from '../../Config'
 import { TouchableHighlight } from 'react-native-gesture-handler';
 var that = null;
 let isSendCode = false;
-class Register extends React.Component{
+class GetPassword extends React.Component{
 
     constructor(props){
         super(props);
@@ -48,17 +48,6 @@ class Register extends React.Component{
                 alignItems: 'center',
                 backgroundColor: '#F5FCFF',}} resizeMode="cover"
             source={require('../../../images/login_bg.png')}>
-                <TextInput onChangeText={(text) => {this.setName(text)}} style={{ paddingHorizontal:20,width: '80%',height: 50,fontSize: 17,backgroundColor:'#ffffffbb',color: '#000000',borderRadius:8}} placeholder="请输入用户名" secureTextEntry={false}  //设置为密码输入框
-                autoCapitalize='none'  //设置首字母不自动大写
-                underlineColorAndroid={'transparent'}  //将下划线颜色改为透明
-                placeholderTextColor={'gray'}  //设置占位符颜色
-                ></TextInput>
-                <TextInput  onChangeText={(text) => {this.setPas(text)}} style={{ paddingHorizontal:20,width: '80%',height: 50,fontSize: 17,backgroundColor:'#ffffffbb',color: '#000000',marginTop:10,borderRadius:8}} password = {true} placeholder="请输入密码" 
-                secureTextEntry={true}  //设置为密码输入框
-                autoCapitalize='none'  //设置首字母不自动大写
-                underlineColorAndroid={'transparent'}  //将下划线颜色改为透明
-                placeholderTextColor={'gray'}  //设置占位符颜色
-                ></TextInput>
                 <TextInput  onChangeText={(text) => {this.setPhone(text)}} style={{ paddingHorizontal:20,width: '80%',height: 50,fontSize: 17,backgroundColor:'#ffffffbb',color: '#000000',marginTop:10,borderRadius:8}} password = {true} placeholder="请输入手机号" 
                 secureTextEntry={true}  //设置为密码输入框
                 autoCapitalize='none'  //设置首字母不自动大写
@@ -82,7 +71,7 @@ class Register extends React.Component{
                 
                <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="#DDDDDD00" style={style.item} onPress={()=>{this.register()}}>
-                <Text style={{fontSize:20,borderRadius:8,backgroundColor:'#0000ffbb',color:'white',textAlignVertical:'center',textAlign:'center',height:50,width:'80%'}}>注册</Text>
+                <Text style={{fontSize:20,borderRadius:8,backgroundColor:'#0000ffbb',color:'white',textAlignVertical:'center',textAlign:'center',height:50,width:'80%'}}>获取密码</Text>
                </TouchableHighlight>
             </ImageBackground>
         );
@@ -229,4 +218,4 @@ const style = StyleSheet.create({
     }
 });
 
-export default Register;
+export default GetPassword;

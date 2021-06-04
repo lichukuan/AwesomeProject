@@ -11,7 +11,8 @@ export default class UserInfo extends React.Component {
           data:{
             real_name:'',
             address:'',
-            mobilePhoneNumber:''
+            mobilePhoneNumber:'',
+            post:''
           },
           id:props.route.params.id,
       }
@@ -70,12 +71,12 @@ export default class UserInfo extends React.Component {
        const name = this.state.data.real_name;
        const address = this.state.data.address;
        const phone = this.state.data.mobilePhoneNumber;
-       let post = '';
-       if(Config.USER_POST == 'root'){
+       let post = this.state.data.post;
+       if(post == 'root'){
          post = '管理员'
-       } else if(Config.USER_POST == 'worker'){
+       } else if(post == 'worker'){
          post = '工作人员'
-       } else if(Config.USER_POST == 'custom'){
+       } else if(post == 'custom'){
            post = '住户'
        }else{
            post = '无'
@@ -92,13 +93,13 @@ export default class UserInfo extends React.Component {
                     <View style={{flexDirection:'row',justifyContent:'flex-start',width:Dimensions.get('window').width,marginLeft:20,marginTop:10}}>
                          <View style={{flexDirection:'column'}}>
                             <Text style={{color:'gray',fontSize:18}}>姓名：</Text>
-                            <Text style={{color:'gray',fontSize:18}}>职责</Text>
+                            {/* <Text style={{color:'gray',fontSize:18}}>职责</Text> */}
                             <Text style={{color:'gray',fontSize:18}}>社区地址</Text>
                             <Text style={{color:'gray',fontSize:18}}>电话号码</Text>
                          </View>
                             <View style={{flexDirection:'column',marginLeft:20}}>
                             <Text style={{fontSize:18,color:'black',marginLeft:20}}>{name}</Text> 
-                            <Text style={{fontSize:18,color:'black',marginLeft:20}}>{post}</Text> 
+                            {/* <Text style={{fontSize:18,color:'black',marginLeft:20}}>{post}</Text>  */}
                             <Text style={{fontSize:18,color:'black',marginLeft:20}}>{address}</Text> 
                             <Text style={{fontSize:18,color:'black',marginLeft:20}}>{phone}</Text> 
                          </View>

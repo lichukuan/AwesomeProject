@@ -11,7 +11,8 @@ import {
   Text,
   TouchableHighlight,
   DeviceEventEmitter,
-  ImageBackground
+  ImageBackground,
+  Alert
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Config from '../Config';
@@ -40,11 +41,12 @@ class CheckUserID extends React.Component{
         phone:0,
         code:0,
         real_image_height:0,
+        real_palcehoder_height:200,
         id_image_height:0,
+        id_placehoder_height:200,
         real_picture_url:null,
         id_card_picture_url:null,
         second:600,
-
      }
      this.navigation=props.navigation;   
      that = this;
@@ -67,26 +69,19 @@ class CheckUserID extends React.Component{
              </View>
              <View style={{marginTop:20,backgroundColor:'white'}}>
                <Text style={{fontSize:20,padding:10}}>个人照片</Text>
-               <Image source={require('../../images/real_pic.png') } style={{alignSelf:'center'}}></Image>
+               <Image source={real_picture_url} style={{marginTop:10,height:this.state.real_image_height,width:'80%',alignSelf:'center'}}></Image>
+               <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress = {()=>{this.takeRealPicture()}}>
+               <Image source={require('../../images/real_pic.png') } style={{alignSelf:'center',height:this.state.real_palcehoder_height}} ></Image>
+                                 </TouchableHighlight>
                <Text style={{fontSize:20,padding:10}}>身份证正面照</Text>
-               <Image source={require('../../images/id_card_pic.png') } style={{alignSelf:'center'}}></Image>
+               <Image source={id_card_picture_url} style={{marginTop:10,height:this.state.id_image_height,width:'80%',alignSelf:'center'}}></Image>
+               <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress = {()=>{this.takeIDCardPicture()}}>
+               <Image source={require('../../images/id_card_pic.png') } style={{alignSelf:'center',height:this.state.id_placehoder_height}} onPress = {()=>{this.takeIDCardPicture()}}></Image>
+               </TouchableHighlight>
                <View style={{height:20}}></View>
              </View>
-             {/* <TextInput onChangeText={(text) => {this.setPhone(text)}} style={style.name} placeholder="请输入电话号码"></TextInput>
-             <View height={60}>
-                <View style={style.sms}>
-                    <TextInput  onChangeText={(text) => {this.setCode(text)}} style={style.sms_code} placeholder="验证码" ></TextInput>
-                    <TouchableHighlight  activeOpacity={0.6}
-                                 underlayColor="white" style={style.send} onPress={()=>{this.sendMessage()}}>
-                            <Text style={{backgroundColor:'skyblue',color:'white',fontSize:18,textAlign:'center',textAlignVertical:'center',height:50}}>{isSendCode?this.state.second+'':'发送'}</Text>
-                    </TouchableHighlight>
-                </View>
-             </View> */}
-            {/* <Button title='上传真人相片' onPress={()=>{this.takeRealPicture()}} style={style.button}></Button> */}
-            {/* <ImageBackground source={require('../../')}>
-            </ImageBackground> */}
-            <Image source={id_card_picture_url} style={{marginTop:10,height:this.state.id_image_height}}></Image>
-            {/* <Button title='上传身份证正面照' onPress={()=>{this.takeIDCardPicture()}} style={style.button}></Button> */}
             <View style={{height:10}}></View>
             {/* <Button onPress={()=>{this.check()}} style={style.button}  title="认证"></Button> */}
             <Text style={{color:'white',backgroundColor:'blue',height:50,borderRadius:25,marginHorizontal:20,textAlignVertical:'center',textAlign:'center',fontSize:25}}>申请</Text>
@@ -157,7 +152,22 @@ class CheckUserID extends React.Component{
    takeRealPicture(){
     launchImageLibrary(options, (response) => {
       console.log( 'Response = ' , response);
-  
+      if(response.fileSize > 1000000){
+        Alert.alert(
+          '图片太大',
+          '只能上传大小小于1M的图片',
+          [
+            
+            {
+              text: '确定', onPress: () => {
+                 
+              }
+            }
+          ],
+          {cancelable: false}
+        )
+        return;
+      }
       if  (response.didCancel) {
         console.log( '用户取消了选择！' );
       }
@@ -179,7 +189,8 @@ class CheckUserID extends React.Component{
                   //这里设定服务器返回的header中statusCode为success时数据返回成功
                   this.setState({
                     real_picture_url: source,
-                    real_image_height:200
+                    real_image_height:200,
+                    real_palcehoder_height:0
                   });
                   user_real_url = data.info;
                   console.log('user_real_url = '+user_real_url);
@@ -198,7 +209,23 @@ class CheckUserID extends React.Component{
    takeIDCardPicture(){
     launchImageLibrary(options, (response) => {
       console.log( 'Response = ' , response);
-  
+      if(response.fileSize > 1000000){
+        Alert.alert(
+          '图片太大',
+          '只能上传大小小于1M的图片',
+          [
+            
+            {
+              text: '确定', onPress: () => {
+                 
+              }
+            }
+          ],
+          {cancelable: false}
+        )
+        return;
+      }
+
       if  (response.didCancel) {
         console.log( '用户取消了选择！' );
       }
@@ -212,8 +239,7 @@ class CheckUserID extends React.Component{
         let source = { uri: response.uri };
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        
-
+      
         uploadImage(response)
           .then( res=>{
               //请求成功
@@ -222,7 +248,8 @@ class CheckUserID extends React.Component{
                   //这里设定服务器返回的header中statusCode为success时数据返回成功
                   this.setState({
                     id_card_picture_url: source,
-                    id_image_height:200
+                    id_image_height:200,
+                    id_placehoder_height:0
                   });
                   user_id_url = data.info;
               }else{

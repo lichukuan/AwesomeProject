@@ -9,6 +9,8 @@ import {
   Text,
   Image,
   StatusBar,
+  Dimensions,
+  TouchableHighlight
 } from 'react-native';
 import { SceneView } from 'react-navigation';
 import Config from "../../Config";
@@ -67,7 +69,7 @@ class ApplyForJoinCommunityNumberinfor extends React.Component{
 
    render(){
        return (
-         <View style={styles.rightContainer}>
+         <ScrollView style={styles.rightContainer}>
            <View style={styles.container}>
              <Text style={styles.title}>真实姓名：{this.state.real_name}</Text>
              <Text style={styles.title}>电话号码：{this.state.mobilePhoneNumber}</Text>
@@ -82,13 +84,16 @@ class ApplyForJoinCommunityNumberinfor extends React.Component{
                     // source={require('../../images/icon.jpg')}
                     source={{uri:this.state.id_pic_url}}
                     style={styles.thumbnail}/>
-              <View style={{height:10}}></View>
-              <Button title='同意加入' onPress={()=>{this.agreeJoin()} }></Button>
-              <View style={{height:10}}></View>
-              <Button title='拒绝加入' onPress={()=>{this.refuseJoin()}}></Button> 
-                          
+               <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="#DDDDDD00" style={styles.item} onPress={()=>{this.agreeJoin()}}>
+                <Text style={{fontSize:20,borderRadius:8,color:'white',backgroundColor:'#0000ffbb',textAlignVertical:'center',textAlign:'center',height:50,width:'90%'}}>同意加入</Text>
+               </TouchableHighlight>
+               <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="#DDDDDD00" style={styles.item} onPress={()=>{this.refuseJoin()}}>
+                <Text style={{fontSize:20,borderRadius:8,backgroundColor:'#0000ffbb',color:'white',textAlignVertical:'center',textAlign:'center',height:50,width:'90%',marginBottom:30}}>拒绝加入</Text>
+               </TouchableHighlight>             
            </View>
-         </View>
+         </ScrollView>
        )
    }
 
@@ -137,10 +142,9 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection: "column",
       justifyContent: "center",
-      backgroundColor: "#F5FCFF",
+      backgroundColor:'white',
   },
   rightContainer: {
-      margin:10,
       height:'100%',
   },
   title: {
@@ -149,6 +153,7 @@ const styles = StyleSheet.create({
       fontSize: 20,
       marginBottom: 9,
       justifyContent: 'flex-start',
+      marginLeft:10
   },
   ti:{
     color: '#000',
@@ -157,6 +162,7 @@ const styles = StyleSheet.create({
     marginBottom: 9,
     marginTop:9,
     justifyContent: 'flex-start',
+    marginLeft:10
   },year: {
       fontSize: 15,
       marginBottom: 5,
@@ -180,11 +186,21 @@ const styles = StyleSheet.create({
       marginBottom: 5,
   },
   thumbnail: {
-      height: 200,
-      width : '100%',
+      height: 250,
+      margin:10,
+      resizeMode:'center',
+      backgroundColor:'black'
   },
   list: {
       backgroundColor: "#FFF"
-  }
+  },
+  item:{
+    marginTop:5,
+    width:Dimensions.get('window').width,
+    flexDirection:'row',
+    alignContent:'center',
+    alignContent:'center',
+    justifyContent:'center',
+}
 });
 export default ApplyForJoinCommunityNumberinfor;

@@ -13,12 +13,12 @@ import {
   Alert
 } from 'react-native';
 import Config from '../../Config'
-
+let that;
 class CommunityManager extends React.Component{
     constructor(props){
         super(props);
         this.navigation = props.navigation;
-
+        that = this;
     }
 
     render(){
@@ -71,7 +71,7 @@ class CommunityManager extends React.Component{
     toUserCommunity(){
       if(Config.apply_for_id != null){
         console.log('我的社区');
-        this.navigation.navigate('我的社区')
+        that.navigation.navigate('社区信息',{id:Config.apply_for_id})
       }else{
         Alert.alert(
             '加入社区',
@@ -92,7 +92,23 @@ class CommunityManager extends React.Component{
 
     joinCommunity(){
         if(Config.apply_for_id != null){
-            
+          let content = ''
+          if(Config.IS_ROOT){
+            content = '您必须向应用管理员提出申请才能解散社区';
+          }else{
+            content = '您需要联系社区管理员帮您退出该社区';
+          }
+          Alert.alert(
+            '退出社区',
+            content,
+            [ 
+              {
+                text: '确定', onPress: () => {
+                }
+              }
+            ],
+            {cancelable: false}
+          )
           }else{
             Alert.alert(
                 '加入社区',
@@ -105,7 +121,6 @@ class CommunityManager extends React.Component{
                 ],
                 {cancelable: false}
               )
-        
           }  
     }
 }

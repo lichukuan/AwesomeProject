@@ -144,7 +144,12 @@ class Main extends React.Component {
     }
 
     clean(){
-        this.navigation.navigate('保洁服务')
+        if(Config.USER_POST == 'custom'){
+            this.navigation.navigate('保洁服务')
+        }else{
+            this.navigation.navigate('保洁服务处理')
+        }
+        
     }
 
     //获取隔离信息
@@ -404,6 +409,19 @@ getmyDate() {
                         <Text>健康码</Text>
                     </View>
                     </TouchableHighlight>
+                    {
+                        Config.USER_POST != 'custom'?null:
+                        (
+                            <TouchableHighlight  activeOpacity={0.6}
+                            underlayColor="white" onPress={()=>{this.showHealthCode()}}>
+                                    <View style={{flexDirection:'column',marginLeft:40,marginBottom:5}}>
+                                        <Image source={require('../images/打卡.jpg')} style={{width:35,height:35,alignSelf:'center'}}></Image>
+                                        <Text> 打卡</Text>
+                                    </View>
+                            </TouchableHighlight>
+                        )
+                    }
+                   
                 </View>
 
             </View>
@@ -426,10 +444,13 @@ getmyDate() {
                         <Text>家电维修</Text>
                     </View>
                     </TouchableHighlight>
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.parking()}}>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
                         <Image source={require('../images/停车场.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>停车服务</Text>
                     </View>
+                    </TouchableHighlight>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
                         <Image source={require('../images/失物招领.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>失物招领</Text>
@@ -529,6 +550,10 @@ getmyDate() {
 )
     }
 
+    parking(){
+        this.navigation.navigate("停车服务");
+    }
+
     myCommunity(){
         if(loginCheck()){
             if(Config.apply_for_id == null){
@@ -576,7 +601,7 @@ getmyDate() {
     showHealthCode(){
       console.log("展示健康码");
       if(loginCheck())
-      this.navigation.navigate('home',{itemId:13,key:'ShowHealthCode'});
+      this.navigation.navigate('健康码',{itemId:13,key:'ShowHealthCode'});
     }
 
     goCreateCommunityOrShowCommunityInformation(){
