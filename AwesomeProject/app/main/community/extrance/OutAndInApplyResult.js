@@ -87,7 +87,7 @@ class OutAndInApplyResult extends React.Component{
     }else{
         state = 'end'
     }   
-    const url = 'https://api2.bmob.cn/1/classes/Record'+item.objectId
+    const url = 'https://api2.bmob.cn/1/classes/Record/'+item.objectId
     var fetchOptions = {
         method: 'PUT',
         headers: {

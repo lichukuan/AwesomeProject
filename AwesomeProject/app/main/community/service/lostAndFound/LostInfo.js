@@ -2,7 +2,7 @@ import React from 'react';
 import {ActivityIndicator, FlatList, Alert,Image, StyleSheet, Text, View,TouchableHighlight,DeviceEventEmitter} from "react-native";
 import Config from '../../../Config'
 var that;
-export default class CleanDealList extends React.Component {
+export default class LostDealList extends React.Component {
     constructor(props){
       super(props);
       this.navigation = props.navigation;

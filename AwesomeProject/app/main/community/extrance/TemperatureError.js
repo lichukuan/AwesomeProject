@@ -7,7 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Config from '../../Config'
 import AsyncStorage from '@react-native-community/async-storage';
 var that;
-export default class OutAndInErrorList extends React.Component {
+export default class TemperatureError extends React.Component {
     constructor(props){
       super(props);
       this.navigation = props.navigation;
@@ -38,7 +38,7 @@ export default class OutAndInErrorList extends React.Component {
     }
 
     fetchData(){
-            const url = 'https://api2.bmob.cn/1/classes/Record?where='+JSON.stringify({
+            const url = 'https://api2.bmob.cn/1/classes/HealthCard?where='+JSON.stringify({
                   community_id:Config.apply_for_id,
             });
             var fetchOptions = {
@@ -137,9 +137,7 @@ export default class OutAndInErrorList extends React.Component {
                 <View style={{margin:5,backgroundColor:'white',padding:5}}>
                    <View style={styles.item_container}>
                        <Text style={styles.item_left}>{p.user_name}</Text>
-                       <Text style={{fontSize:18,color:'skyblue'}} onPress={()=>{
-                           that.navigation.navigate('用户信息',{id:p.user_id})
-                       }}>详情</Text>
+                       <Text style={{fontSize:18,color:'skyblue'}}>详情</Text>
                    </View>
                    <View style={styles.item_container}>
                        <Text style={styles.item_left}>异常原因</Text>
@@ -158,7 +156,6 @@ export default class OutAndInErrorList extends React.Component {
         );
     }
 
-   
     getmyDate(plus) {
         var date = new Date();
         var year = date.getFullYear().toString();
@@ -236,7 +233,7 @@ export default class OutAndInErrorList extends React.Component {
               <FlatList
                 data={this.state.data}
                 ItemSeparatorComponent={ItemDivideComponent}
-                renderItem={OutAndInErrorList.renderMovie}
+                renderItem={TemperatureError.renderMovie}
                 keyExtractor={(item, index) => item.objectId}
                />
            </View>

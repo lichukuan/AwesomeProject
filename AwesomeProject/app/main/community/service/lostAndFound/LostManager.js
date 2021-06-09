@@ -1,15 +1,13 @@
 import React from 'react';
 import {ActivityIndicator, FlatList, Alert,Image, StyleSheet,Dimensions, Text, View,TouchableHighlight,DeviceEventEmitter} from "react-native";
 import Config from '../../../Config'
-import ActionButton from 'react-native-action-button';
 var that;
-export default class CleanManager extends React.Component {
+export default class LostManager extends React.Component {
     constructor(props){
       super(props);
       this.navigation = props.navigation;
       this.state = {
           data:[],
-
       }
       that = this;
     }
@@ -17,20 +15,20 @@ export default class CleanManager extends React.Component {
     componentDidMount(){
         this.fetchData();
 
-        // this.change_community_listener = DeviceEventEmitter.addListener(Config.USER_FRAGMENT_COMMUNITY_CHANGE,(e)=>{
-        //     that.navigation.navigate('user',{itemId:3,key:e})
-        // });
+        this.listener = DeviceEventEmitter.addListener(Config.UPDATE_LOST_INFO,(e)=>{
+            this.fetchData();
+        });
+        
     }
 
     componentWillUnmount(){
-        //this.change_community_listener.remove();
+        this.listener.remove();
     }
 
     fetchData(){
             const url = 'https://api2.bmob.cn/1/classes/Service?where='+JSON.stringify({
-                  create_user_id:Config.LOGIN_USER_ID,
                   community_id:Config.apply_for_id,
-                  tag:'保洁服务'
+                  tag:'失物招领'
             });
             var fetchOptions = {
                 method: 'GET',
@@ -65,9 +63,8 @@ export default class CleanManager extends React.Component {
         // item也是FlatList中固定的参数名，请阅读FlatList的相关文档
         let state = '';
         let func = '';
-        let worker = item.deal_name
+        let worker = item.create_user_name
         let time = item.updatedAt;
-        let phone = item.deal_phone;
         switch(item.state){
            case 'wait_deal':
             state = '待处理';
@@ -80,42 +77,35 @@ export default class CleanManager extends React.Component {
                break;
             case 'dealing':
                 state = '处理中';
-                func = '完成'
                 break;
             case 'over':
                 state = '完成';
-                func = '结束'
                 break;        
         }
         
         return (
             <View>
                 <View style={{margin:5,backgroundColor:'white',padding:5,borderRadius:10,padding:10}}>
-                   <View style={styles.item_container}>
-                       <Text style={styles.item_left}>订单号</Text>
-                       <Text style={styles.item_right}>{item.objectId}</Text>
-                   </View>
-                   <View style={styles.item_container}>
+                   <Image source={{uri:item.lost_pic}} style={{height:300}}></Image> 
+                   <Text style={styles.item_left}>备注信息</Text>
+                   <Text style={{
+                       flex:1,fontSize:18,
+                       color:'black'
+                   }}>{item.lost_message}</Text>
+                   {/* <View style={styles.item_container}>
                        <Text style={styles.item_left}>状态</Text>
                        <Text style={styles.item_right}>{state}</Text>
                    </View>
                    <View style={styles.item_container}>
-                       <Text style={styles.item_left}>工作人员</Text>
+                       <Text style={styles.item_left}>发现人员</Text>
                        <Text style={styles.item_right}>{worker}</Text>
-                   </View>
-                   <View style={styles.item_container}>
-                       <Text style={styles.item_left}>联系电话</Text>
-                       <Text style={styles.item_right}>{phone}</Text>
-                   </View>
-                   <View style={styles.item_container}>
-                       <Text style={styles.item_left}>完成时间</Text>
-                       <Text style={styles.item_right}>{time}</Text>
-                   </View>
-                   {
+                   </View> */}
+
+                   {/* {
                        func == ''?null:(<View style={{height:2,backgroundColor:'gray'}}></View>)
 
-                   }
-                   <Text onPress={()=>{that.click(item)}} style={{height:60,fontSize:20,textAlignVertical:'center',textAlign:'center'}}>{func}</Text>
+                   } */}
+                   {/* <Text onPress={()=>{that.click(item)}} style={{height:60,fontSize:20,textAlignVertical:'center',textAlign:'center'}}>{func}</Text> */}
                 </View>
             </View>
         );
@@ -170,7 +160,7 @@ export default class CleanManager extends React.Component {
             create_user_name:Config.user.realName,
             community_id:Config.apply_for_id,
             clean_location:Config.user.address,
-            tag:'保洁服务',
+            tag:'失物招领',
             state:'wait_deal',
          }
            const url = 'https://api2.bmob.cn/1/classes/Service'
@@ -207,13 +197,23 @@ export default class CleanManager extends React.Component {
     render(){  
        return (
            <View>
-               <Text
-               onPress={()=>{requestApply()}}
-               style={{height:100,backgroundColor:'skyblue',fontSize:20,textAlignVertical:'center',color:'white',textAlign:'center'}}>申请入口</Text>
+                <View style={{flexDirection:'row',backgroundColor:'white',height:60,alignItems:'center'}}>
+                         <TouchableHighlight activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>this.back()}>
+                         <Image source={require('../../../../images/返回.png')} style={{height:20,width:20,marginLeft:10}} ></Image>
+                         </TouchableHighlight>
+                         <Text style={{flex:1,fontSize:20,fontWeight:'bold',alignSelf:'center',textAlign:'center'}}>失物招领</Text>
+                         <TouchableHighlight activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{
+                                 this.navigation.navigate('添加失物');
+                         }}>
+                             <Text style={{fontSize:20,color:'skyblue',paddingRight:10}}>添加</Text>
+                         </TouchableHighlight> 
+                </View>
                <FlatList
                 data={this.state.data}
                 ItemSeparatorComponent={ItemDivideComponent}
-                renderItem={CleanManager.renderMovie}
+                renderItem={LostManager.renderMovie}
                 keyExtractor={(item, index) => item.objectId}
                />
                 {/* <ActionButton 
@@ -223,28 +223,13 @@ export default class CleanManager extends React.Component {
            </View>
        )
     }
+
+    back(){
+        this.navigation.goBack();
+    }
     
 }
 
-function requestApply(){
-    Alert.alert(
-        '确定申请',
-        '请问您是否要在'+Config.user.address+'申请保洁服务',
-        [
-
-            {
-                text: '取消', onPress: () => {
-                }
-              },
-          {
-            text: '确定', onPress: () => {
-              that.appalyClean();
-            }
-          }
-        ],
-        {cancelable: false}
-      )
-}
 
 class ItemDivideComponent extends React.Component {
     render() {

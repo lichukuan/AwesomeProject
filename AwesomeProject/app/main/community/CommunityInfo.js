@@ -49,7 +49,7 @@ export default class CommunityInfo extends React.Component {
             fetch(url, fetchOptions)
             .then((response) => response.text())
             .then((responseData) => {
-                const data = JSON.parse(responseData);
+                    const data = JSON.parse(responseData);
                     this.setState({
                         data: data,
                         loaded: true
@@ -103,7 +103,7 @@ export default class CommunityInfo extends React.Component {
 
   //体温异常列表
   healthErrorList(){
-
+    this.navigation.navigate('体温异常')
   }
 
 
@@ -163,13 +163,16 @@ export default class CommunityInfo extends React.Component {
                     source={require('../../images/向右.png')}
                     style={{width:20,height:20,marginEnd:10}}/> 
             </View>   
-            </TouchableHighlight> 
+            </TouchableHighlight>
+            <TouchableHighlight  activeOpacity={0.6}  style={{flex:1,marginBottom:10}}
+                                 underlayColor="white" onPress={()=>{this.toRoot()}}>
             <View style={style.item_container}>
                     <Text style={style.item_left}>管理员</Text>
                     <Image
                     source={require('../../images/向右.png')}
                     style={{width:20,height:20,marginEnd:10}}/> 
             </View>    
+            </TouchableHighlight> 
             {/* <View style={style.item_container}>
                     <Text style={style.item_left}>社区成员</Text>
                     <Image
@@ -306,6 +309,12 @@ export default class CommunityInfo extends React.Component {
   
            </View>
        )
+    }
+
+    toRoot(){
+      this.navigation.navigate('用户信息',{
+        id:this.state.data.create_user_id
+      })
     }
     
 }

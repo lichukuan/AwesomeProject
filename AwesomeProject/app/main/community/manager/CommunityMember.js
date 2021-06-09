@@ -72,13 +72,13 @@ export default class CommunityMember extends React.Component {
             <TouchableHighlight  onPress={()=>{that.click(item)}}>
                 <View style={styles.container}>
                 <Image
-                    source={require('../../../images/icon.jpg')}
+                    source={require('../../../images/defacult_icon.png')}
                     style={styles.thumbnail}/>
                 <View style={styles.rightContainer}>
                     <Text style={styles.title}>{item.user_name}</Text>
                     <Text style={styles.title}>{item.updatedAt}</Text>
                 </View>
-                <Button title='删除'></Button>
+                {/* <Button title='删除'></Button> */}
                 </View>
             </TouchableHighlight>
         );
@@ -89,6 +89,7 @@ export default class CommunityMember extends React.Component {
        console.log(item);
     //    DeviceEventEmitter.emit(Config.USER_FRAGMENT_COMMUNITY_CHANGE,'ApplyForJoinCommunityNumberinfor');
      //  this.navigation.navigate('info',{value:item});
+     this.navigation.navigate("用户信息",{id:item.user_id,member_id:item.objectId,member_post:item.post})
     }
 
     render() {

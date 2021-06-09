@@ -10,7 +10,8 @@ import {
   TouchableHighlight,
   Image,
   Text,
-  Alert
+  Alert,
+  DeviceEventEmitter
 } from 'react-native';
 import Picker from 'react-native-picker';
 import Config from '../../Config';
@@ -47,23 +48,30 @@ class Apply extends React.Component{
              <View style={{backgroundColor:'white'}}>
                   <View style={{flexDirection:'row',alignItems:'center',height:60,padding:10}}>
                      <Text style={{fontSize:20,height:40,width:100,textAlignVertical:'center'}}>外出地址</Text>
-                     <TextInput onChangeText={(text) => {this.setName(text)}} style={{flex:1,height:50,fontSize:18}} placeholder="请输入外出地址"></TextInput>
+                     <TextInput onChangeText={(text) => {this.setOutAdress(text)}} style={{flex:1,height:50,fontSize:18}} placeholder="请输入外出地址"></TextInput>
                   </View>
                   <View style={{flexDirection:'row',alignItems:'center',height:60,padding:10}}>
                      <Text style={{fontSize:20,height:40,width:100,textAlignVertical:'center'}}>外出原因</Text>
-                     <TextInput onChangeText={(text) => {this.setAddress(text)}} style={{flex:1,height:50,fontSize:18}} placeholder="请输入外出原因"></TextInput>
+                     <TextInput onChangeText={(text) => {this.setOutReason(text)}} style={{flex:1,height:50,fontSize:18}} placeholder="请输入外出原因"></TextInput>
                   </View>
-                  <TouchableHighlight  onPress={()=>{this.pickType()}} style={{marginHorizontal:10}}>
+                  <TouchableHighlight  
+                  activeOpacity={0.6}
+                  underlayColor="white"
+                  onPress={()=>{this.pickType()}} style={{marginHorizontal:10}}>
                       <View style={{flexDirection:'row',height:50,alignContent:'center',alignItems:'center'}}>
                             <Text style={{flex:1,fontSize:20,color:'gray'}}>请假类型</Text>
                             <Text style={{fontSize:20}}>{type}</Text>
                       </View>
                   </TouchableHighlight>
-
+                  {
+                    type == '长时间离开'?(
+                      <TextInput onChangeText={(text)=>{this.setDay(text)}} style={{height:60,fontSize:18,marginHorizontal:10}} placeholder="请输入请假时间"></TextInput>
+                    ):null
+                  }
                   <TextInput maxLength={2}
                             multiline = {true} onChangeText={(text) => {this.setOther(text)}} style={{height:120,fontSize:18,marginHorizontal:10,textAlignVertical: 'top'}} placeholder="请输入备注" value={other}></TextInput>
              </View>
-             <Text style={{color:'white',backgroundColor:'blue',height:50,borderRadius:25,marginHorizontal:20,textAlignVertical:'center',textAlign:'center',fontSize:25,marginTop:20}}>申请</Text>
+             <Text style={{color:'white',backgroundColor:'blue',height:50,borderRadius:25,marginHorizontal:20,textAlignVertical:'center',textAlign:'center',fontSize:25,marginTop:20}} onPress={()=>{this.check()}}>申请</Text>
 
            </ScrollView>
         )
@@ -79,13 +87,12 @@ class Apply extends React.Component{
 
   check(){
     const type = this.state.type;
-    const name = this.state.name;
-    const address = this.state.address;
+    // const name = this.state.name;
     const out_address = this.state.out_address;
     const day = this.state.day;
     const reason = this.state.reason;
     const other = this.state.other;
-    if(type == default_type || name == ''  || out_address == '' || reason == ''){
+    if(type == default_type || out_address == '' || reason == ''){
         Alert.alert(
           '请完善信息',
           '除了备注之外，其他信息都为必要信息',
@@ -119,7 +126,7 @@ class Apply extends React.Component{
                     day:day,
                     reason:reason,
                     user_id:Config.LOGIN_USER_ID,
-                    user_name:name,
+                    user_name:Config.user.realName,
                     type:_type,
                     out_time:that.getmyDate(),
                     community_id:Config.apply_for_id
@@ -129,6 +136,7 @@ class Apply extends React.Component{
             .then((response) => response.text())
             .then((responseData) => {
                 console.log(responseData);
+                DeviceEventEmitter.emit(Config.UPDATE_OUT_AND_IN_INFO,true);
                 that.navigation.goBack();
             }).done();   
     }

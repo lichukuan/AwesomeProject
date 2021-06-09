@@ -147,7 +147,7 @@ class Main extends React.Component {
         if(Config.USER_POST == 'custom'){
             this.navigation.navigate('保洁服务')
         }else{
-            this.navigation.navigate('保洁服务处理')
+            this.navigation.navigate('保洁服务')
         }
         
     }
@@ -451,15 +451,21 @@ getmyDate() {
                         <Text>停车服务</Text>
                     </View>
                     </TouchableHighlight>
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.lost()}}>
                     <View style={{flexDirection:'column',marginBottom:5,marginLeft:20}}>
                         <Image source={require('../images/失物招领.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>失物招领</Text>
                     </View>
+                    </TouchableHighlight>
                     <View style={{width:20}}></View>
+                    <TouchableHighlight  activeOpacity={0.6}
+                                 underlayColor="white" onPress={()=>{this.express()}}>
                     <View style={{flexDirection:'column',marginBottom:5,marginTop:10}}>
                         <Image source={require('../images/快递员.png')} style={{width:35,height:35,alignSelf:'center'}}></Image>
                         <Text>代取快递</Text>
                     </View>
+                    </TouchableHighlight>
                 </View>
             </View>
 
@@ -492,10 +498,6 @@ getmyDate() {
           visible={this.state.defaultAnimationDialog}
           rounded
           actionsBordered
-          // actionContainerStyle={{
-          //   height: 100,
-          //   flexDirection: 'column',
-          // }}
           dialogTitle={
             <DialogTitle
               title="隔离政策"
@@ -548,6 +550,18 @@ getmyDate() {
       </ScrollView>     
       
 )
+    }
+
+    lost(){
+        this.navigation.navigate("失物招领")
+    }
+
+    express(){
+        if(Config.USER_POST == 'custom'){
+            this.navigation.navigate("代取快递")
+        }else{
+            this.navigation.navigate("代取快递处理")
+        }
     }
 
     parking(){

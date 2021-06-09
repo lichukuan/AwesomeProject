@@ -26,7 +26,8 @@ class Register extends React.Component{
         this.state = {
             name:"",
             pas:"",
-            phone:''
+            phone:'',
+            second:60
         }
         that = this;
         this.navigation=props.navigation;
@@ -34,15 +35,6 @@ class Register extends React.Component{
 
     render(){
         return (
-            // <View style={{margin:10}}>
-            //     <TextInput onChangeText={(text) => {this.setName(text)}} style={style.name} placeholder="请输入用户名"></TextInput>
-            //     <TextInput  onChangeText={(text) => {this.setPas(text)}} style={style.name} password = {true} placeholder="请输入密码" ></TextInput>
-            //     <TextInput  onChangeText={(text) => {this.setPhone(text)}} style={style.name} password = {true} placeholder="请输入手机号" ></TextInput>                
-            //    <TouchableHighlight  activeOpacity={0.6}
-            //                      underlayColor="#DDDDDD" style={style.item} onPress={()=>{this.register()}}>
-            //     <Text style={{fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:40}}>注册</Text>
-            //    </TouchableHighlight>
-            // </View>
             <ImageBackground style={{flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -59,8 +51,8 @@ class Register extends React.Component{
                 underlineColorAndroid={'transparent'}  //将下划线颜色改为透明
                 placeholderTextColor={'gray'}  //设置占位符颜色
                 ></TextInput>
-                <TextInput  onChangeText={(text) => {this.setPhone(text)}} style={{ paddingHorizontal:20,width: '80%',height: 50,fontSize: 17,backgroundColor:'#ffffffbb',color: '#000000',marginTop:10,borderRadius:8}} password = {true} placeholder="请输入手机号" 
-                secureTextEntry={true}  //设置为密码输入框
+                <TextInput  onChangeText={(text) => {this.setPhone(text)}} style={{ paddingHorizontal:20,width: '80%',height: 50,fontSize: 17,backgroundColor:'#ffffffbb',color: '#000000',marginTop:10,borderRadius:8}}  placeholder="请输入手机号" 
+                //设置为密码输入框
                 autoCapitalize='none'  //设置首字母不自动大写
                 underlineColorAndroid={'transparent'}  //将下划线颜色改为透明
                 placeholderTextColor={'gray'}  //设置占位符颜色
@@ -68,7 +60,7 @@ class Register extends React.Component{
 
                 <View style={{flexDirection:'row',width:'88%',justifyContent:'space-around'}}>
                 <TextInput  
-                 onChangeText={(text) => {this.setPhone(text)}} style={{ paddingHorizontal:20,width: '50%',height: 50,fontSize: 17,backgroundColor:'#ffffffbb',color: '#000000',marginTop:10,borderRadius:8}} password = {true} 
+                 onChangeText={(text) => {this.setSMS(text)}} style={{ paddingHorizontal:20,width: '50%',height: 50,fontSize: 17,backgroundColor:'#ffffffbb',color: '#000000',marginTop:10,borderRadius:8}} password = {true} 
                  secureTextEntry={true}  //设置为密码输入框
                  autoCapitalize='none'  //设置首字母不自动大写
                  underlineColorAndroid={'transparent'}  //将下划线颜色改为透明
@@ -100,6 +92,10 @@ class Register extends React.Component{
         this.setState({phone:data});
     }
 
+    setSMS(data){
+        this.setState({smsCode:data});
+    }
+
     tick(){
         this.setState({
           second:this.state.second - 1
@@ -107,7 +103,7 @@ class Register extends React.Component{
         if(this.state.second == 0){
           isSendCode = false;
           this.setState({
-            second:600
+            second:60
           })
           clearInterval(this.interval);
         }
@@ -145,7 +141,9 @@ class Register extends React.Component{
         const  url = 'https://api2.bmob.cn/1/users';
         const name = this.state.name;
         const pas = this.state.pas+"";
-        const phone = this.state.phone+'';
+        const phone = this.state.phone;
+        const smsCode = this.state.smsCode;
+        console.log("姓名 "+name+"  phone = "+phone);
         var fetchOptions = {
             method: 'POST',
             headers: {
@@ -154,6 +152,7 @@ class Register extends React.Component{
             'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                smsCode:smsCode,
                 username : name,
                 password : pas,
                 mobilePhoneNumber:phone

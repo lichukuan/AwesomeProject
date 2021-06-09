@@ -15,6 +15,8 @@ export default class UserInfo extends React.Component {
             post:''
           },
           id:props.route.params.id,
+          member_id:props.route.params.member_id,
+          member_post:props.route.params.member_post
       }
       that = this;
     }
@@ -53,15 +55,15 @@ export default class UserInfo extends React.Component {
         })
     }
      outAndInRecord(){
-
+       this.navigation.navigate('出入记录')
      }
 
      cardRecord(){
-
+        this.navigation.navigate('打卡记录')
      }
 
      serviceCard(){
-
+        this.navigation.navigate('服务记录')
      }
 
 
@@ -71,16 +73,7 @@ export default class UserInfo extends React.Component {
        const name = this.state.data.real_name;
        const address = this.state.data.address;
        const phone = this.state.data.mobilePhoneNumber;
-       let post = this.state.data.post;
-       if(post == 'root'){
-         post = '管理员'
-       } else if(post == 'worker'){
-         post = '工作人员'
-       } else if(post == 'custom'){
-           post = '住户'
-       }else{
-           post = '无'
-       }
+       let post = this.state.member_post;
        return (
            <View style={{flexDirection:'column',flex:1,alignItems:'center'}}>
               {/* 头像界面 */}
@@ -158,22 +151,79 @@ export default class UserInfo extends React.Component {
             </TouchableHighlight>
             </View>
             <View style={{flex:1}}></View>
-            <View style={{marginTop:10,alignContent:'center',backgroundColor:'white',width:Dimensions.get('window').width,flexDirection:'row'}}>
+            {
+                (Config.IS_ROOT && this.state.id != Config.LOGIN_USER_ID)?
+                (<View style={{marginTop:10,alignContent:'center',backgroundColor:'white',width:Dimensions.get('window').width,flexDirection:'row'}}>
                 <TouchableHighlight  activeOpacity={0.6} underlayColor="#DDDDDD" style={{height:50,borderRadius:25,margin:10,flex:1}} onPress={()=>{
-                    
+                     if(post == 'custom'){
+                        this.changeWorker('worker')
+                    }else{
+                        this.changeWorker('custom')
+                    }
                 }}>
                 <Text style={{ fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:50,backgroundColor:'skyblue',
-                    borderRadius:10,alignContent:'center',alignItems:'center'}}>工作人员</Text>
+                    borderRadius:10,alignContent:'center',alignItems:'center'}}>{
+                        post == 'custom' ? "工作人员" : "居民"
+                    }</Text>
                 </TouchableHighlight>
                 <TouchableHighlight  activeOpacity={0.6} underlayColor="#DDDDDD" style={{height:50,borderRadius:25,margin:10,flex:1}} onPress={()=>{
-                    
+                   this.deleteWorker();
                 }}>
-                <Text style={{ fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:50,backgroundColor:'skyblue',
-                    borderRadius:10,alignContent:'center',alignItems:'center'}}>住户</Text>
+                <Text style={{ fontSize:20,color:'white',textAlignVertical:'center',textAlign:'center',height:50,backgroundColor:'red',
+                    borderRadius:10,alignContent:'center',alignItems:'center'}}>删除</Text>
                 </TouchableHighlight>
-           </View>
+           </View>):null
+            }
+            
            </View>
        )
+    }
+
+    changeWorker(type){
+        if(this.state.member_id != undefined){
+            const url = 'https://api2.bmob.cn/1/classes/CmmunityMember/'+this.state.member_id;
+            var fetchOptions = {
+                method: 'PUT',
+                headers: {
+                'X-Bmob-Application-Id': Config.BMOB_APP_ID,
+                'X-Bmob-REST-API-Key': Config.REST_API_ID,
+                'Content-Type': 'application/json',
+                'X-Bmob-Session-Token':Config.SESSION_TOKEN
+                },
+                body: JSON.stringify({
+                   post:type
+                })
+            };
+            fetch(url, fetchOptions)
+            .then((response) => response.text())
+            .then((responseText) => {
+                const data = JSON.parse(responseText);
+                console.log(data);
+                that.navigation.goBack();    
+            }).done(); 
+        }
+    }
+
+    deleteWorker(){
+        if(this.state.member_id != undefined){
+            const url = 'https://api2.bmob.cn/1/classes/CmmunityMember/'+this.state.member_id;
+            var fetchOptions = {
+                method: 'DELETE',
+                headers: {
+                'X-Bmob-Application-Id': Config.BMOB_APP_ID,
+                'X-Bmob-REST-API-Key': Config.REST_API_ID,
+                'Content-Type': 'application/json',
+                'X-Bmob-Session-Token':Config.SESSION_TOKEN
+                }
+            };
+            fetch(url, fetchOptions)
+            .then((response) => response.text())
+            .then((responseText) => {
+                const data = JSON.parse(responseText);
+                console.log(data);
+                that.navigation.goBack();    
+            }).done(); 
+        }
     }
     
 }

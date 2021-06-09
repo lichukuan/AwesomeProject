@@ -53,11 +53,11 @@ class CreateCommunity extends React.Component{
                 <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
                 <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="white" onPress={()=>{
-                                    Linking.canOpenURL('mqq:2896754286').then(supported => {
+                                    Linking.canOpenURL('mqq:qq号').then(supported => {
                                         if (!supported) {
                                            this.props.setToastMsg('请先安装QQ')
                                         } else {
-                                           return Linking.openURL('mqq:2896754286')
+                                           return Linking.openURL('mqq:qq号')
                                         }
                                      })
                                  }}>
@@ -69,11 +69,11 @@ class CreateCommunity extends React.Component{
 
                     <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="white" onPress={()=>{
-                                    Linking.canOpenURL('tel:${"15207067001"}').then(supported => {
+                                    Linking.canOpenURL('tel:${"电话号码"}').then(supported => {
                                         if (!supported) {
                                            this.props.setToastMsg('出错了')
                                         } else {
-                                           return Linking.openURL('tel:${"15207067001"}')
+                                           return Linking.openURL('tel:${"电话号码"}')
                                         }
                                      })
                                  }}>
@@ -89,16 +89,16 @@ class CreateCommunity extends React.Component{
             <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
                     <View style={{flexDirection:'row'}}>
                         <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>管理员</Text>
-                        <Text style={{marginTop:10,fontSize:18,color:'black',marginLeft:10}}>唐三桂</Text>
+                        <Text style={{marginTop:10,fontSize:18,color:'black',marginLeft:10}}>xxx</Text>
                     </View>    
                 <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
                 <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="white" onPress={()=>{
-                                    Linking.canOpenURL('mqq://975096573').then(supported => {
+                                    Linking.canOpenURL('mqq://qq号').then(supported => {
                                         if (!supported) {
                                            this.props.setToastMsg('请先安装QQ')
                                         } else {
-                                           return Linking.openURL('mqqwpa://im/chat?chat_type=wpa&uin=975096573')
+                                           return Linking.openURL('mqqwpa://im/chat?chat_type=wpa&uin=qq号')
                                         }
                                      })
                                  }}>
@@ -111,11 +111,11 @@ class CreateCommunity extends React.Component{
 
                     <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="white" onPress={()=>{
-                                    Linking.canOpenURL('tel:${"13340262094"}').then(supported => {
+                                    Linking.canOpenURL('tel:${"电话号码"}').then(supported => {
                                         if (!supported) {
                                            this.props.setToastMsg('出错了')
                                         } else {
-                                           return Linking.openURL('tel:${"13340262094"}')
+                                           return Linking.openURL('tel:${"电话号码"}')
                                         }
                                      })
                                  }}>
@@ -132,16 +132,16 @@ class CreateCommunity extends React.Component{
             <View style={{marginTop:10,backgroundColor:'white',borderRadius:10,flexDirection:'column',height:150}}>
                     <View style={{flexDirection:'row'}}>
                         <Text style={{marginTop:10,fontSize:18,color:'gray',marginLeft:10}}>管理员</Text>
-                        <Text style={{marginTop:10,fontSize:18,color:'black',marginLeft:10}}>刘彦斌</Text>
+                        <Text style={{marginTop:10,fontSize:18,color:'black',marginLeft:10}}>xxx</Text>
                     </View>    
                 <View style={{flexDirection:'row',marginLeft:10,flex:1,alignItems:'center',justifyContent:'flex-start'}}>
                 <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="white" onPress={()=>{
-                                    Linking.canOpenURL('mqq://247804779').then(supported => {
+                                    Linking.canOpenURL('mqq://qq号').then(supported => {
                                         if (!supported) {
                                            this.props.setToastMsg('请先安装QQ')
                                         } else {
-                                           return Linking.openURL('mqqwpa://im/chat?chat_type=wpa&uin=247804779')
+                                           return Linking.openURL('mqqwpa://im/chat?chat_type=wpa&uin=qq号')
                                         }
                                      })
                                  }}>
@@ -154,11 +154,11 @@ class CreateCommunity extends React.Component{
 
                     <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="white" onPress={()=>{
-                                    Linking.canOpenURL('tel:${"13509443150"}').then(supported => {
+                                    Linking.canOpenURL('tel:${"电话号码"}').then(supported => {
                                         if (!supported) {
                                            this.props.setToastMsg('出错了')
                                         } else {
-                                           return Linking.openURL('tel:${"13509443150"}')
+                                           return Linking.openURL('tel:${"电话号码"}')
                                         }
                                      })
                                  }}>

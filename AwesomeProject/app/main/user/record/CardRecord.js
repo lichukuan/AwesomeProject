@@ -7,13 +7,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Config from '../../Config'
 import AsyncStorage from '@react-native-community/async-storage';
 var that;
-export default class OutAndInManager extends React.Component {
+export default class CardRecord extends React.Component {
     constructor(props){
       super(props);
       this.navigation = props.navigation;
       this.state = {
           data:[],
-
       }
       that = this;
     }
@@ -31,21 +30,16 @@ export default class OutAndInManager extends React.Component {
         this.change_community_listener = DeviceEventEmitter.addListener(Config.USER_FRAGMENT_COMMUNITY_CHANGE,(e)=>{
             that.navigation.navigate('user',{itemId:3,key:e})
         });
-
-        this.listener1 = DeviceEventEmitter.addListener(Config.UPDATE_OUT_AND_IN_INFO,(e)=>{
-            this.fetchData();
-        });
     }
 
     componentWillUnmount(){
         this.listener.remove();
         this.change_community_listener.remove();
-        this.listener1.remove();
     }
 
-    //社区管理应用
     fetchData(){
-            const url = 'https://api2.bmob.cn/1/classes/Record?where='+JSON.stringify({
+            const url = 'https://api2.bmob.cn/1/classes/HealthCard?where='+JSON.stringify({
+                  community_id:Config.apply_for_id,
                   user_id:Config.LOGIN_USER_ID
             });
             var fetchOptions = {
@@ -61,13 +55,38 @@ export default class OutAndInManager extends React.Component {
             .then((responseData) => {
                 console.log("获取的申请为："+responseData);
                 const data = JSON.parse(responseData);
-                this.setState({
-                    data: data.results,
-                    loaded: true
-                });
+                if(data.results.length > 0){
+                    this.setState({
+                        data: data.results,
+                        loaded: true
+                    });
+                }
             }).done();        
     }
 
+
+    //20210420
+   conver(a){
+    // 如果想要替换所有指定的字符串，可以用while循环
+    var strArray = a.split('-')
+    let year = parseInt(strArray[0])*10000;
+    let month = parseInt(strArray[1])*100;
+    let day = parseInt(strArray[2]);
+    return year+month+day;
+  }
+
+  getDate(plus) {
+       var date = new Date();
+       var year = date.getFullYear()*10000;
+       var month = (date.getMonth()+1)*100;
+       var day = (date.getDate()+parseInt(plus)) - 1;
+       console.log(day);
+       return year+month+day;
+    }
+
+    getmyDate() {
+        return this.getDate(1);  
+      }
     static renderLoadingView() {  
         return (
             <View style={styles.container}>
@@ -79,48 +98,29 @@ export default class OutAndInManager extends React.Component {
     static renderMovie({item}) {
         // { item }是一种“解构”写法，请阅读ES2015语法的相关文档
         // item也是FlatList中固定的参数名，请阅读FlatList的相关文档
-        let state = '';
-        switch(item.state){
-           case 'wait_out':
-            state = '待出门';
-            break;
-           case 'wait_in':
-               state = '待回家';
-               break;
-            default:
-                state = '结束';    
-        }
-        if(item.request_state == 'refuse'){
-            state = '已拒绝'
-        }else if(item.request_state == 'wait'){
-            state = '待同意'
-        }
-        const backTime = that.getmyDate(item.day);
+        console.log("==data===");
+        console.log(item);
+        const p = item;
+        const type = item.type;
         return (
             <View >
                 <View style={{margin:5,backgroundColor:'white',padding:5}}>
                    <View style={styles.item_container}>
-                       <Text style={styles.item_left}>{item.user_name}</Text>
-                       <Text style={styles.item_right}>{state}</Text>
+                       <Text style={styles.item_left}>{p.user_name}</Text>
+                       {/* <Text style={{fontSize:18,color:'skyblue'}}>详情</Text> */}
                    </View>
                    <View style={styles.item_container}>
-                       <Text style={styles.item_left}>外出时间</Text>
-                       <Text style={styles.item_right}>{item.out_time}</Text>
+                       <Text style={styles.item_left}>外出类型</Text>
+                       <Text style={styles.item_right}>{type=='long'?'长时间离返':'今日离返'}</Text>
                    </View>
                    <View style={styles.item_container}>
-                       <Text style={styles.item_left}>外出地点</Text>
-                       <Text style={styles.item_right}>{item.address}</Text>
+                       <Text style={styles.item_left}>外出地址</Text>
+                       <Text style={styles.item_right}>{p.address}</Text>
                    </View>
                    <View style={styles.item_container}>
-                       <Text style={styles.item_left}>预计返回时间</Text>
-                       <Text style={styles.item_right}>{backTime}</Text>
+                       <Text style={styles.item_left}>外出原因</Text>
+                       <Text style={styles.item_right}>{p.reason}</Text>
                    </View>
-                   <View style={styles.item_container}>
-                       <Text style={styles.item_left}>更新时间</Text>
-                       <Text style={styles.item_right}>{item.updatedAt}</Text>
-                   </View>
-                   <View style={{height:2,backgroundColor:'gray'}}></View>
-                   <Text onPress={()=>{that.click(item)}} style={{height:60,fontSize:20,textAlignVertical:'center',textAlign:'center'}}>详情</Text>
                 </View>
             </View>
         );
@@ -135,28 +135,75 @@ export default class OutAndInManager extends React.Component {
         return year+'-'+month+'-'+day;
      }
 
-    click(item){
+    clickAgree(item){
        console.log("item==============");
        console.log(item);
+       this.updateData(item,'agree')
+       const i = this.getIndex(item);
+       console.log('i = '+i);
+       let data = this.state.data;
+       const res = data.splice(i,1);
+       console.log('res = ' + data.length);
+       this.setState({
+           data:data
+       })
     //    DeviceEventEmitter.emit(Config.USER_FRAGMENT_COMMUNITY_CHANGE,'ApplyForJoinCommunityNumberinfor');
-       this.navigation.navigate('出入详情',{value:item});
+       //this.navigation.goBack();
     }
 
-    requestApply(){
-        //出入申请
-        this.navigation.navigate('出入申请');
-    }
+    clickRefuse(item){
+        console.log("item==============");
+        console.log(item);
+        this.updateData(item,'refuse')
+        const i = this.getIndex(item);
+       console.log('i = '+i);
+       let data = this.state.data;
+       const res = data.splice(i,1);
+       console.log('res = ' + data.length);
+       this.setState({
+           data:data
+       })
+     //    DeviceEventEmitter.emit(Config.USER_FRAGMENT_COMMUNITY_CHANGE,'ApplyForJoinCommunityNumberinfor');
+        //this.navigation.goBack();
+     }
+
+     getIndex(item){
+         const data = this.state.data;
+         for(var i = 0;i < data.length;i++){
+             if(data[i].objectId == item.objectId){
+                 return i;
+             }
+         }
+     }
+
+     updateData(item,data){  
+        const url = 'https://api2.bmob.cn/1/classes/Record/'+item.objectId
+        var fetchOptions = {
+            method: 'PUT',
+            headers: {
+            'X-Bmob-Application-Id': Config.BMOB_APP_ID,
+            'X-Bmob-REST-API-Key': Config.REST_API_ID,
+            'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                request_state:data,//出入状态,wait_out wait_in
+             })
+        };
+        fetch(url, fetchOptions)
+        .then((response) => response.text())
+        .then((responseData) => {
+            console.log(responseData);
+            //that.navigation.goBack();
+        }).done();   
+       }
 
     render(){  
        return (
            <View>
-               <Text
-               onPress={()=>{this.requestApply()}}
-               style={{height:100,backgroundColor:'skyblue',fontSize:20,textAlignVertical:'center',color:'white',textAlign:'center'}}>申请入口</Text>
-               <FlatList
+              <FlatList
                 data={this.state.data}
                 ItemSeparatorComponent={ItemDivideComponent}
-                renderItem={OutAndInManager.renderMovie}
+                renderItem={CardRecord.renderMovie}
                 keyExtractor={(item, index) => item.objectId}
                />
            </View>

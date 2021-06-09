@@ -1,5 +1,13 @@
 export default class Config{
 
+   
+
+   //更新出入申请信息
+   static UPDATE_OUT_AND_IN_INFO = 'UPDATE_OUT_AND_IN_INFO';
+
+   //更新失物招领信息
+   static UPDATE_LOST_INFO = 'UPDATE_LOST_INFO';
+
    //用户登录状态更新广播 
    static UPDATE_USER_LOGIN_INFO = 'UPDATE_USER_LOGIN_INFO';
 
@@ -23,8 +31,8 @@ export default class Config{
    static create_community_id = null;//管理员创建的社区id
    static USER_POST = null;//社区的职位
    
-   static BMOB_APP_ID = '6ff9c68a13e661734e423db5c32da5e8';
-   static REST_API_ID = 'b1af538d4e7e039a876546bdc8cd121b';
+   static BMOB_APP_ID = '填入自己的bmob的id';
+   static REST_API_ID = '填入自己的bmob的rest api id';
 
    static json_ip_data = null;
    static json_epidemic_data = null;

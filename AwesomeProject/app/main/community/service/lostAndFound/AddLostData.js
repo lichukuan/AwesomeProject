@@ -15,7 +15,7 @@ import {
   Alert
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import Config from '../Config';
+import Config from '../../../Config';
 var that = null;
  
 //图片选择器参数设置
@@ -31,8 +31,7 @@ var  options = {
 };
 let user_real_url = '';
 let user_id_url = '';
-let isSendCode = false;
-class CheckUserID extends React.Component{
+class AddLostData extends React.Component{
 
   constructor(props){
      super(props);
@@ -57,55 +56,36 @@ class CheckUserID extends React.Component{
       const id_card_picture_url = this.state.id_card_picture_url;
        return (
            <ScrollView style={{}}>
-             <View style={{backgroundColor:'white',height:120}}>
-                  <View style={{flexDirection:'row',alignItems:'center',height:60,padding:10}}>
-                     <Text style={{fontSize:20,height:40,width:100,textAlignVertical:'center'}}>姓名</Text>
-                     <TextInput onChangeText={(text) => {this.setName(text)}} style={{flex:1,height:50,fontSize:18}} placeholder="请输入真实姓名"></TextInput>
-                  </View>
-                  <View style={{flexDirection:'row',alignItems:'center',height:60,padding:10}}>
-                     <Text style={{fontSize:20,height:40,width:100,textAlignVertical:'center'}}>社区地址</Text>
-                     <TextInput onChangeText={(text) => {this.setAddress(text)}} style={{flex:1,height:50,fontSize:18}} placeholder="请输入社区地址"></TextInput>
-                  </View>
-             </View>
+            
              <View style={{marginTop:20,backgroundColor:'white'}}>
-               <Text style={{fontSize:20,padding:10}}>个人照片</Text>
-               <Image source={real_picture_url} style={{marginTop:10,height:this.state.real_image_height,width:'80%',alignSelf:'center'}}></Image>
-               <TouchableHighlight  activeOpacity={0.6}
-                                 underlayColor="white" onPress = {()=>{this.takeRealPicture()}}>
-               <Image source={require('../../images/real_pic.png') } style={{alignSelf:'center',height:this.state.real_palcehoder_height}} ></Image>
-                                 </TouchableHighlight>
-               <Text style={{fontSize:20,padding:10}}>身份证正面照</Text>
                <Image source={id_card_picture_url} style={{marginTop:10,height:this.state.id_image_height,width:'80%',alignSelf:'center'}}></Image>
                <TouchableHighlight  activeOpacity={0.6}
                                  underlayColor="white" onPress = {()=>{this.takeIDCardPicture()}}>
-               <Image source={require('../../images/id_card_pic.png') } style={{alignSelf:'center',height:this.state.id_placehoder_height}} onPress = {()=>{this.takeIDCardPicture()}}></Image>
+               <Image source={require('../../../../images/lost_bg.jpg') } style={{alignSelf:'center',height:this.state.id_placehoder_height}} ></Image>
                </TouchableHighlight>
                <View style={{height:20}}></View>
              </View>
+             <View style={{backgroundColor:'white',height:200}}>
+                  <View style={{flexDirection:'column',height:260}}>
+                     <Text style={{fontSize:20,height:40,width:100,marginLeft:10}}>备注信息</Text>
+                     <TextInput onChangeText={(text) => {this.setAddress(text)}} style={{height:150,fontSize:18,marginLeft:10,textAlignVertical: 'top'}} 
+                      maxLength={400}
+                      multiline = {true}
+                     placeholder="请输入备注信息"></TextInput>
+                  </View>
+             </View>
             <View style={{height:10}}></View>
             {/* <Button onPress={()=>{this.check()}} style={style.button}  title="认证"></Button> */}
-            <Text style={{color:'white',backgroundColor:'blue',height:50,borderRadius:25,marginHorizontal:20,textAlignVertical:'center',textAlign:'center',fontSize:25}} onPress={()=>{this.check()}}>申请</Text>
+            <Text style={{color:'white',backgroundColor:'blue',height:50,borderRadius:25,marginHorizontal:20,textAlignVertical:'center',textAlign:'center',fontSize:25}} onPress={()=>{this.update()}}>确定</Text>
            </ScrollView>
         )
    }
 
 
-
-   setPhone(data){
-      this.setState({phone:data})
-   }
-
    setAddress(data){
       this.setState({
         address:data
       })
-   }
-   setCode(data){
-      this.setState({code:data})
-   } 
-
-   setName(data){
-     this.setState({name:data})
    }
 
   tick(){
@@ -120,92 +100,6 @@ class CheckUserID extends React.Component{
       clearInterval(this.interval);
     }
   }
-
-   sendMessage(){
-     if(isSendCode){
-       return;
-     }
-     isSendCode = true;
-     this.interval = setInterval(() => this.tick(), 1000);
-      const url = 'https://api2.bmob.cn/1/requestSmsCode';
-      const phone = this.state.phone;
-      var fetchOptions = {
-        method: 'POST',
-        headers: {
-        'X-Bmob-Application-Id': Config.BMOB_APP_ID,
-        'X-Bmob-REST-API-Key': Config.REST_API_ID,
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            mobilePhoneNumber : phone,
-        })
-    };
-    fetch(url, fetchOptions)
-    .then((response) => response.text())
-    .then((responseText) => {
-        console.log(responseText);
-        const data = JSON.parse(responseText);
-        
-    }).done();      
-   }
-
-   takeRealPicture(){
-    launchImageLibrary(options, (response) => {
-      console.log( 'Response = ' , response);
-      if(response.fileSize > 1000000){
-        Alert.alert(
-          '图片太大',
-          '只能上传大小小于1M的图片',
-          [
-            
-            {
-              text: '确定', onPress: () => {
-                 
-              }
-            }
-          ],
-          {cancelable: false}
-        )
-        return;
-      }
-      if  (response.didCancel) {
-        console.log( '用户取消了选择！' );
-      }
-      else  if  (response.error) {
-        alert( "ImagePicker发生错误："  + response.error);
-      }
-      else  if  (response.customButton) {
-        alert( "自定义按钮点击："  + response.customButton);
-      }
-      else  {
-        let source = { uri: response.uri };
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        uploadImage(response)
-          .then( res=>{
-              //请求成功
-              const data = JSON.parse(res)
-              if(data.code === '200'){
-                  //这里设定服务器返回的header中statusCode为success时数据返回成功
-                  this.setState({
-                    real_picture_url: source,
-                    real_image_height:200,
-                    real_palcehoder_height:0
-                  });
-                  user_real_url = data.info;
-                  console.log('user_real_url = '+user_real_url);
-              }else{
-                   //服务器返回异常，设定服务器返回的异常信息保存在 header.msgArray[0].desc
-                  console.log(res);
-              }
-          }).catch( err => { 
-            console.log('uploadImage', err.message);
-               //请求失败
-          })
-      }
-    });
-   }
-
    takeIDCardPicture(){
     launchImageLibrary(options, (response) => {
       console.log( 'Response = ' , response);
@@ -264,34 +158,39 @@ class CheckUserID extends React.Component{
     });
    }
 
-   check(){
-      const url = 'https://api2.bmob.cn/1/users/'+Config.LOGIN_USER_ID;
+
+   update(){
+     const address = this.state.address;
+     const pic = user_id_url;
+      const url = 'https://api2.bmob.cn/1/classes/Service'
       var fetchOptions = {
-        method: 'PUT',
+        method: 'POST',
         headers: {
         'X-Bmob-Application-Id': Config.BMOB_APP_ID,
         'X-Bmob-REST-API-Key': Config.REST_API_ID,
-        'X-Bmob-Session-Token':Config.SESSION_TOKEN,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            real_name:this.state.name,
-            address:this.state.address,
-            real_picture_url:user_real_url,
-            id_card_picture_url:user_id_url,
-            authentication:true
+           lost_pic:pic,
+           lost_message:address,
+           tag:'失物招领',
+           state:"dealing",
+           create_user_name:Config.user.realName,
+           create_user_id:Config.LOGIN_USER_ID,
+           community_id:Config.apply_for_id
         })
     };
     fetch(url, fetchOptions)
     .then((response) => response.text())
     .then((responseText) => {
+      console.log(responseText);
+        //const data = JSON.parse(responseText);
         console.log(responseText);
         const data = JSON.parse(responseText);
-          that.navigation.goBack();
-          Config.authentication= true
+        DeviceEventEmitter.emit(Config.UPDATE_LOST_INFO,true);
+        that.navigation.goBack();
     }).done();    
    }
-
 
 }
 
@@ -358,4 +257,4 @@ const style = StyleSheet.create({
 });
 
 
-export default CheckUserID;
+export default AddLostData;

@@ -47,6 +47,14 @@ import GetPassword from './app/main/user/account/GetPassword'
 import UpdatePhone from './app/main/user/account/UpdatePhone'
 import AboutApp from './app/main/user/AboutApp'
 import Parking from './app/main/community/service/parking/Parking'
+import ExpressManager from './app/main/community/service/express/ExpressManager'
+import ExpressDealList from './app/main/community/service/express/ExpressDealList'
+import LostManager from './app/main/community/service/lostAndFound/LostManager'
+import AddLostData from './app/main/community/service/lostAndFound/AddLostData'
+import TemperatureError from './app/main/community/extrance/TemperatureError'
+import OutAndInRecord from './app/main/user/record/OutAndInRecord'
+import ServiceRecord from './app/main/user/record/ServiceRecord'
+import CardRecord from './app/main/user/record/CardRecord'
 const Tab = createBottomTabNavigator();
 let that = null;
 function MainFragment() {
@@ -186,6 +194,18 @@ export default class App extends React.Component {
                   <MainStack.Screen name="更新手机号" component={UpdatePhone}/>
                   <MainStack.Screen name="关于应用" component={AboutApp}/>
                   <MainStack.Screen name="停车服务" component={Parking}/>
+                  <MainStack.Screen name="代取快递" component={ExpressManager}/>
+                  <MainStack.Screen name='体温异常' component={TemperatureError}/>
+                  <MainStack.Screen name="代取快递处理" component={ExpressDealList}/>
+                  <MainStack.Screen name='出入记录' component={OutAndInRecord}/>
+                  <MainStack.Screen name='失物招领' component={LostManager} options={{
+                      header: ()=>(
+                        <View style={{height:0}}></View>
+                      )
+                  }}/>
+                  <MainStack.Screen name="添加失物" component={AddLostData}/>
+                  <MainStack.Screen name='打卡记录' component={CardRecord}/>
+                  <MainStack.Screen name='服务记录' component={ServiceRecord}/>
               </MainStack.Navigator>      
             </NavigationContainer>
         );

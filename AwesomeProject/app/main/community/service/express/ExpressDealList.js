@@ -2,13 +2,12 @@ import React from 'react';
 import {ActivityIndicator, FlatList, Alert,Image, StyleSheet, Text, View,TouchableHighlight,DeviceEventEmitter} from "react-native";
 import Config from '../../../Config'
 var that;
-export default class CleanDealList extends React.Component {
+export default class ExpressDealList extends React.Component {
     constructor(props){
       super(props);
       this.navigation = props.navigation;
       this.state = {
           data:[],
-
       }
       that = this;
     }
@@ -20,7 +19,7 @@ export default class CleanDealList extends React.Component {
     fetchData(){
             const url = 'https://api2.bmob.cn/1/classes/Service?where='+JSON.stringify({
                   community_id:Config.apply_for_id,
-                  tag:'保洁服务',
+                  tag:'代取快递',
                   state:'wait_deal'
             });
             var fetchOptions = {
@@ -81,6 +80,12 @@ export default class CleanDealList extends React.Component {
                        <Text style={styles.item_left}>发布时间</Text>
                        <Text style={styles.item_right}>{item.createdAt}</Text>
                    </View>
+                   <Text style={styles.item_left}>快递信息：</Text>
+                   <Text style={{
+                       flex:1,fontSize:18,
+                       color:'black',
+                       padding:10
+                   }}>{item.express_message}</Text>
                    <View style={{height:2,backgroundColor:'gray'}}></View>
                    <Text onPress={()=>{that.click(item)}} style={{height:60,fontSize:20,textAlignVertical:'center',textAlign:'center'}}>接受</Text>
                 </View>
@@ -107,7 +112,6 @@ export default class CleanDealList extends React.Component {
                 body:JSON.stringify({
                     deal_id:Config.LOGIN_USER_ID,
                     deal_name:Config.user.realName,
-                    tag:'保洁服务',
                     state:'dealing',
                     deal_phone:Config.user.phone
                 })
@@ -142,7 +146,7 @@ export default class CleanDealList extends React.Component {
                <FlatList
                 data={this.state.data}
                 ItemSeparatorComponent={ItemDivideComponent}
-                renderItem={CleanDealList.renderMovie}
+                renderItem={ExpressDealList.renderMovie}
                 keyExtractor={(item, index) => item.objectId}
                />
            </View>
